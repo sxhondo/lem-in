@@ -1,5 +1,20 @@
 #include "lem_in.h"
 
+int 		path_len(t_path **dst)
+{
+	t_path	*p;
+	int 	i;
+
+	i = 0;
+	p = *dst;
+	while (p)
+	{
+		p = p->next;
+		i++;
+	}
+	return (i);
+}
+
 t_path 		*create_node(int v, int par)
 {
 	t_path	*p;
@@ -36,6 +51,31 @@ void		push_front(t_path **dst, t_path *node)
 	}
 }
 
+void		print_paths(t_path **p1, t_path **p2)
+{
+
+	ft_printf("Path 1: \n");
+	for (t_path *p = *p1; p; p = p->next)
+		ft_printf("{Bgreen}%d {eoc}", p->node);
+	ft_printf("\nPath 2: \n");
+	for (t_path *p = *p2; p; p = p->next)
+		ft_printf("{Bgreen}%d {eoc}", p->node);
+}
+
+//int 		find_marked(t_path **s)
+//{
+//	t_path	*p;
+//
+//	p = *s;
+//	while (p)
+//	{
+//		if (p->mark)
+//			return (p->node);
+//		p = p->next;
+//	}
+//	return (0);
+//}
+
 void		free_path(t_path **s)
 {
 	t_path	*p;
@@ -47,5 +87,22 @@ void		free_path(t_path **s)
 		next = p->next;
 		free (p);
 		p = next;
+	}
+}
+
+void		free_tab(t_list **tab)
+{
+	t_list	*lst;
+	t_list	*next;
+	t_path	*ptr;
+
+	lst = *tab;
+	while (lst)
+	{
+		next = lst->next;
+		ptr = lst->content;
+		free_path(&ptr);
+		free(lst);
+		lst = next;
 	}
 }
