@@ -62,29 +62,6 @@ void		print_paths(t_path **p1, t_path **p2)
 		ft_printf("{Bgreen}%d {eoc}", p->node);
 }
 
-int 		count_max_edges(int **mx, int size)
-{
-	int 	count;
-	int 	i;
-	int 	j;
-
-	count = 0;
-	i = 0;
-	while (i < size)
-	{
-		j = 0;
-		while (j < size)
-		{
-			if (mx[i][j] != 0)
-				count++;
-			j++;
-		}
-		i++;
-	}
-	return (count);
-}
-
-
 void		free_path(t_path **s)
 {
 	t_path	*p;
