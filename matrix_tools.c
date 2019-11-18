@@ -49,6 +49,7 @@ int 		**make_matrix(int size)
 			/* H */ {0, 0, 0, 0, 1, 0, 1, 0},
 	};
 
+
 // /*  */	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 //	int		m[14][14] = {
 //			/* A */	{0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0},
@@ -80,6 +81,25 @@ int 		**make_matrix(int size)
 			mx[i][j] = m[i][j];
 	}
 	return (mx);
+}
+
+int 		**duplicate_matrix(int **mx, int size)
+{
+	int 	i, j;
+	int 	**new;
+
+	new = (int **)malloc(size * sizeof(int *));
+	for (i = 0; i < size; i++)
+		new[i] = (int *)malloc(size * sizeof(int));
+
+	i = -1;
+	while (++i < size)
+	{
+		j = -1;
+		while (++j < size)
+			new[i][j] = mx[i][j];
+	}
+	return (new);
 }
 
 void		print_matrix(int **mx, int size)
@@ -128,6 +148,25 @@ int			find_overlap(int **mx, int size)
 		i++;
 	}
 	return (1);
+}
+
+void		set_mx_to(int **mx, int size, int c)
+{
+	int 	i, j;
+
+	i = 0;
+	while (i < size)
+	{
+		j = 0;
+		while (j < size)
+		{
+			if (mx[i][j] == 0 || mx[i][j] == 1 || mx[i][j] == -1)
+				mx[i][j] = c;
+			j++;
+		}
+		i++;
+	}
+	mx[0][0] = 0;
 }
 
 void		set_to_zero(int **mx, int size)
