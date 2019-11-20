@@ -51,15 +51,36 @@ void		push_front(t_path **dst, t_path *node)
 	}
 }
 
-void		print_paths(t_path **p1, t_path **p2)
+void		print_path(t_path **path)
 {
+	t_path	*ptr;
 
-	ft_printf("Path 1: \n");
-	for (t_path *p = *p1; p; p = p->next)
-		ft_printf("{Bgreen}%d {eoc}", p->node);
-	ft_printf("\nPath 2: \n");
-	for (t_path *p = *p2; p; p = p->next)
-		ft_printf("{Bgreen}%d {eoc}", p->node);
+	ptr = *path;
+	ft_printf("\n\n");
+	while (ptr)
+	{
+		ft_printf("{green}%d {eoc}", ptr->node);
+		ptr = ptr->next;
+	}
+	ft_printf("\n");
+}
+
+void		print_ways(t_list **ways)
+{
+	t_list	*p;
+	t_path	*ptr;
+	int 	i;
+
+	i = 0;
+	p = *ways;
+	ft_printf("\n");
+	while (p)
+	{
+		ft_printf("Path [%d]: \n", i++);
+		ptr = p->content;
+		print_path(&ptr);
+		p = p->next;
+	}
 }
 
 void		free_path(t_path **s)
