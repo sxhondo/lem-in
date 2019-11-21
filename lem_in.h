@@ -6,12 +6,13 @@
 
 typedef struct		s_path
 {
+	int 			cost;
 	int				node;
 	int 			parent;
 	struct s_path	*next;
 }					t_path;
 
-t_path 				*create_node(int v, int par);
+t_path 				*create_node(int v, int par, int cost);
 void				push_back(t_path **path, t_path *node);
 void				push_front(t_path **dst, t_path *node);
 

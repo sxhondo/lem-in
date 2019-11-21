@@ -15,7 +15,7 @@ int 		path_len(t_path **dst)
 	return (i);
 }
 
-t_path 		*create_node(int v, int par)
+t_path 		*create_node(int v, int par, int cost)
 {
 	t_path	*p;
 
@@ -23,6 +23,7 @@ t_path 		*create_node(int v, int par)
 		return (NULL);
 	p->node = v;
 	p->parent = par;
+	p->cost = cost;
 	return (p);
 }
 

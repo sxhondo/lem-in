@@ -39,7 +39,7 @@ t_path		*exclude_shortest(t_path **path, int **mx, int size)
 	return (NULL);
 }
 
-int				get_neighbours(t_path **s, int *mx, int parent, int size)
+int				get_neighbours(t_path **s, int *mx, int parent, int size, int cost)
 {
 	t_path		*node;
 	int 		i;
@@ -51,7 +51,7 @@ int				get_neighbours(t_path **s, int *mx, int parent, int size)
 	{
 		if (mx[i] != 0 && !check_parent(s, i, size))
 		{
-			node = create_node(i, parent);
+			node = create_node(i, parent, cost);
 			push_back(s, node);
 			++q;
 		}
@@ -73,7 +73,7 @@ t_path		*get_reverse_path(t_path **s, int finish, int **mx)
 		{
 			if (ptr->node == finish)
 			{
-				node = create_node(ptr->node, ptr->parent);
+				node = create_node(ptr->node, ptr->parent, ptr->cost);
 				push_front(&path, node);
 //				ft_printf("{Bgreen}%d->{eoc}", ptr->node);
 				finish = ptr->parent;
@@ -88,39 +88,6 @@ t_path		*get_reverse_path(t_path **s, int finish, int **mx)
 	free_path(s);
 	return (path);
 
-}
-
-t_path 		*get_shortest_edges(int **mx, int size)
-{
-	t_path  *s = NULL;
-	t_path	*ptr;
-	int 	i;
-	int 	old;
-	int 	skip;
-
-	push_back(&s, create_node(0, 0));
-	ptr = s;
-	i = 0;
-	while (ptr && ptr->node != size - 1)
-	{
-		old = get_neighbours(&s, mx[i], i, size - 1);
-		skip = path_len(&s) - old;
-		for (t_path *p = s; p; p = p->next)
-		{
-			skip-- > 0 ? ft_printf("{blue}[%d]-->{eoc}{red}%d {eoc}", p->parent, p->node)
-				: ft_printf("{blue}[%d]-->{eoc}{yellow}%d {eoc}", p->parent, p->node);
-		}
-		ft_printf("\n%d - discovered\n--------\n", ptr->node);
-		if ((ptr = ptr->next))
-			i = ptr->node;
-		else
-		{
-			ft_printf("{Bred}Can't reach finish.{eoc}\n");
-			free_path(&s);
-			return (NULL);
-		}
-	}
-	return (get_reverse_path(&s, size - 1, mx));
 }
 
 int			*init_tab(int **mx, int size)
@@ -184,43 +151,80 @@ int			*calculate_min_cost(int **mx, int size)
 	return (tab);
 }
 
-t_path		*choose_cheapest(t_path **s, t_path **N, int *prices)
+t_path 		*get_shortest_edges(int **mx, int size)
 {
-	t_path	*p;
+	t_path  *s = NULL;
+	t_path	*ptr;
 	int 	i;
-	int 	len;
-	int 	*arr;
-	int 	tmp;
+	int 	old;
+	int 	skip;
+	int 	*tab;
 
-	len = path_len(N);
-	if (len > 0)
-		arr = (int *)malloc(sizeof(int *) * len);
-	else
-		return (NULL);
-	p = *N;
+	tab = calculate_min_cost(mx, size);
+	push_back(&s, create_node(0, 0, 0));
+	ptr = s;
 	i = 0;
-	while (p)
+	while (ptr && ptr->node != size - 1)
 	{
-		arr[i] = p->node;
-		i++;
-		p = p->next;
-	}
-
-	for (int q = 0; q < len; q++)
-		ft_printf("%3d", arr[q]);
-	if (len == 2)
-	{
-		if (arr[0] > arr[1])
+		old = get_neighbours(&s, mx[i], i, size - 1, tab[i]);
+		skip = path_len(&s) - old;
+		for (t_path *p = s; p; p = p->next)
 		{
-			tmp = arr[0];
-			arr[0] = arr[1];
-			arr[1] = tmp;
+			skip-- > 0 ? ft_printf("{blue}[%d]-->{eoc}{red}%d {eoc}", p->parent, p->node)
+				: ft_printf("{blue}[%d]-->{eoc}{yellow}%d {eoc}", p->parent, p->node);
+		}
+		ft_printf("\n%d - discovered\n--------\n", ptr->node);
+		if ((ptr = ptr->next))
+			i = ptr->node;
+		else
+		{
+			ft_printf("{Bred}Can't reach finish.{eoc}\n");
+			free_path(&s);
+			return (NULL);
 		}
 	}
+	return (get_reverse_path(&s, size - 1, mx));
+}
 
-	i = -1;
-	while (++i < len)
-		push_back(s, create_node(arr[i], 0));
+
+
+// t_path		*choose_cheapest(t_path **s, t_path **N, int *prices)
+// {
+// 	t_path	*p;
+// 	int 	i;
+// 	int 	len;
+// 	int 	*arr;
+// 	int 	tmp;
+//
+// 	len = path_len(N);
+// 	if (len > 0)
+// 		arr = (int *)malloc(sizeof(int *) * len);
+// 	else
+// 		return (NULL);
+// 	p = *N;
+// 	i = 0;
+// 	while (p)
+// 	{
+// 		arr[i] = p->node;
+// 		i++;
+// 		p = p->next;
+// 	}
+//
+// 	for (int q = 0; q < len; q++)
+// 		ft_printf("%3d", arr[q]);
+// 	if (len == 2)
+// 	{
+// 		if (arr[0] > arr[1])
+// 		{
+// 			tmp = arr[0];
+// 			arr[0] = arr[1];
+// 			arr[1] = tmp;
+// 		}
+// 	}
+//
+// 	i = -1;
+// 	while (++i < len)
+// 		push_back(s, create_node(arr[i], 0));
 
 
 //	t_path	*i;
@@ -247,83 +251,83 @@ t_path		*choose_cheapest(t_path **s, t_path **N, int *prices)
 //		i = i->next;
 //	}
 //	return (NULL);
-}
+// }
 
-int 			is_member_of_set(t_path **s, int value, int size)
-{
-	t_path	*ptr;
+// int 			is_member_of_set(t_path **s, int value, int size)
+// {
+// 	t_path	*ptr;
+//
+// 	ptr = *s;
+// 	while (ptr)
+// 	{
+// 		if (ptr->node == value && value != size)
+// 			return (1);
+// 		ptr = ptr->next;
+// 	}
+// 	return (0);
+// }
 
-	ptr = *s;
-	while (ptr)
-	{
-		if (ptr->node == value && value != size)
-			return (1);
-		ptr = ptr->next;
-	}
-	return (0);
-}
+// t_path		*get_neighbours_by_cost(t_path **s, int *mx, int par, int size)
+// {
+// 	int 	i;
+// 	t_path	*N = NULL;
+//
+// 	i = 0;
+// 	while (i < size)
+// 	{
+// 		if (mx[i] != 0 && !is_member_of_set(s, i, size))
+// 			push_front(&N, create_node(i, par));
+// 		i++;
+// 	}
+// 	for (t_path *p = N; p; p = p->next)
+// 		ft_printf("\n{red}[PRETENDERS: %d]{eoc} ", p->node);
+// 	ft_printf("\n");
+// 	return (N);
+// }
 
-t_path		*get_neighbours_by_cost(t_path **s, int *mx, int par, int size)
-{
-	int 	i;
-	t_path	*N = NULL;
-
-	i = 0;
-	while (i < size)
-	{
-		if (mx[i] != 0 && !is_member_of_set(s, i, size))
-			push_front(&N, create_node(i, par));
-		i++;
-	}
-	for (t_path *p = N; p; p = p->next)
-		ft_printf("\n{red}[PRETENDERS: %d]{eoc} ", p->node);
-	ft_printf("\n");
-	return (N);
-}
-
-t_path		*get_shortest_weight(int **mx, int size)
-{
-	int 	i;
-	int 	*tab;
-	int 	skip;
-	t_path	*s = NULL;
-	t_path	*ptr;
-	t_path	*neighs;
-
-	print_matrix(mx, size);
-
-	tab = calculate_min_cost(mx, size);
-	i = 0;
-	push_back(&s, create_node(0, 0));
-	ptr = s;
-	while (ptr && ptr->node != size - 1)
-	{
-		if ((neighs = get_neighbours_by_cost(&s, mx[i], i, size)))
-		{
-			choose_cheapest(&s, &neighs, tab);
-			skip = path_len(&s) - path_len(&neighs);
-		}
-		print_tab(tab, size);
-		for (t_path *p = s; p; p = p->next)
-		{
-			skip-- >= 0 ? ft_printf("{blue}[%d]->{red}%d{eoc} ", p->parent, p->node) :
-			ft_printf("{blue}[%d]->{yellow}%d{eoc} ", p->parent, p->node);
-		}
-		ft_printf("\n");
-		if ((ptr = ptr->next))
-			i = ptr->node;
-		else
-		{
-			ft_printf("{Bred}Can't reach finish.{eoc}\n");
-			free_path(&s);
-			free (tab);
-			return (NULL);
-		}
-	}
-	free (tab);
-	return (s);
-}
-
+// t_path		*get_shortest_weight(int **mx, int size)
+// {
+// 	int 	i;
+// 	int 	*tab;
+// 	int 	skip;
+// 	t_path	*s = NULL;
+// 	t_path	*ptr;
+// 	t_path	*neighs;
+//
+// 	print_matrix(mx, size);
+//
+// 	tab = calculate_min_cost(mx, size);
+// 	i = 0;
+// 	push_back(&s, create_node(0, 0));
+// 	ptr = s;
+// 	while (ptr && ptr->node != size - 1)
+// 	{
+// 		if ((neighs = get_neighbours_by_cost(&s, mx[i], i, size)))
+// 		{
+// 			choose_cheapest(&s, &neighs, tab);
+// 			skip = path_len(&s) - path_len(&neighs);
+// 		}
+// 		print_tab(tab, size);
+// 		for (t_path *p = s; p; p = p->next)
+// 		{
+// 			skip-- >= 0 ? ft_printf("{blue}[%d]->{red}%d{eoc} ", p->parent, p->node) :
+// 			ft_printf("{blue}[%d]->{yellow}%d{eoc} ", p->parent, p->node);
+// 		}
+// 		ft_printf("\n");
+// 		if ((ptr = ptr->next))
+// 			i = ptr->node;
+// 		else
+// 		{
+// 			ft_printf("{Bred}Can't reach finish.{eoc}\n");
+// 			free_path(&s);
+// 			free (tab);
+// 			return (NULL);
+// 		}
+// 	}
+// 	free (tab);
+// 	return (s);
+// }
+//
 void		disjoint_path_finding(t_list **ways, int **mx, int size)
 {
 	t_list	*lst;
@@ -355,24 +359,28 @@ int 		main()
 	t_path		*path;
 
 
-	size = 14;
+	size = 8;
 	mx = make_matrix(size);
 
-	path = get_shortest_edges(mx, size);
-	ft_lstadd(&ways, ft_lstnew(path, sizeof(t_path)));
-	exclude_shortest(&path, mx, size);
-
-	while ((path = get_shortest_weight(mx, size)))
-	{
-		print_matrix(mx, size);
+	while ((path = get_shortest_edges(mx, size)))
+		{
+			print_path(&path);
+			exclude_shortest(&path, mx, size);
+			ft_lstadd(&ways, ft_lstnew(path, sizeof(t_path)));
+		}
 		print_ways(&ways);
-		exclude_shortest(&path, mx, size);
-		print_matrix(mx, size);
-		ft_lstadd(&ways, ft_lstnew(path, sizeof(t_path)));
-	}
-	disjoint_path_finding(&ways, mx, size);
-	print_matrix(mx, size);
-	free_tab(&ways);
-	free_matrix(mx, size);
+	// disjoint_path_finding(&ways, mx, size);
+	// while ((path = get_shortest_weight(mx, size)))
+	// {
+	// 	print_matrix(mx, size);
+	// 	print_ways(&ways);
+	// 	exclude_shortest(&path, mx, size);
+	// 	print_matrix(mx, size);
+	// 	ft_lstadd(&ways, ft_lstnew(path, sizeof(t_path)));
+	// }
+	// disjoint_path_finding(&ways, mx, size);
+	// print_matrix(mx, size);
+	// free_tab(&ways);
+	// free_matrix(mx, size);
 	return (0);
 }
