@@ -57,7 +57,6 @@ void		print_path(t_path **path)
 	t_path	*ptr;
 
 	ptr = *path;
-	ft_printf("\n\n");
 	while (ptr)
 	{
 		ft_printf("{green}%d {eoc}", ptr->node);
