@@ -1,76 +1,47 @@
 #include "lem_in.h"
 
-int 		**make_matrix(int size)
+t_mx 		*make_mx(int size)
 {
+//	int 	m[8][8] = {
+//			/* A */	{0, 1, 1, 0, 0, 0, 0, 0},
+//			/* B */	{1, 0, 0, 1, 0, 0, 0, 0},
+//			/* C */ {1, 0, 0, 0, 1, 1, 0, 0},
+//			/* D */ {0, 1, 0, 0, 1, 0, 0, 0},
+//			/* E */ {0, 0, 1, 1, 0, 1, 0, 1},
+//			/* F */ {0, 0, 1, 0, 1, 0, 1, 0},
+//			/* G */ {0, 0, 0, 0, 0, 1, 0, 1},
+//			/* H */ {0, 0, 0, 0, 1, 0, 1, 0},
+//	};
+
+	 int		m[14][14] = {
+	 		/* A */	{0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0},
+	 		/* B */	{1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+	 		/* C */	{0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+	 		/* D */	{0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0},
+	 		/* E */	{1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0},
+	 		/* F */	{0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0},
+	 		/* G */	{1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0},
+	 		/* H */	{0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 1, 0, 0, 0},
+	 		/* I */	{0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1},
+	 		/* J */	{0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0},
+	 		/* K */	{0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1},
+	 		/* L */	{0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0},
+	 		/* M */	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1},
+	 		/* N */	{0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0},
+	 };
+
 	int 	i, j;
 	int 	**mx;
+	t_mx	*s;
 
-	/* two paths */
-//	int 	m[4][4] = {
-//			/* A */	{0, 1, 1, 0},
-//			/* B */	{1, 0, 1, 1},
-//			/* C */	{1, 1, 0, 1},
-//			/* D */	{0, 1, 1, 0},
-//	};
+	if (!(s = ft_memalloc(sizeof(t_mx))))
+		return (NULL);
 
-	/* no paths */
-//	int 	m[4][4] = {
-//			/* A */	{0, 1, 1, 0},
-//			/* B */	{1, 0, 0, 0},
-//			/* C */	{1, 0, 0, 0},
-//			/* D */	{0, 0, 1, 0},
-//	};
+	if (!(mx = (int **)malloc(size * sizeof(int *))))
+		return (NULL);
 
-	/* two paths with one common node ! ! ! */
-//	int 	m[5][5] = {
-//			/* A */	{0, 1, 1, 0, 0},
-//			/* B */	{1, 0, 0, 1, 0},
-//			/* C */	{1, 0, 0, 1, 0},
-//			/* D */	{0, 1, 1, 0, 1},
-//			/* E */	{0, 0, 0, 1, 0},
-//	};
-
-//	int 	m[4][4] = {
-//			/* A */	{0, 1, 1, 0},
-//			/* B */	{0, 0, 0, 1},
-//			/* C */	{0, 0, 0, 1},
-//			/* D */	{0, 0, 1, 0},
-//	};
-
-
-	int 	m[8][8] = {
-			/* A */	{0, 1, 1, 0, 0, 0, 0, 0},
-			/* B */	{1, 0, 0, 1, 0, 0, 0, 0},
-			/* C */ {1, 0, 0, 0, 1, 1, 0, 0},
-			/* D */ {0, 1, 0, 0, 1, 0, 0, 0},
-			/* E */ {0, 0, 1, 1, 0, 1, 0, 1},
-			/* F */ {0, 0, 1, 0, 1, 0, 1, 0},
-			/* G */ {0, 0, 0, 0, 0, 1, 0, 1},
-			/* H */ {0, 0, 0, 0, 1, 0, 1, 0},
-	};
-
-//	 int		m[14][14] = {
-//	 		/* A */	{0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0},
-//	 		/* B */	{1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-//	 		/* C */	{0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-//	 		/* D */	{0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0},
-//	 		/* E */	{1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0},
-//	 		/* F */	{0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0},
-//	 		/* G */	{1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0},
-//	 		/* H */	{0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 1, 0, 0, 0},
-//	 		/* I */	{0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1},
-//	 		/* J */	{0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0},
-//	 		/* K */	{0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1},
-//	 		/* L */	{0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0},
-//	 		/* M */	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1},
-//	 		/* N */	{0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0},
-//	 };
-
-
-	mx = (int **)malloc(size * sizeof(int *));
 	for (i = 0; i < size; i++)
 		mx[i] = (int *)malloc(size * sizeof(int));
-
 	i = -1;
 	while (++i < size)
 	{
@@ -78,29 +49,12 @@ int 		**make_matrix(int size)
 		while (++j < size)
 			mx[i][j] = m[i][j];
 	}
-	return (mx);
+	s->mx = mx;
+	s->size = size;
+	return (s);
 }
 
-int 		**duplicate_matrix(int **mx, int size)
-{
-	int 	i, j;
-	int 	**new;
-
-	new = (int **)malloc(size * sizeof(int *));
-	for (i = 0; i < size; i++)
-		new[i] = (int *)malloc(size * sizeof(int));
-
-	i = -1;
-	while (++i < size)
-	{
-		j = -1;
-		while (++j < size)
-			new[i][j] = mx[i][j];
-	}
-	return (new);
-}
-
-void		print_matrix(int **mx, int size)
+void		print_mx(int **mx, int size)
 {
 	char 	ch;
 	int 	i, j;
@@ -147,48 +101,6 @@ int			exclude_overlap(int **mx, int size)
 	return (1);
 }
 
-void		set_mx_to(int **mx, int size, int c)
-{
-	int 	i, j;
-
-	i = 0;
-	while (i < size)
-	{
-		j = 0;
-		while (j < size)
-		{
-			if (mx[i][j] == 0 || mx[i][j] == 1 || mx[i][j] == -1)
-				mx[i][j] = c;
-			j++;
-		}
-		i++;
-	}
-	mx[0][0] = 0;
-}
-
-int 		count_max_edges(int **mx, int size)
-{
-	int 	count;
-	int 	i;
-	int 	j;
-
-	count = 0;
-	i = 0;
-	while (i < size)
-	{
-		j = 0;
-		while (j < size)
-		{
-			if (mx[i][j] != 0)
-				count++;
-			j++;
-		}
-		i++;
-	}
-	return (count);
-}
-
-
 void		set_to_zero(int **mx, int size)
 {
 	int 	i;
@@ -207,12 +119,39 @@ void		set_to_zero(int **mx, int size)
 	}
 }
 
-void		free_matrix(int **mx, int size)
+void		free_mx(t_mx *M)
 {
 	int 	i;
 
 	i = 0;
-	while (i < size)
-		free(mx[i++]);
-	free (mx);
+	while (i < M->size)
+		free(M->mx[i++]);
+	free (M->mx);
+	free (M);
+}
+
+int			*init_tab(int size, int c)
+{
+	int 	*tab;
+
+	tab = (int *)malloc(sizeof(int *) * size);
+	for (int i = 0; i < size; i++)
+		tab[i] = c;
+	tab[0] = 0;
+	return (tab);
+
+}
+
+void		print_tab(int *tab, int size)
+{
+	int 	i;
+	int 	ch = 'A';
+
+	ft_printf("\n");
+	for (i = 0; i < size; i++)
+		ft_printf("{red}%3c{eoc}", ch++);
+	ft_printf("\n");
+	for (i = 0; i < size; i++)
+		ft_printf("{cyan}%3d{eoc}", tab[i]);
+	ft_printf("\n\n");
 }

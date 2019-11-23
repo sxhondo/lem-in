@@ -1,5 +1,28 @@
 #include "lem_in.h"
 
+int 		is_paths(t_mx *M)
+{
+	t_path	*f;
+	int 	i;
+
+	if ((f = get_shortest_path(M)))
+	{
+		free_path(&f);
+		return (1);
+	}
+	return (0);
+}
+
+void		add_path_to_lst(t_list **lst, t_path *path)
+{
+	t_list	*node;
+
+	if (!(node = ft_lstnew(path, sizeof(t_path))))
+		return ;
+	free (path);
+	ft_lstadd(lst, node);
+}
+
 int 		path_len(t_path **dst)
 {
 	t_path	*p;
@@ -15,7 +38,7 @@ int 		path_len(t_path **dst)
 	return (i);
 }
 
-t_path 		*create_node(int v, int par, int cost)
+t_path 		*create_node(int v, int par)
 {
 	t_path	*p;
 
@@ -23,7 +46,6 @@ t_path 		*create_node(int v, int par, int cost)
 		return (NULL);
 	p->node = v;
 	p->parent = par;
-	p->cost = cost;
 	return (p);
 }
 
@@ -65,15 +87,14 @@ void		print_path(t_path **path)
 	ft_printf("\n");
 }
 
-void		print_ways(t_list **ways)
+void		print_paths(t_list **lst)
 {
 	t_list	*p;
 	t_path	*ptr;
 	int 	i;
 
 	i = 0;
-	p = *ways;
-	ft_printf("\n");
+	p = *lst;
 	while (p)
 	{
 		ft_printf("Path [%d]: \n", i++);
@@ -81,6 +102,7 @@ void		print_ways(t_list **ways)
 		print_path(&ptr);
 		p = p->next;
 	}
+	ft_printf("\n");
 }
 
 void		free_path(t_path **s)
@@ -92,12 +114,12 @@ void		free_path(t_path **s)
 	while (p)
 	{
 		next = p->next;
-		free (p);
+		free(p);
 		p = next;
 	}
 }
 
-void		free_tab(t_list **tab)
+void		free_list(t_list **tab)
 {
 	t_list	*lst;
 	t_list	*next;
@@ -112,4 +134,5 @@ void		free_tab(t_list **tab)
 		free(lst);
 		lst = next;
 	}
+	*tab = NULL;
 }

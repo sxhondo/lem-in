@@ -4,33 +4,48 @@
 #include "libft.h"
 #include "ft_printf.h"
 
+typedef struct		s_mx
+{
+	int 			**mx;
+	int 			size;
+}					t_mx;
+
 typedef struct		s_path
 {
-	int 			cost;
 	int				node;
-	int 			parent;
-	struct s_path	*next;
+	int				parent;
+	struct 	s_path	*next;
 }					t_path;
 
-t_path 				*create_node(int v, int par, int cost);
+/*
+**	Struct tools
+*/
+
+t_path 				*get_shortest_path(t_mx *M);
+
+t_path 				*create_node(int v, int par);
 void				push_back(t_path **path, t_path *node);
 void				push_front(t_path **dst, t_path *node);
-
-int 				**make_matrix(int size);
-int 				**duplicate_matrix(int **mx, int size);
-void				set_mx_to(int **mx, int size, int c);
-int 				count_max_edges(int **mx, int size);
-void				print_matrix(int **mx, int size);
-void				free_matrix(int **mx, int size);
+int 				path_len(t_path **dst);
+void				add_path_to_lst(t_list **lst, t_path *path);
 void				free_path(t_path **s);
+void				print_paths(t_list **lst);
+void				print_path(t_path **path);
+void				free_list(t_list **tab);
+int 				is_paths(t_mx *M);
+
+/*
+**	Matrix tools
+*/
+
+t_mx				*make_mx(int size);
+void				print_mx(int **mx, int size);
+void				free_mx(t_mx *M);
 void				set_to_zero(int **mx, int size);
+
 int					exclude_overlap(int **mx, int size);
 
-void				try_another_path(t_path **s, int i);
-int 				path_len(t_path **dst);
-void				print_ways(t_list **ways);
-void				print_path(t_path **path);
-void				free_tab(t_list **tab);
-int 				find_marked(t_path **s);
+int					*init_tab(int size, int c);
+void				print_tab(int *tab, int size);
 
 #endif //LEM_IN_LEM_IN_H
