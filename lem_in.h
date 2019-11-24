@@ -4,6 +4,10 @@
 #include "libft.h"
 #include "ft_printf.h"
 
+
+//#2147483647
+//#-2147483648
+
 typedef struct		s_mx
 {
 	int 			**mx;

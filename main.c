@@ -1,214 +1,129 @@
 #include "lem_in.h"
 
-t_path		*exclude_shortest(t_path **path, t_mx *M)
+void		put_error(int type)
 {
-	t_path	*ptr;
-
-	ptr = *path;
-	while (ptr)
-	{
-		if (!ptr->next)
-			M->mx[ptr->node][ptr->parent] = -1;
-		M->mx[ptr->parent][ptr->node] = 0;
-		M->mx[ptr->node][ptr->parent] = -1;
-		ptr = ptr->next;
-	}
-	return (NULL);
+	if (type == 0)
+		ft_printf("{red}Can't open file{eoc}\n");
+	if (type == 1)
+		ft_printf("{red}bad modifier{eoc}\n");
+	if (type == 2)
+		ft_printf("{red}bad name{eoc}\n");
+	if (type == 3)
+		ft_printf("{red}coordinates not well formatted{eoc}\n");
+	exit (type);
 }
 
-int 		check_parent(t_path **s, int value, unsigned size)
+static int		lem_atoi(const char *str, int *num, int pos)
 {
-	t_path	*ptr;
+	int			sign;
+	long		res;
+	int			i;
 
-	ptr = *s;
-	while (ptr)
-	{
-		if (ptr->node == value && value != size)
-			return (1);
-		ptr = ptr->next;
-	}
-	return (0);
-}
-
-int			get_neighbours(t_path **s, const int *mx, int parent, unsigned size)
-{
-	t_path	*node;
-	int 	i;
-	int 	q;
-
-	q = 0;
 	i = 0;
-	while (i < size)
+	res = 0;
+	sign = 1;
+	if ((*str == '-' || *str == '+') && ++i)
+		sign = *str++ == '-' ? -1 : 1;
+	while (*str && ft_isdigit(*str) && ++i)
 	{
-		if (mx[i] != 0 && !check_parent(s, i, size))
-		{
-			node = create_node(i, parent);
-			push_back(s, node);
-			++q;
-		}
+		if (!*str || *str < '0' || *str > '9')
+			put_error(3);
+		res = res * 10 + (*str++ - '0');
+		if ((sign == 1 && res > INT32_MAX)
+			|| (sign == -1 && res - 2 >= INT32_MAX))
+			put_error(3);
+	}
+	while (*str && *str++ == ' ')
 		i++;
-	}
-	return (q);
+	num[pos] = (int)res * sign;
+	return (i);
 }
 
-t_path		*get_reverse_path(t_path **s, int finish)
+unsigned		proceed_sharp(const char *line)
 {
-	t_path	*node;
-	t_path	*ptr;
-	t_path 	*path = NULL;
-
-	while (finish)
+	if (*line++ == '#')
 	{
-		ptr = *s;
-		while (ptr)
+		if (*line == '#')
 		{
-			if (ptr->node == finish)
-			{
-				node = create_node(ptr->node, ptr->parent);
-				push_front(&path, node);
-				finish = ptr->parent;
-				break;
-			}
-			ptr = ptr->next;
+			line++;
+			if (ft_strequ(line, "start"))
+				return (1u);
+			else if (ft_strequ(line, "end"))
+				return (2u);
+			else
+				put_error(1);
 		}
-	}
-	push_front(&path, create_node(0, 0));
-	free_path(s);
-	return (path);
-
-}
-
-t_path 		*get_shortest_path(t_mx *M)
-{
-	t_path 	*s = NULL;
-	t_path 	*ptr;
-	int 	i;
-	int 	tmp;
-
-	push_back(&s, create_node(0, 0));
-	ptr = s;
-	i = 0;
-	while (ptr && ptr->node != M->size - 1)
-	{
-		tmp = get_neighbours(&s, M->mx[i], i, M->size);
-//		int sk2 = path_len(&s) - tmp;
-//		for (t_path *p = s; p; p = p->next)
-//		{
-//			sk2-- > 0 ?
-//			ft_printf("{blue}[%d]-->{eoc}{red}%d {eoc}", p->parent, p->node)
-//			: ft_printf("{blue}[%d]-->{eoc}{yellow}%d {eoc}", p->parent, p->node);
-//		}
-//		ft_printf("\n");
-		if ((ptr = ptr->next))
-			i = ptr->node;
 		else
-		{
-			free_path(&s);
-			return (NULL);
-		}
-	}
-	return (get_reverse_path(&s, M->size - 1));
-}
-void			disjoint_path_finding(t_list **ways, t_mx *M)
-{
-	t_list		*lst;
-	t_path		*ptr;
-
-	set_to_zero(M->mx, M->size);
-	lst = *ways;
-	while (lst)
-	{
-		ptr = lst->content;
-		while (ptr)
-		{
-			if (ptr->node)
-				M->mx[ptr->parent][ptr->node] = 1;
-			ptr = ptr->next;
-		}
-
-		lst = lst->next;
-	}
-	exclude_overlap(M->mx, M->size);
-}
-
-int				bellman_ford(t_mx *M, int *costs, int *tab)
-{
-	int 		i;
-	int 		j;
-	int			iteration;
-
-	iteration = M->size - 1;
-	while (iteration--)
-	{
-		i = -1;
-		while (++i < M->size)
-		{
-			j = -1;
-			while (++j < M->size)
-			{
-				if (M->mx[i][j] == 0)
-					continue;
-				if (costs[i] < INT32_MAX && M->mx[i][j] + costs[i] < costs[j])
-				{
-					costs[j] = costs[i] + M->mx[i][j];
-					tab[j] = i;
-				}
-			}
-		}
+			ft_printf("{yellow}C: %s{eoc}\n", line);
 	}
 	return (0);
 }
 
-t_path 		*calculate_min_cost(t_mx *M)
+int 		get_name(const char *line, char **name)
 {
-	t_path	*path = NULL;
-	t_path	*node;
 	int 	i;
-	int 	*costs;
-	int 	*tab;
 
-	costs = init_tab(M->size, INT32_MAX);
-	tab = init_tab(M->size, 0);
-	bellman_ford(M, costs, tab);
-	i = M->size - 1;
-	while (i)
-	{
-		node = create_node(i, tab[i]);
-		push_front(&path, node);
-		i = node->parent;
-	}
-	push_front(&path, create_node(0, 0));
-	free(costs);
-	free(tab);
-	return (path);
+	i = 0;
+	while (*line == ' ')
+		line++;
+	while (line[i] != ' ' && line[i])
+		i++;
+	*name = ft_strndup(line, i);
+	line += i;
+	while (*line++ == ' ' && *line)
+		i++;
+	return (i);
 }
 
-int 		main()
+int			proceed_room(const char *line, unsigned mod)
 {
-	int 		size;
-	t_list		*lst = NULL;
-	t_path		*path;
-	t_mx		*M;
+	char 	*name;
+	int 	xy[2];
+	int 	i = 0;
 
-	size = 14;
-	M = make_mx(size);
-	if (!(path = get_shortest_path(M)))
+	if (*line == 'L')
+		put_error(2);
+	line += get_name(line, &name);
+	while (*line)
 	{
-		ft_printf("{red}Can't reach finish.{eoc}\n");
-		return (0);
+		if (i >= 2)
+			put_error(3);
+		line += lem_atoi(line, xy, i++);
 	}
-	exclude_shortest(&path, M);
-	add_path_to_lst(&lst, path);
-	while (is_paths(M))
+
+	mod == 1 ? ft_printf("NAME: {green}[%s] {eoc}", name) :
+		mod == 2 ? ft_printf("NAME: {red}[%s] {eoc}", name) :
+			ft_printf("NAME: [%s] ", name);
+	ft_printf("X: [%d], Y: [%d]\n", xy[0], xy[1]);
+	ft_strdel(&name);
+	return (0);
+}
+
+void				parser(const char *line)
+{
+	static unsigned mod;
+
+	if (*line == '#')
 	{
-		path = calculate_min_cost(M);
-		exclude_shortest(&path, M);
-		add_path_to_lst(&lst, path);
+		if (mod)
+			put_error(1);
+		mod = proceed_sharp(line);
+		return ;
 	}
-	print_paths(&lst);
-	disjoint_path_finding(&lst, M);
-	print_mx(M->mx, M->size);
-	free_list(&lst);
-	free_mx(M);
+	mod = proceed_room(line, mod);
+}
+
+int 		main(int ac, char **av)
+{
+	int 	fd;
+	char 	*line;
+
+	if ((fd = open("/Users/sxhondo/lem-in/maps/map1", O_RDONLY)) == -1)
+		put_error(0);
+	while ((get_next_line(fd, &line)) > 0)
+	{
+		parser(line);
+		free (line);
+	}
 	return (0);
 }
