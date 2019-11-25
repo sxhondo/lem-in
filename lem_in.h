@@ -22,12 +22,16 @@ typedef struct		s_path
 }					t_path;
 
 /*
+**	Parser tools
+*/
+int 				skip_spaces(const char *str);
+/*
 **	Struct tools
 */
 
-t_path 				*get_shortest_path(t_mx *M);
+t_path 			*get_shortest_path(t_mx *M);
 
-t_path 				*create_node(int v, int par);
+t_path 			*create_node(int v, int par);
 void				push_back(t_path **path, t_path *node);
 void				push_front(t_path **dst, t_path *node);
 int 				path_len(t_path **dst);

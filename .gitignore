@@ -3,3 +3,6 @@ CMakeLists.txt
 cmake-build-debug
 .idea
 .DS_Store
+.tags
+.tags1
+a.out
