@@ -143,12 +143,10 @@ int			*init_tab(int size, int c)
 {
 	int 	*tab;
 
-	tab = (int *)malloc(sizeof(int *) * size);
-	for (int i = 0; i < size; i++)
-		tab[i] = c;
+	if (!(tab = ft_new_array(size, c)))
+		return (0);
 	tab[0] = 0;
 	return (tab);
-
 }
 
 void		print_tab(int *tab, int size)
