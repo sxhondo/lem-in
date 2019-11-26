@@ -8,6 +8,14 @@
 //#2147483647
 //#-2147483648
 
+typedef struct		s_vertix
+{
+	char 			*name;
+	int 			x;
+	int 			y;
+	struct s_vertix *next;
+}					t_vertix;
+
 typedef struct		s_mx
 {
 	int 			**mx;
@@ -22,9 +30,13 @@ typedef struct		s_path
 }					t_path;
 
 /*
-**	Parser tools
+**	Parsing tools
 */
+
 int 				skip_spaces(const char *str);
+int					lem_atoi(const char *str, int *num, int pos, int lc);
+void				verbose_collecting_data(unsigned mod, char *name, int x, int y);
+void				put_error(int type, int lc);
 /*
 **	Struct tools
 */

@@ -1,45 +1,6 @@
 #include "lem_in.h"
 
-void		put_error(int type, int lc)
-{
-	if (type == 0)
-		ft_printf("Can't open file\n");
-	if (lc > 0)
-		ft_printf("%d: {red}error: {eoc}", lc);
-	if (type == 1)
-		ft_printf("bad modifier\n");
-	if (type == 2)
-		ft_printf("bad name\n");
-	if (type == 3)
-		ft_printf("room or link not well formatted\n");
-	exit (type);
-}
-
-static int		lem_atoi(const char *str, int *num, int pos, int lc)
-{
-	int			sign;
-	long		res;
-	int			i;
-
-	i = 0;
-	res = 0;
-	sign = 1;
-	if ((*str == '-' || *str == '+') && ++i)
-		sign = *str++ == '-' ? -1 : 1;
-	while (*str && ft_isdigit(*str) && ++i)
-	{
-		if (!*str || *str < '0' || *str > '9')
-			put_error(3, lc);
-		res = res * 10 + (*str++ - '0');
-		if ((sign == 1 && res > INT32_MAX)
-			|| (sign == -1 && res - 2 >= INT32_MAX))
-			put_error(3, lc);
-	}
-	num[pos] = (int)res * sign;
-	return (i);
-}
-
-unsigned		proceed_sharp(const char *line, int lc)
+unsigned			proceed_sharp(const char *line, int lc)
 {
 	if (*line++ == '#')
 	{
@@ -59,10 +20,10 @@ unsigned		proceed_sharp(const char *line, int lc)
 	return (0);
 }
 
-int 		parse_room_name(const char *line, char **name, int lc)
+int 				parse_room_name(const char *line, char **name, int lc)
 {
-	const char 	*start;
-	int 				i;
+	const char 		*start;
+	int 			i;
 
 	i = 0;
 	start = line;
@@ -74,17 +35,23 @@ int 		parse_room_name(const char *line, char **name, int lc)
 	*name = ft_strndup(line, i);
 	line += i;
 	line += skip_spaces(line);
-	return (line - start);
+	return ((int)(line - start));
 }
 
-
-
-int			proceed_link_room(const char *line, unsigned mod, int lc)
+void				proceed_links(unsigned mod, char *name, int lc)
 {
-	char 	*name;
-	int 	xy[2];
-	int 	i = 0;
+	if (mod)
+		put_error(5, lc);
+	ft_printf("LINK: [%s]\n", name);
+}
 
+unsigned			proceed_rooms(const char *line, unsigned mod, int lc)
+{
+	char 			*name;
+	int 			xy[2];
+	int 			i;
+
+	i = 0;
 	xy[0] = -1;
 	xy[1] = -1;
 	line += parse_room_name(line, &name, lc);
@@ -99,50 +66,77 @@ int			proceed_link_room(const char *line, unsigned mod, int lc)
 		}
 		if (xy[0] < 0 || xy[1] < 0)
 			put_error(3, lc);
-		mod == 1 ? ft_printf("NAME: {green}[%s] {eoc}", name) :
-			mod == 2 ? ft_printf("NAME: {red}[%s] {eoc}", name) :
-					ft_printf("NAME: [%s] ", name);
-		ft_printf("X: [%d], Y: [%d]\n", xy[0], xy[1]);
-		return (mod);
+		verbose_collecting_data(mod, name, xy[0], xy[1]);
 	}
 	else
-	{
-		ft_printf("Link name is [%s]\n", name);
-		exit (0);
-	}
+		proceed_links(mod, name, lc);
+	ft_strdel(&name);
+	return (0);
 }
 
-void				parser(const char *line, int lc)
+unsigned	parser(const char *line, int lc, unsigned mod)
 {
-	static unsigned mod;
-
 	line += skip_spaces(line);
 	if (*line == '#')
 	{
 		if (mod)
 			put_error(1, lc);
-		mod = proceed_sharp(line, lc);
-		return ;
+		return (proceed_sharp(line, lc));
 	}
-	proceed_link_room(line, mod, lc);
-	mod = 0;
+	proceed_rooms(line, mod, lc);
+	return (0);
 }
 
-int 		main(int ac, char **av)
+unsigned		check_several_modifiers(unsigned mod, unsigned m_flag, int lc)
 {
-	int 	fd;
-	int 	lc;
-	int  	ret;
-	char 	*line;
+	if (mod == 1)
+	{
+		if ((m_flag & 1u))
+			put_error(6, lc);
+		return (1u);
+	}
+	else if (mod == 2)
+	{
+		if ((m_flag & 2u))
+			put_error(7, lc);
+		return (2u);
+	}
+	else
+		put_error(7, lc);
+	return (0);
+}
 
+void				check_no_room_given(unsigned m_flag, int lc)
+{
+	if (!m_flag)
+		put_error(8, lc);
+	if (!(m_flag & 1u) && (m_flag & 2u))
+		put_error(9, lc);
+	if (m_flag & 1u && !(m_flag & 2u))
+		put_error(10, lc);
+}
+
+int 				main(int ac, char **av)
+{
+	static unsigned mod = 0;
+	unsigned		m_flag;
+	int 			fd;
+	int 			lc;
+	char 			*line;
+
+	m_flag = 0;
 	lc = 1;
 	if ((fd = open(av[1], O_RDONLY)) == -1)
 		put_error(0, 0);
 	while ((get_next_line(fd, &line)) > 0)
 	{
-		parser(line, lc++);
+		if (!*line)
+			put_error(4, lc);
+		if ((mod = parser(line, lc++, mod)))
+			m_flag |= check_several_modifiers(mod, m_flag, lc);
 		ft_strdel(&line);
 	}
+	check_no_room_given(m_flag, lc);
 	close(fd);
 	return (0);
 }
