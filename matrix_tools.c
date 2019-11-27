@@ -1,83 +1,29 @@
 #include "lem_in.h"
 
-t_mx 		*make_mx(int size)
+void			print_mx(int **mx, int size, t_vertix **ver)
 {
-//	int 	m[8][8] = {
-//			/* A */	{0, 1, 1, 0, 0, 0, 0, 0},
-//			/* B */	{1, 0, 0, 1, 0, 0, 0, 0},
-//			/* C */ {1, 0, 0, 0, 1, 1, 0, 0},
-//			/* D */ {0, 1, 0, 0, 1, 0, 0, 0},
-//			/* E */ {0, 0, 1, 1, 0, 1, 0, 1},
-//			/* F */ {0, 0, 1, 0, 1, 0, 1, 0},
-//			/* G */ {0, 0, 0, 0, 0, 1, 0, 1},
-//			/* H */ {0, 0, 0, 0, 1, 0, 1, 0},
-//	};
+	int 		i, j;
+	t_vertix 	*p;
 
-//	 int		m[14][14] = {
-//	 		/* A */	{0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0},
-//	 		/* B */	{1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-//	 		/* C */	{0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-//	 		/* D */	{0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0},
-//	 		/* E */	{1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0},
-//	 		/* F */	{0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0},
-//	 		/* G */	{1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0},
-//	 		/* H */	{0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 1, 0, 0, 0},
-//	 		/* I */	{0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1},
-//	 		/* J */	{0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0},
-//	 		/* K */	{0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1},
-//	 		/* L */	{0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0},
-//	 		/* M */	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1},
-//	 		/* N */	{0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0},
-//	 };
-
-	int		m[6][6] = {
-			/* A */	{0, 1, 1, 1, 0, 0},
-			/* B */	{1, 0, 1, 1, 0, 0},
-			/* C */	{1, 1, 0, 0, 1, 1},
-			/* D */	{1, 1, 0, 0, 1, 1},
-			/* E */	{0, 0, 1, 1, 0, 1},
-			/* F */	{0, 0, 1, 1, 1, 0},
-	};
-
-	int 	i, j;
-	int 	**mx;
-	t_mx	*s;
-
-	if (!(s = ft_memalloc(sizeof(t_mx))))
-		return (NULL);
-
-	if (!(mx = (int **)malloc(size * sizeof(int *))))
-		return (NULL);
-
-	for (i = 0; i < size; i++)
-		mx[i] = (int *)malloc(size * sizeof(int));
-	i = -1;
-	while (++i < size)
+	p = NULL;
+	ft_printf("\n   ");
+	p = *ver;
+	while (p)
 	{
-		j = -1;
-		while (++j < size)
-			mx[i][j] = m[i][j];
+		p->mod == 0 ? ft_printf("%3s", p->name) :
+			p->mod == 1 ? ft_printf("{red}%3s{eoc}", p->name) :
+				ft_printf("{blue}%3s{eoc}", p->name);
+		p = p->next;
 	}
-	s->mx = mx;
-	s->size = size;
-	return (s);
-}
-
-void		print_mx(int **mx, int size)
-{
-	char 	ch;
-	int 	i, j;
-
-	ch = 'A';
-	ft_printf("\n ");
-	for (i = 0; i < size; i++)
-		ft_printf("{red}%3c", ch++);
+	p = *ver;
 	ft_printf("\n");
-	ch = 'A';
 	i = -1;
 	while (++i < size)
 	{
-		ft_printf("{blue}%c{eoc}", ch++);
+		p->mod == 0 ? ft_printf("%3s", p->name) :
+			p->mod == 1 ? ft_printf("{red}%3s{eoc}", p->name) :
+				ft_printf("{blue}%3s{eoc}", p->name);
+		p = p->next;
 		j = -1;
 		while (++j < size)
 			mx[i][j] == 0 ? ft_printf("%3d", mx[i][j])
@@ -147,18 +93,4 @@ int			*init_tab(int size, int c)
 		return (0);
 	tab[0] = 0;
 	return (tab);
-}
-
-void		print_tab(int *tab, int size)
-{
-	int 	i;
-	int 	ch = 'A';
-
-	ft_printf("\n");
-	for (i = 0; i < size; i++)
-		ft_printf("{red}%3c{eoc}", ch++);
-	ft_printf("\n");
-	for (i = 0; i < size; i++)
-		ft_printf("{cyan}%3d{eoc}", tab[i]);
-	ft_printf("\n\n");
 }

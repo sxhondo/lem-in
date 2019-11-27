@@ -34,44 +34,64 @@ typedef struct		s_mx
 }					t_mx;
 
 /*
-**	Validating tools
+**	parser.c
 */
+void 					**parser(char *path);
 
-void 				reader(int fd, void **ptrs);
-int 				skip_spaces(const char *str);
-int					lem_atoi(const char *str, int *num, int pos, int lc);
-void				verbose_collecting_data(unsigned mod, char *name, int x, int y);
-void				put_error(int type, int lc);
-unsigned			check_several_modifiers(unsigned mod, unsigned m_flag, int lc);
-void				check_no_room_given(unsigned m_flag, int lc);
-unsigned			check_sharp(const char *line, int lc);
-size_t				check_ants_num(const char *line, int lc);
-
-
-void					**get_structures();
 /*
-**	Struct Edge
+**	solver.c
 */
+
+int 					solver(t_mx *M, t_vertix **ver);
+t_path 					*get_shortest_path(t_mx *M);
+
+/*
+**	structurise_list.c
+*/
+void					put_to_start(t_vertix **ver);
+void					put_to_end(t_vertix **ver);
+
+/*
+**	reader.c
+*/
+void 					reader(int fd, void **ptrs);
+
+/*
+**	validating_tools.c
+*/
+void					put_error(int type, int lc);
+int 					skip_spaces(const char *str);
+int						lem_atoi(const char *str, int *num, int pos, int lc);
+unsigned				check_few_mod(unsigned mod, unsigned m_flag, int lc);
+int						lst_len(void **lst, unsigned mod);
+void					check_no_room_given(unsigned m_flag, int lc);
+unsigned				check_sharp(const char *line, int lc);
+size_t					check_ants_num(const char *line, int lc);
+
+/*
+**	struct_edge.c
+*/
+
 void					edge_free(t_edge **edge);
 void					edge_print(t_edge **edge);
 t_edge					*edge_init(char *e1, char *e2);
-void					edge_push_back(t_edge **edge, t_edge *elem);
+void					edge_push_back(t_edge **edge, t_edge *elem,
+											t_vertix **ver, int lc);
 
 
 /*
-**	Struct Vertix
+**	struct_vertix.c
 */
 
 void					vertix_free(t_vertix **ver);
 void					vertix_print(t_vertix **ver);
-void					vertix_push_back(t_vertix **ver, t_vertix *elem);
 t_vertix				*vertix_init(unsigned mod, char *name, const int *xy);
+void					vertix_push_back(t_vertix **ver, t_vertix *elem, int lc);
 
 /*
-**	Struct tools
+**	struct_path.c
 */
 
-t_path 				*get_shortest_path(t_mx *M);
 t_path 				*create_node(int v, int par);
 void				push_back(t_path **path, t_path *node);
 void				push_front(t_path **dst, t_path *node);
@@ -88,7 +108,7 @@ int 				is_paths(t_mx *M);
 */
 
 t_mx				*make_mx(int size);
-void				print_mx(int **mx, int size);
+void				print_mx(int **mx, int size, t_vertix **ver);
 void				free_mx(t_mx *M);
 void				set_to_zero(int **mx, int size);
 

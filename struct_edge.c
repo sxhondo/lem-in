@@ -31,10 +31,26 @@ void				edge_print(t_edge **edge)
 	ft_printf("--------------------\n");
 }
 
-void				edge_push_back(t_edge **edge, t_edge *elem)
+void				edge_push_back(t_edge **edge, t_edge *elem, t_vertix **ver, int lc)
 {
+	int 			i;
+	int 			j;
 	t_edge			*tmp;
+	t_vertix		*v;
 
+	j = 0;
+	i = 0;
+	v = *ver;
+	while (v)
+	{
+		if (ft_strequ(v->name, elem->e1))
+			i++;
+		if (ft_strequ(v->name, elem->e2))
+			j++;
+		v = v->next;
+	}
+	if (i == 0 || j == 0)
+		put_error(16, lc);
 	tmp = *edge;
 	if (!*edge)
 		*edge = elem;

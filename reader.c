@@ -34,6 +34,8 @@ static t_edge			*proceed_links(unsigned mod, char *name, int lc)
 	if (!(a = ft_strndup(name, i)))
 		put_error(12, 0);
 	name += i + 1;
+	if (!*name)
+		put_error(3, lc);
 	if (!(b = ft_strdup(name)))
 		put_error(12, 0);
 	tmp = edge_init(a, b);
@@ -41,7 +43,7 @@ static t_edge			*proceed_links(unsigned mod, char *name, int lc)
 }
 
 static unsigned			proceed_rooms(const char *line, unsigned mod, int lc,
-																	void **ptrs)
+															void **ptrs)
 {
 	char 				*name;
 	int 				*xy;
@@ -61,10 +63,11 @@ static unsigned			proceed_rooms(const char *line, unsigned mod, int lc,
 		}
 		if (xy[0] < 0 || xy[1] < 0)
 			put_error(3, lc);
-		vertix_push_back((t_vertix **)&ptrs[1], vertix_init(mod, name, xy));
+		vertix_push_back((t_vertix **)&ptrs[1], vertix_init(mod, name, xy), lc);
 	}
 	else
-		edge_push_back((t_edge **)&ptrs[2], proceed_links(mod, name, lc));
+		edge_push_back((t_edge **)&ptrs[2], proceed_links(mod, name, lc),
+				(t_vertix **)&ptrs[1], lc);
 	ft_strdel(&name);
 	free(xy);
 	return 0;
@@ -87,28 +90,68 @@ static unsigned			validator(const char *line, int lc, unsigned mod,
 	return (0);
 }
 
-//t_vec					*vec_read(int fd)
-//{
-//	t_vec				*vec;
-//	char 				buf[1];
-//
-//	if (fd < 0 || read(fd, NULL, 0) < 0)
-//		put_error(0, 0);
-//	if (!(vec = ft_vec_init(1, sizeof(char))))
-//		put_error(12, 0);
-//	while (read(fd, buf, sizeof(buf)) > 0)
-//	{
-//		ft_vec_add(&vec, buf);
-//	}
-//	ft_vec_add(&vec, "\0");
-//	if (!(ft_vec_resize(&vec)))
-//	{
-//		ft_vec_del(&vec);
-//		put_error(12, 0);
-//	}
-//	return (vec);
-//}
+static t_vec			*vec_read(int fd)
+{
+	t_vec				*vec;
+	char 				buf[1];
 
+	if (fd < 0 || read(fd, NULL, 0) < 0)
+		put_error(0, 0);
+	if (!(vec = ft_vec_init(1, sizeof(char))))
+		put_error(12, 0);
+	while (read(fd, buf, sizeof(buf)) > 0)
+		ft_vec_add(&vec, buf);
+	ft_vec_add(&vec, "\0");
+	if (!(ft_vec_resize(&vec)))
+	{
+		ft_vec_del(&vec);
+		put_error(12, 0);
+	}
+	return (vec);
+}
+
+static int				cut_after_n(const char *src, char **dst, int lc)
+{
+	int 				i;
+
+	i = 0;
+	while (src[i] && src[i] != '\n')
+		i++;
+	if (!i)
+		put_error(4, lc);
+	if (!(*dst = ft_strndup(src, i)))
+		put_error(12, 0);
+	return (i);
+}
+
+void 					reader(int fd, void **ptrs)
+{
+	int 				lc;
+	unsigned 			mod_fl[2];
+	int  				i_total[2];
+	void				*store[2];
+	t_vec				*buf;
+
+	lc = 1;
+	buf = vec_read(fd);
+	mod_fl[0] = 0;
+	mod_fl[1] = 0;
+	store[0] = buf->data;
+	i_total[1] = buf->total;
+	while ((i_total[1]))
+	{
+		i_total[0] = cut_after_n(store[0], (char **)&store[1], lc) + 1;
+		store[0] += i_total[0];
+		i_total[1] -= i_total[0];
+		if ((mod_fl[0] = validator(store[1], lc++, mod_fl[0], ptrs)))
+			mod_fl[1] |= check_few_mod(mod_fl[0], mod_fl[1], lc);
+		ft_strdel((char **)&store[1]);
+	}
+	check_no_room_given(mod_fl[1], lc);
+	ft_vec_del(&buf);
+}
+
+/*
 void 					reader(int fd, void **ptrs)
 {
 	static unsigned 	mod = 0;
@@ -128,3 +171,4 @@ void 					reader(int fd, void **ptrs)
 	}
 	check_no_room_given(m_flag, lc);
 }
+*/

@@ -25,7 +25,7 @@ void				vertix_print(t_vertix **ver)
 	ft_printf("------{red}VERTIXES{eoc}------\n");
 	while (p)
 	{
-		p->mod == 1 ? ft_printf("{green}[%s] {eoc}", p->name) :
+		p->mod == 1 ? ft_printf("{blue}[%s] {eoc}", p->name) :
 			p->mod == 2 ? ft_printf("{red}[%s] {eoc}", p->name) :
 				ft_printf("[%s] ", p->name);
 		ft_printf("X: [%2d], Y: [%2d]\n", p->x, p->y);
@@ -53,7 +53,7 @@ t_vertix			*vertix_init(unsigned mod, char *name, const int *xy)
 	return (ver);
 }
 
-void					vertix_push_back(t_vertix **ver, t_vertix *elem)
+void					vertix_push_back(t_vertix **ver, t_vertix *elem, int lc)
 {
 	t_vertix			*tmp;
 
@@ -63,23 +63,36 @@ void					vertix_push_back(t_vertix **ver, t_vertix *elem)
 	else
 	{
 		while (tmp->next)
+		{
+			if ((ft_strequ(tmp->name, elem->name)))
+				put_error(15, lc);
 			tmp = tmp->next;
+		}
+		if ((ft_strequ(tmp->name, elem->name)))
+			put_error(15, lc);
 		tmp->next = elem;
 		elem->next = NULL;
 	}
 }
 
-void					**get_structures()
+int						lst_len(void **lst, unsigned mod)
 {
-	t_vertix			*vertix;
-	t_edge				*edges;
-	void				**tab;
+	int 				i;
+	t_vertix			*v;
+	t_edge				*e;
 
-	vertix = NULL;
-	edges = NULL;
-	tab = (void **)malloc(sizeof(void *) * 3);
-	tab[0] = 0;
-	tab[1] = vertix;
-	tab[2] = edges;
-	return (tab);
+	i = 0;
+	if (mod == 0)
+	{
+		v = *lst;
+		while (v && ++i)
+			v = v->next;
+	}
+	else if (mod == 1)
+	{
+		e = *lst;
+		while (e && ++i)
+			e = e->next;
+	}
+	return (i);
 }

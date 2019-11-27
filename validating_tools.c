@@ -24,8 +24,12 @@ void		put_error(int type, int lc)
 		ft_printf("no %s room given\n", type == 9 ? "start" : "end");
 	if (type == 12)
 		ft_printf("out of memory\n");
-	if (type == 13)
-		ft_printf("invalid ants number\n");
+	if (type == 13 || type == 14)
+		type == 13 ? ft_printf("invalid ants number\n") :
+			ft_printf("ants number can't be zero\n");
+	if (type == 15 || type == 16)
+		type == 15 ? ft_printf("room name already exist\n") :
+			ft_printf("room name doesn't exist");
 	exit (type);
 }
 
@@ -48,6 +52,8 @@ int					lem_atoi(const char *str, int *num, int pos, int lc)
 	sign = 1;
 	if ((*str == '-' || *str == '+') && ++i)
 		sign = *str++ == '-' ? -1 : 1;
+	if (!ft_isdigit(*str))
+		put_error(3, lc);
 	while (*str && ft_isdigit(*str) && ++i)
 	{
 		if (!*str || *str < '0' || *str > '9')
@@ -100,7 +106,7 @@ unsigned			check_sharp(const char *line, int lc)
 	return (0);
 }
 
-unsigned			check_several_modifiers(unsigned mod, unsigned m_flag, int lc)
+unsigned			check_few_mod(unsigned mod, unsigned m_flag, int lc)
 {
 	if (mod == 1)
 	{
@@ -137,12 +143,12 @@ size_t					check_ants_num(const char *line, int lc)
 	i = 0;
 	while (line[i])
 	{
-		if (!ft_isdigit(line[i]))
+		if (!ft_isdigit(line[i]) && line[i] != ' ')
 			put_error(13, lc);
 		i++;
 	}
 	if (!(ants = mini_atoi(line)))
-		put_error(13, lc);
+		put_error(14, lc);
 	return (ants);
 }
 

@@ -1,8 +1,8 @@
 #include "lem_in.h"
 
-t_path		*exclude_shortest(t_path **path, t_mx *M)
+t_path					*exclude_shortest(t_path **path, t_mx *M)
 {
-	t_path	*ptr;
+	t_path				*ptr;
 
 	ptr = *path;
 	while (ptr)
@@ -16,9 +16,9 @@ t_path		*exclude_shortest(t_path **path, t_mx *M)
 	return (NULL);
 }
 
-int 		check_parent(t_path **s, int value, unsigned size)
+int 					check_parent(t_path **s, int value, unsigned size)
 {
-	t_path	*ptr;
+	t_path				*ptr;
 
 	ptr = *s;
 	while (ptr)
@@ -30,11 +30,11 @@ int 		check_parent(t_path **s, int value, unsigned size)
 	return (0);
 }
 
-int			get_neighbours(t_path **s, const int *mx, int parent, unsigned size)
+static int				get_neighbours(t_path **s, const int *mx, int parent, unsigned size)
 {
-	t_path	*node;
-	int 	i;
-	int 	q;
+	t_path				*node;
+	int 				i;
+	int 				q;
 
 	q = 0;
 	i = 0;
@@ -51,11 +51,11 @@ int			get_neighbours(t_path **s, const int *mx, int parent, unsigned size)
 	return (q);
 }
 
-t_path		*get_reverse_path(t_path **s, int finish)
+static t_path			*get_reverse_path(t_path **s, int finish)
 {
-	t_path	*node;
-	t_path	*ptr;
-	t_path 	*path = NULL;
+	t_path				*node;
+	t_path				*ptr;
+	t_path 				*path = NULL;
 
 	while (finish)
 	{
@@ -78,12 +78,12 @@ t_path		*get_reverse_path(t_path **s, int finish)
 
 }
 
-t_path 		*get_shortest_path(t_mx *M)
+t_path 					*get_shortest_path(t_mx *M)
 {
-	t_path 	*s = NULL;
-	t_path 	*ptr;
-	int 	i;
-	int 	tmp;
+	t_path 				*s = NULL;
+	t_path 				*ptr;
+	int 				i;
+	int 				tmp;
 
 	push_back(&s, create_node(0, 0));
 	ptr = s;
@@ -109,10 +109,10 @@ t_path 		*get_shortest_path(t_mx *M)
 	}
 	return (get_reverse_path(&s, M->size - 1));
 }
-void			disjoint_path_finding(t_list **ways, t_mx *M)
+static void			disjoint_path_finding(t_list **ways, t_mx *M)
 {
-	t_list		*lst;
-	t_path		*ptr;
+	t_list			*lst;
+	t_path			*ptr;
 
 	set_to_zero(M->mx, M->size);
 	lst = *ways;
@@ -131,11 +131,11 @@ void			disjoint_path_finding(t_list **ways, t_mx *M)
 	exclude_overlap(M->mx, M->size);
 }
 
-int				bellman_ford(t_mx *M, int *costs, int *tab)
+static int			bellman_ford(t_mx *M, int *costs, int *tab)
 {
-	int 		i;
-	int 		j;
-	int			iteration;
+	int 			i;
+	int 			j;
+	int				iteration;
 
 	iteration = M->size - 1;
 	while (iteration--)
@@ -159,13 +159,13 @@ int				bellman_ford(t_mx *M, int *costs, int *tab)
 	return (0);
 }
 
-t_path 		*calculate_min_cost(t_mx *M)
+static t_path 		*calculate_min_cost(t_mx *M)
 {
-	t_path	*path = NULL;
-	t_path	*node;
-	int 	i;
-	int 	*costs;
-	int 	*tab;
+	t_path			*path = NULL;
+	t_path			*node;
+	int 			i;
+	int 			*costs;
+	int 			*tab;
 
 	costs = init_tab(M->size, INT32_MAX);
 	tab = init_tab(M->size, 0);
@@ -183,32 +183,26 @@ t_path 		*calculate_min_cost(t_mx *M)
 	return (path);
 }
 
-//int 			main()
-//{
-//	int 		size;
-//	t_list		*lst = NULL;
-//	t_path		*path;
-//	t_mx		*M;
-//
-//	size = 6;
-//	M = make_mx(size);
-//	if (!(path = get_shortest_path(M)))
-//	{
-//		ft_printf("{red}Can't reach finish.{eoc}\n");
-//		return (0);
-//	}
-//	exclude_shortest(&path, M);
-//	add_path_to_lst(&lst, path);
-//	while (is_paths(M))
-//	{
-//		path = calculate_min_cost(M);
-//		exclude_shortest(&path, M);
-//		add_path_to_lst(&lst, path);
-//	}
-//	print_paths(&lst);
-//	disjoint_path_finding(&lst, M);
-//	print_mx(M->mx, M->size);
-//	free_list(&lst);
-//	free_mx(M);
-//	return (0);
-//}
+int 					solver(t_mx *M, t_vertix **ver)
+{
+	t_list				*lst = NULL;
+	t_path				*path;
+
+	if (!(path = get_shortest_path(M)))
+	{
+		ft_printf("{red}Can't reach finish.{eoc}\n");
+		return (0);
+	}
+	exclude_shortest(&path, M);
+	add_path_to_lst(&lst, path);
+	while (is_paths(M))
+	{
+		path = calculate_min_cost(M);
+		exclude_shortest(&path, M);
+		add_path_to_lst(&lst, path);
+	}
+	print_paths(&lst);
+	disjoint_path_finding(&lst, M);
+	free_list(&lst);
+	return (0);
+}
