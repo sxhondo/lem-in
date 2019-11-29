@@ -91,14 +91,14 @@ t_path 					*get_shortest_path(t_mx *M)
 	while (ptr && ptr->node != M->size - 1)
 	{
 		tmp = get_neighbours(&s, M->mx[i], i, M->size);
-//		int sk2 = path_len(&s) - tmp;
-//		for (t_path *p = s; p; p = p->next)
-//		{
-//			sk2-- > 0 ?
-//			ft_printf("{blue}[%d]-->{eoc}{red}%d {eoc}", p->parent, p->node)
-//			: ft_printf("{blue}[%d]-->{eoc}{yellow}%d {eoc}", p->parent, p->node);
-//		}
-//		ft_printf("\n");
+		// int sk2 = path_len(&s) - tmp;
+		// for (t_path *p = s; p; p = p->next)
+		// {
+		// 	sk2-- > 0 ?
+		// 	ft_printf("{blue}[%d]-->{eoc}{red}%d {eoc}", p->parent, p->node)
+		// 	: ft_printf("{blue}[%d]-->{eoc}{yellow}%d {eoc}", p->parent, p->node);
+		// }
+		// ft_printf("\n");
 		if ((ptr = ptr->next))
 			i = ptr->node;
 		else
@@ -189,10 +189,7 @@ int 					solver(t_mx *M, t_vertix **ver)
 	t_path				*path;
 
 	if (!(path = get_shortest_path(M)))
-	{
-		ft_printf("{red}Can't reach finish.{eoc}\n");
-		return (0);
-	}
+		put_error(17, 0, (void *)path);
 	exclude_shortest(&path, M);
 	add_path_to_lst(&lst, path);
 	while (is_paths(M))
@@ -201,7 +198,7 @@ int 					solver(t_mx *M, t_vertix **ver)
 		exclude_shortest(&path, M);
 		add_path_to_lst(&lst, path);
 	}
-	print_paths(&lst);
+	print_paths(&lst, ver);
 	disjoint_path_finding(&lst, M);
 	free_list(&lst);
 	return (0);

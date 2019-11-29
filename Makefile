@@ -1,9 +1,10 @@
 
 NAME = lem-in
 CC = gcc
-CFLAGS =
+#CFLAGS = -Wall -Wextra -Werror
 
 SRCS_DIR = srcs/
+OBJ_DIR = obj/
 LDIR = libft/
 LINC = $(LDIR)incs
 LIBFT = $(LDIR)libft.a

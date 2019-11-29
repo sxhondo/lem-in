@@ -1,11 +1,13 @@
 #include "lem_in.h"
 
-void		put_error(int type, int lc)
+void		put_error(int type, int lc, void **free)
 {
+	lc ? ft_printf("%d: {red}error: {eoc}", lc) :
+		ft_printf("{red}error: {eoc}");
 	if (type == 0)
 		ft_printf("Can't open file\n");
-	if (lc > 0)
-		ft_printf("%d: {red}error: {eoc}", lc);
+	// if (lc >= 0)
+	// 	ft_printf("%d: {red}error: {eoc}", lc);
 	if (type == 1)
 		ft_printf("bad modifier\n");
 	if (type == 2)
@@ -29,7 +31,12 @@ void		put_error(int type, int lc)
 			ft_printf("ants number can't be zero\n");
 	if (type == 15 || type == 16)
 		type == 15 ? ft_printf("room name already exist\n") :
-			ft_printf("room name doesn't exist");
+			ft_printf("room name doesn't exist\n");
+	if (type == 17)
+	{
+		ft_printf("can't reach finish\n");
+		free_path((t_path **)&free);
+	}
 	exit (type);
 }
 
@@ -53,15 +60,15 @@ int					lem_atoi(const char *str, int *num, int pos, int lc)
 	if ((*str == '-' || *str == '+') && ++i)
 		sign = *str++ == '-' ? -1 : 1;
 	if (!ft_isdigit(*str))
-		put_error(3, lc);
+		put_error(3, lc, NULL);
 	while (*str && ft_isdigit(*str) && ++i)
 	{
 		if (!*str || *str < '0' || *str > '9')
-			put_error(3, lc);
+			put_error(3, lc, NULL);
 		res = res * 10 + (*str++ - '0');
 		if ((sign == 1 && res > INT32_MAX)
 			|| (sign == -1 && res - 2 >= INT32_MAX))
-			put_error(3, lc);
+			put_error(3, lc, NULL);
 	}
 	num[pos] = (int)res * sign;
 	return (i);
@@ -98,7 +105,7 @@ unsigned			check_sharp(const char *line, int lc)
 			else if (ft_strequ(line, "end"))
 				return (2u);
 			else
-				put_error(1, lc);
+				put_error(1, lc, NULL);
 		}
 		else
 			ft_printf("{yellow}C: %s{eoc}\n", line);
@@ -111,28 +118,28 @@ unsigned			check_few_mod(unsigned mod, unsigned m_flag, int lc)
 	if (mod == 1)
 	{
 		if ((m_flag & 1u))
-			put_error(6, lc);
+			put_error(6, lc, NULL);
 		return (1u);
 	}
 	else if (mod == 2)
 	{
 		if ((m_flag & 2u))
-			put_error(7, lc);
+			put_error(7, lc, NULL);
 		return (2u);
 	}
 	else
-		put_error(7, lc);
+		put_error(7, lc, NULL);
 	return (0);
 }
 
 void					check_no_room_given(unsigned m_flag, int lc)
 {
 	if (!m_flag)
-		put_error(8, lc);
+		put_error(8, lc, NULL);
 	if (!(m_flag & 1u) && (m_flag & 2u))
-		put_error(9, lc);
+		put_error(9, lc, NULL);
 	if (m_flag & 1u && !(m_flag & 2u))
-		put_error(10, lc);
+		put_error(10, lc, NULL);
 }
 
 size_t					check_ants_num(const char *line, int lc)
@@ -144,11 +151,11 @@ size_t					check_ants_num(const char *line, int lc)
 	while (line[i])
 	{
 		if (!ft_isdigit(line[i]) && line[i] != ' ')
-			put_error(13, lc);
+			put_error(13, lc, NULL);
 		i++;
 	}
 	if (!(ants = mini_atoi(line)))
-		put_error(14, lc);
+		put_error(14, lc, NULL);
 	return (ants);
 }
 

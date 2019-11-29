@@ -1,6 +1,22 @@
 
 #include "lem_in.h"
 
+char 					*get_i_ver(t_vertix **ver, int i)
+{
+	t_vertix 		*v;
+	int 				j;
+
+	j = 0;
+	v = *ver;
+	while (v)
+	{
+		if (j == i)
+			return (v->name);
+		j++;
+		v = v->next;
+	}
+}
+
 void				vertix_free(t_vertix **ver)
 {
 	t_vertix		*p;
@@ -41,12 +57,12 @@ t_vertix			*vertix_init(unsigned mod, char *name, const int *xy)
 
 	if (!(ver = ft_memalloc(sizeof(t_vertix))))
 	{
-		put_error(12, 0);
+		put_error(12, 0, NULL);
 		return (0);
 	}
 	ver->mod = mod;
 	if (!(ver->name = ft_strdup(name)))
-		put_error(12, 0);
+		put_error(12, 0, NULL);
 	ver->x = xy[0];
 	ver->y = xy[1];
 	ver->next = NULL;
@@ -65,11 +81,11 @@ void					vertix_push_back(t_vertix **ver, t_vertix *elem, int lc)
 		while (tmp->next)
 		{
 			if ((ft_strequ(tmp->name, elem->name)))
-				put_error(15, lc);
+				put_error(15, lc, NULL);
 			tmp = tmp->next;
 		}
 		if ((ft_strequ(tmp->name, elem->name)))
-			put_error(15, lc);
+			put_error(15, lc, NULL);
 		tmp->next = elem;
 		elem->next = NULL;
 	}

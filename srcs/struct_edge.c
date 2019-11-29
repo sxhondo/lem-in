@@ -50,7 +50,7 @@ void				edge_push_back(t_edge **edge, t_edge *elem, t_vertix **ver, int lc)
 		v = v->next;
 	}
 	if (i == 0 || j == 0)
-		put_error(16, lc);
+		put_error(16, lc, NULL);
 	tmp = *edge;
 	if (!*edge)
 		*edge = elem;
@@ -69,7 +69,7 @@ t_edge				*edge_init(char *e1, char *e2)
 
 	if (!(edge = ft_memalloc(sizeof(t_edge))))
 	{
-		put_error(12, 0);
+		put_error(12, 0, NULL);
 		return (0);
 	}
 	edge->e1 = e1;

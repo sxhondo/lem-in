@@ -59,7 +59,7 @@ void 					reader(int fd, void **ptrs);
 /*
 **	validating_tools.c
 */
-void					put_error(int type, int lc);
+void					put_error(int type, int lc, void **free);
 int 					skip_spaces(const char *str);
 int						lem_atoi(const char *str, int *num, int pos, int lc);
 unsigned				check_few_mod(unsigned mod, unsigned m_flag, int lc);
@@ -87,7 +87,7 @@ void					vertix_free(t_vertix **ver);
 void					vertix_print(t_vertix **ver);
 t_vertix				*vertix_init(unsigned mod, char *name, const int *xy);
 void					vertix_push_back(t_vertix **ver, t_vertix *elem, int lc);
-
+char 					*get_i_ver(t_vertix **ver, int i);
 /*
 **	struct_path.c
 */
@@ -98,8 +98,8 @@ void				push_front(t_path **dst, t_path *node);
 int 				path_len(t_path **dst);
 void				add_path_to_lst(t_list **lst, t_path *path);
 void				free_path(t_path **s);
-void				print_paths(t_list **lst);
-void				print_path(t_path **path);
+void				print_paths(t_list **lst, t_vertix **ver);
+void				print_path(t_path **path, t_vertix **ver);
 void				free_list(t_list **tab);
 int 				is_paths(t_mx *M);
 

@@ -74,20 +74,28 @@ void		push_front(t_path **dst, t_path *node)
 	}
 }
 
-void		print_path(t_path **path)
+void			print_path(t_path **path, t_vertix **ver)
 {
 	t_path	*ptr;
+	int 		i;
 
+	i = 1;
 	ptr = *path;
 	while (ptr)
 	{
-		ft_printf("{green}%d {eoc}", ptr->node);
+		if (i == 1)
+			ft_printf("{red}%s->{eoc}", get_i_ver(ver, ptr->node));
+		else if (i != path_len(path))
+			ft_printf("{green}%s->{eoc}", get_i_ver(ver, ptr->node));
+		else if (i == path_len(path))
+			ft_printf("{blue}%s{eoc}", get_i_ver(ver, ptr->node));
+		i++;
 		ptr = ptr->next;
 	}
 	ft_printf("\n");
 }
 
-void		print_paths(t_list **lst)
+void		print_paths(t_list **lst, t_vertix **ver)
 {
 	t_list	*p;
 	t_path	*ptr;
@@ -97,9 +105,9 @@ void		print_paths(t_list **lst)
 	p = *lst;
 	while (p)
 	{
-		ft_printf("Path [%d]: \n", i++);
+		ft_printf("Path [%d]: ", i++);
 		ptr = p->content;
-		print_path(&ptr);
+		print_path(&ptr, ver);
 		p = p->next;
 	}
 	ft_printf("\n");
