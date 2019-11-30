@@ -54,7 +54,7 @@ static t_mx				*make_matrix(void *ants, t_vertix **ver, t_edge **edge)
 	int 				**mx;
 	int 				size;
 
-	ft_printf("number of ants: {cyan}%5d\n{eoc}", ants);
+//	ft_printf("number of ants: {cyan}%5d\n{eoc}", ants);
 //	vertix_print(ver);
 //	edge_print(edge);
 	put_to_start(ver);
@@ -73,22 +73,6 @@ static t_mx				*make_matrix(void *ants, t_vertix **ver, t_edge **edge)
 
 }
 
-static void				**new_ptr_array(int size)
-{
-	int 				i;
-	void				**tab;
-
-	if (!(tab = (void **)malloc(sizeof(void *) * size)) || size <= 0)
-	{
-		put_error(12, 0, NULL);
-		return (NULL);
-	}
-	i = -1;
-	while (++i < size)
-		tab[i] = NULL;
-	return (tab);
-}
-
 void 				**parser(char *path)
 {
 	int 			fd;
@@ -101,10 +85,15 @@ void 				**parser(char *path)
 		put_error(0, 0, NULL);
 	reader(fd, ptrs);
 	M = make_matrix(ptrs[0], (t_vertix **)&ptrs[1], (t_edge **)&ptrs[2]);
+/*
+	vertix_print((t_vertix **)&ptrs[1]);
+	edge_print((t_edge **)&ptrs[2]);
+*/
 	edge_free((t_edge **)&ptrs[2]);
-	ret = new_ptr_array(2);
+	ret = new_ptr_array(3);
 	ret[0] = M;
 	ret[1] = ptrs[1];
+	ret[2] = (void *)ptrs[0];
 	free(ptrs);
 	close(fd);
 	return (ret);

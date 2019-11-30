@@ -1,51 +1,19 @@
 #include "lem_in.h"
 
-void		put_error(int type, int lc, void **free)
+void					**new_ptr_array(int size)
 {
-	lc ? ft_printf("%d: {red}error: {eoc}", lc) :
-		ft_printf("{red}error: {eoc}");
-	if (type == 0)
-		ft_printf("Can't open file\n");
-	// if (lc >= 0)
-	// 	ft_printf("%d: {red}error: {eoc}", lc);
-	if (type == 1)
-		ft_printf("bad modifier\n");
-	if (type == 2)
-		ft_printf("bad name\n");
-	if (type == 3)
-		ft_printf("room or link not well formatted\n");
-	if (type == 4)
-		ft_printf("empty line\n");
-	if (type == 5)
-		ft_printf("links can't be modified as a start or end\n");
-	if (type == 6 || type == 7)
-		ft_printf("several %s rooms\n", type == 6 ? "start" : "end");
-	if (type == 8)
-		ft_printf("start and end rooms are not given\n");
-	if (type == 9 || type == 10)
-		ft_printf("no %s room given\n", type == 9 ? "start" : "end");
-	if (type == 12)
-		ft_printf("out of memory\n");
-	if (type == 13 || type == 14)
-		type == 13 ? ft_printf("invalid ants number\n") :
-			ft_printf("ants number can't be zero\n");
-	if (type == 15 || type == 16)
-		type == 15 ? ft_printf("room name already exist\n") :
-			ft_printf("room name doesn't exist\n");
-	if (type == 17)
-	{
-		ft_printf("can't reach finish\n");
-		free_path((t_path **)&free);
-	}
-	exit (type);
-}
+	int 				i;
+	void				**tab;
 
-void		verbose_collecting_data(unsigned mod, char *name, int x, int y)
-{
-	mod == 1 ? ft_printf("ROOM: {green}[%s] {eoc}", name) :
-	mod == 2 ? ft_printf("ROOM: {red}[%s] {eoc}", name) :
-	ft_printf("ROOM: [%s] ", name);
-	ft_printf("X: [%d], Y: [%d]\n", x, y);
+	if (!(tab = (void **)malloc(sizeof(void *) * size)) || size <= 0)
+	{
+		put_error(12, 0, NULL);
+		return (NULL);
+	}
+	i = -1;
+	while (++i < size)
+		tab[i] = NULL;
+	return (tab);
 }
 
 int					lem_atoi(const char *str, int *num, int pos, int lc)

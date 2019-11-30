@@ -33,6 +33,12 @@ typedef struct		s_mx
 	int 			size;
 }					t_mx;
 
+
+/*
+**	mover.c
+*/
+void 					mover(int ants, t_list **paths, t_vertix **ver);
+
 /*
 **	parser.c
 */
@@ -42,24 +48,32 @@ void 					**parser(char *path);
 **	solver.c
 */
 
-int 					solver(t_mx *M, t_vertix **ver);
+t_list 					*solver(t_mx *M, t_vertix **ver);
 t_path 					*get_shortest_path(t_mx *M);
+t_path					*exclude_shortest(t_path **path, t_mx *M);
 
 /*
 **	structurise_list.c
 */
 void					put_to_start(t_vertix **ver);
 void					put_to_end(t_vertix **ver);
-
+int 					line_is_busy(t_list **lst, t_path **path, int last_node);
 /*
 **	reader.c
 */
 void 					reader(int fd, void **ptrs);
 
 /*
+**	put_error.c
+*/
+void					*put_error(int type, int lc, void **free);
+void					*put_error1(int type, void **free);
+
+/*
 **	validating_tools.c
 */
-void					put_error(int type, int lc, void **free);
+
+int 					ft_strequal(const char *s1, const char *s2);
 int 					skip_spaces(const char *str);
 int						lem_atoi(const char *str, int *num, int pos, int lc);
 unsigned				check_few_mod(unsigned mod, unsigned m_flag, int lc);
@@ -67,6 +81,7 @@ int						lst_len(void **lst, unsigned mod);
 void					check_no_room_given(unsigned m_flag, int lc);
 unsigned				check_sharp(const char *line, int lc);
 size_t					check_ants_num(const char *line, int lc);
+void					**new_ptr_array(int size);
 
 /*
 **	struct_edge.c

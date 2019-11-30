@@ -56,10 +56,7 @@ t_vertix			*vertix_init(unsigned mod, char *name, const int *xy)
 	t_vertix		*ver;
 
 	if (!(ver = ft_memalloc(sizeof(t_vertix))))
-	{
-		put_error(12, 0, NULL);
-		return (0);
-	}
+		return (put_error(12, 0, NULL));
 	ver->mod = mod;
 	if (!(ver->name = ft_strdup(name)))
 		put_error(12, 0, NULL);

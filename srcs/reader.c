@@ -1,19 +1,29 @@
 #include "lem_in.h"
 
+static int				cut_after_symbol(const char *src, char **dst, char sym, int lc)
+{
+	int 				i;
+
+	i = 0;
+	while (src[i] && src[i] != sym)
+		i++;
+	if (!i)
+		put_error(4, lc, NULL);
+	if (!(*dst = ft_strndup(src, i)))
+		put_error(12, 0, NULL);
+	return (i);
+}
+
 static int				parse_room_name(const char *line, char **name, int lc)
 {
 	const char 			*start;
 	int 				i;
 
-	i = 0;
 	start = line;
 	line += skip_spaces(line);
 	if (*line == 'L')
 		put_error(2, lc, NULL);
-	while (line[i] && line[i] != ' ')
-			i++;
-	if (!(*name = ft_strndup(line, i)))
-		put_error(12, lc, NULL);
+	i = cut_after_symbol(line, name, ' ', lc);
 	line += i;
 	line += skip_spaces(line);
 	return ((int)(line - start));
@@ -28,14 +38,11 @@ static t_edge			*proceed_links(unsigned mod, char *name, int lc)
 
 	if (mod)
 		put_error(5, lc, NULL);
-	i = 0;
-	while (name[i] && name[i] != '-')
-		i++;
-	if (!(a = ft_strndup(name, i)))
-		put_error(12, 0, NULL);
-	name += i + 1;
-	if (!*name)
+	i = cut_after_symbol(name, &a, '-', lc);
+	name += i;
+	if (!*name || !(*name + 1))
 		put_error(3, lc, NULL);
+	name += 1;
 	if (!(b = ft_strdup(name)))
 		put_error(12, 0, NULL);
 	tmp = edge_init(a, b);
@@ -110,20 +117,6 @@ static t_vec			*vec_read(int fd)
 	return (vec);
 }
 
-static int				cut_after_n(const char *src, char **dst, int lc)
-{
-	int 				i;
-
-	i = 0;
-	while (src[i] && src[i] != '\n')
-		i++;
-	if (!i)
-		put_error(4, lc, NULL);
-	if (!(*dst = ft_strndup(src, i)))
-		put_error(12, 0, NULL);
-	return (i);
-}
-
 void 					reader(int fd, void **ptrs)
 {
 	int 				lc;
@@ -140,7 +133,7 @@ void 					reader(int fd, void **ptrs)
 	i_total[1] = buf->total;
 	while ((i_total[1]) > 1)
 	{
-		i_total[0] = cut_after_n(store[0], (char **)&store[1], lc) + 1;
+		i_total[0] = cut_after_symbol(store[0], (char **)&store[1], '\n', lc) + 1;
 		store[0] += i_total[0];
 		i_total[1] -= i_total[0];
 		if ((mod_fl[0] = validator(store[1], lc++, mod_fl[0], ptrs)))

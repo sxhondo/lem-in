@@ -109,12 +109,38 @@ t_path 					*get_shortest_path(t_mx *M)
 	}
 	return (get_reverse_path(&s, M->size - 1));
 }
+
+//static void			disjoint_ver_finding(t_list **ways, t_vertix **ver)
+//{
+//	t_list			*lst;
+//	t_path			*i;
+//	t_path			*j;
+//
+//	lst = *ways;
+//	while (lst)
+//	{
+//		i = lst->content;
+//		while (i)
+//		{
+//			j = i;
+//			while (j)
+//			{
+//				ft_printf("%d -", j->node);
+//				j = j->next;
+//			}
+//			ft_printf("[%d]\n", i->node);
+//			i = i->next;
+//		}
+//		lst = lst->next;
+//	}
+//}
+
 static void			disjoint_path_finding(t_list **ways, t_mx *M)
 {
 	t_list			*lst;
 	t_path			*ptr;
 
-	set_to_zero(M->mx, M->size);
+
 	lst = *ways;
 	while (lst)
 	{
@@ -129,6 +155,7 @@ static void			disjoint_path_finding(t_list **ways, t_mx *M)
 		lst = lst->next;
 	}
 	exclude_overlap(M->mx, M->size);
+	free_list(ways);
 }
 
 static int			bellman_ford(t_mx *M, int *costs, int *tab)
@@ -183,7 +210,29 @@ static t_path 		*calculate_min_cost(t_mx *M)
 	return (path);
 }
 
-int 					solver(t_mx *M, t_vertix **ver)
+t_list 				*remove_disjoint_vertix(t_mx *M, t_vertix **ver)
+{
+	t_path			*path;
+	t_list			*lst = NULL;
+
+//	print_mx(M->mx, M->size, ver);
+	while (is_paths(M))
+	{
+		path = get_shortest_path(M);
+		if (line_is_busy(&lst, &path, M->size - 1))
+		{
+			free_path(&path);
+			break ;
+		}
+		exclude_shortest(&path, M);
+		add_path_to_lst(&lst, path);
+	}
+//	ft_printf("{red}final paths: {eoc}\n");
+//	print_paths(&lst, ver);
+	return (lst);
+}
+
+t_list 					*solver(t_mx *M, t_vertix **ver)
 {
 	t_list				*lst = NULL;
 	t_path				*path;
@@ -198,8 +247,7 @@ int 					solver(t_mx *M, t_vertix **ver)
 		exclude_shortest(&path, M);
 		add_path_to_lst(&lst, path);
 	}
-	print_paths(&lst, ver);
+//	print_mx(M->mx, M->size, ver);
 	disjoint_path_finding(&lst, M);
-	free_list(&lst);
-	return (0);
+	return (remove_disjoint_vertix(M, ver));
 }

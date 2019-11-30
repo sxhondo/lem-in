@@ -60,3 +60,31 @@ void					put_to_end(t_vertix **ver)
 		p = p->next;
 	}
 }
+
+int 				line_is_busy(t_list **lst, t_path **path, int last_node)
+{
+	int 			val;
+	t_list			*l;
+	t_path			*p;
+	t_path			*ptr;
+
+	p = *path;
+	while (p)
+	{
+		val = p->node;
+		l = *lst;
+		while (l)
+		{
+			ptr = l->content;
+			while (ptr)
+			{
+				if (ptr->node == val && ptr->node != 0 && ptr->node != last_node)
+					return (1);
+				ptr = ptr->next;
+			}
+			l = l->next;
+		}
+		p = p->next;
+	}
+	return (0);
+}
