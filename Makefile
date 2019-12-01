@@ -17,8 +17,11 @@ SRCS_LIST=\
 			s_path.c\
 			s_vertix.c\
 			s_mx.c\
+			s_ants.c\
 			structurise_list.c\
 			validating_tools.c\
+			put_error.c\
+			mover.c\
 			main.c
 
 OBJ_LIST = $(SRCS_LIST:%.c=%.o)

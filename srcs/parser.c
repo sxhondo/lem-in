@@ -73,6 +73,10 @@ static t_mx				*make_matrix(void *ants, t_vertix **ver, t_edge **edge)
 
 }
 
+#define 		ANTS				ptrs[0]
+#define			VER_LIST		(t_vertix **)&ptrs[1]
+#define			EDGE_LIST		(t_edge **)&ptrs[2]
+
 void 				**parser(char *path)
 {
 	int 			fd;
@@ -84,12 +88,13 @@ void 				**parser(char *path)
 	if ((fd = open(path, O_RDONLY)) == -1)
 		put_error(0, 0, NULL);
 	reader(fd, ptrs);
-	M = make_matrix(ptrs[0], (t_vertix **)&ptrs[1], (t_edge **)&ptrs[2]);
+	// M = make_matrix(ptrs[0], (t_vertix **)&ptrs[1], (t_edge **)&ptrs[2]);
+	M = make_matrix(ANTS, VER_LIST, EDGE_LIST);
 /*
 	vertix_print((t_vertix **)&ptrs[1]);
 	edge_print((t_edge **)&ptrs[2]);
 */
-	edge_free((t_edge **)&ptrs[2]);
+	edge_free(EDGE_LIST);
 	ret = new_ptr_array(3);
 	ret[0] = M;
 	ret[1] = ptrs[1];
