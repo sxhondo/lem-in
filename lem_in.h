@@ -4,6 +4,13 @@
 #include "libft.h"
 #include "ft_printf.h"
 
+typedef struct		s_ants
+{
+	int 			pos;
+	int 			id;
+	struct s_ants 	*next;
+}					t_ants;
+
 typedef struct		s_vertix
 {
 	char 			*name;
@@ -84,6 +91,14 @@ size_t					check_ants_num(const char *line, int lc);
 void					**new_ptr_array(int size);
 
 /*
+**	s_ants.c
+*/
+
+t_ants 					*spawn_ants(int amount);
+void					free_ants(t_ants **s);
+void					print_ants(t_ants **s, t_vertix **ver, int last);
+
+/*
 **	struct_edge.c
 */
 
@@ -131,5 +146,7 @@ int					exclude_overlap(int **mx, int size);
 
 int					*init_tab(int size, int c);
 void				print_tab(int *tab, int size);
+
+
 
 #endif //LEM_IN_LEM_IN_H

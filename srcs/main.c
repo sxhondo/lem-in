@@ -17,7 +17,11 @@ int 				main(int ac, char **av)
 //	ft_printf("{red}final paths: {eoc}\n");
 //	print_paths(&fin_paths, ver_list);
 
+	ft_printf("{cyan}TOTAL: %d\n{eoc}", ants);
+	print_paths(&fin_paths, ver_list);
 	mover(ants, &fin_paths, ver_list);
+
+
 
 	vertix_free(ver_list);
 	free_mx(M);

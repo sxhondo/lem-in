@@ -13,12 +13,12 @@ SRCS_LIST=\
  			reader.c\
 			parser.c\
 			solver.c\
-			struct_edge.c\
-			struct_path.c\
-			struct_vertix.c\
+			s_edge.c\
+			s_path.c\
+			s_vertix.c\
+			s_mx.c\
 			structurise_list.c\
 			validating_tools.c\
-			matrix_tools.c\
 			main.c
 
 OBJ_LIST = $(SRCS_LIST:%.c=%.o)
