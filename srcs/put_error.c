@@ -21,8 +21,9 @@ void		*put_error(int type, int lc, void **free)
 {
 	lc ? ft_printf("%d: {red}error: {eoc}", lc) :
 		ft_printf("{red}error: {eoc}");
-	if (type == 0)
-		ft_printf("Can't open file\n");
+	if (type == 0 || type == -1)
+		type == 0 ?ft_printf("can't open file\n")
+			: ft_printf("file is too big\n");
 	else if (type == 1)
 		ft_printf("bad modifier\n");
 	else if (type == 2)

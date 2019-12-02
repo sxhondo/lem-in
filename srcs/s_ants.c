@@ -34,10 +34,12 @@ void			print_ants(t_ants **s, t_vertix **ver, int last)
 	p = *s;
 	while (p)
 	{
-		if (p->pos != 0)
+		if (p->pos != 0 && p->pos != INT32_MAX)
 		{
 			ft_printf("L%d-%s ", p->id, get_i_ver(ver, p->pos));
 		}
+		if (p->pos == last)
+			p->pos = INT32_MAX;
 		p = p->next;
 	}
 	ft_printf("\n");

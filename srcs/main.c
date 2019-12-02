@@ -13,16 +13,8 @@ int 				main(int ac, char **av)
 	M = mx_ver[0];
 	ver_list = (t_vertix **)&mx_ver[1];
 	fin_paths = solver(M, ver_list);
-
-//	ft_printf("{red}final paths: {eoc}\n");
-//	print_paths(&fin_paths, ver_list);
-
-	ft_printf("{cyan}TOTAL: %d\n{eoc}", ants);
 	print_paths(&fin_paths, ver_list);
 	mover(ants, &fin_paths, ver_list);
-
-
-
 	vertix_free(ver_list);
 	free_mx(M);
 	free(mx_ver);

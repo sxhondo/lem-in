@@ -107,7 +107,14 @@ static t_vec			*vec_read(int fd)
 	if (!(vec = ft_vec_init(1, sizeof(char))))
 		put_error(12, 0, NULL);
 	while (read(fd, buf, sizeof(buf)) > 0)
+	{
+		if (vec->total >= 4194304)
+		{
+			ft_vec_del(&vec);
+			put_error(-1, 0, NULL);
+		}
 		ft_vec_add(&vec, buf);
+	}
 	ft_vec_add(&vec, "\0");
 	if (!(ft_vec_resize(&vec)))
 	{
@@ -141,6 +148,7 @@ void 					reader(int fd, void **ptrs)
 		ft_strdel((char **)&store[1]);
 	}
 	check_no_room_given(mod_fl[1], lc);
+	ft_printf("%s\n\n", buf->data);
 	ft_vec_del(&buf);
 }
 

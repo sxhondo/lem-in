@@ -1,5 +1,9 @@
 #include "lem_in.h"
 
+#define 	ANTS			ptrs[0]
+#define		VER_LIST		(t_vertix **)&ptrs[1]
+#define		EDGE_LIST		(t_edge **)&ptrs[2]
+
 static int		**allocate_mx(int size)
 {
 	int 		i;
@@ -73,10 +77,6 @@ static t_mx				*make_matrix(void *ants, t_vertix **ver, t_edge **edge)
 
 }
 
-#define 		ANTS				ptrs[0]
-#define			VER_LIST		(t_vertix **)&ptrs[1]
-#define			EDGE_LIST		(t_edge **)&ptrs[2]
-
 void 				**parser(char *path)
 {
 	int 			fd;
@@ -85,14 +85,16 @@ void 				**parser(char *path)
 	t_mx			*M;
 
 	ptrs = new_ptr_array(3);
-	if ((fd = open(path, O_RDONLY)) == -1)
-		put_error(0, 0, NULL);
-	reader(fd, ptrs);
-	// M = make_matrix(ptrs[0], (t_vertix **)&ptrs[1], (t_edge **)&ptrs[2]);
+
+	reader(0, ptrs);
+//	if ((fd = open(path, O_RDONLY)) == -1)
+//		put_error(0, 0, NULL);
+//	reader(fd, ptrs);
+
 	M = make_matrix(ANTS, VER_LIST, EDGE_LIST);
 /*
-	vertix_print((t_vertix **)&ptrs[1]);
-	edge_print((t_edge **)&ptrs[2]);
+	vertix_print(VER_LIST);
+	edge_print(EDGE_LIST);
 */
 	edge_free(EDGE_LIST);
 	ret = new_ptr_array(3);
@@ -100,6 +102,6 @@ void 				**parser(char *path)
 	ret[1] = ptrs[1];
 	ret[2] = (void *)ptrs[0];
 	free(ptrs);
-	close(fd);
+//	close(fd);
 	return (ret);
 }

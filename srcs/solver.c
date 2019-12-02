@@ -214,12 +214,17 @@ t_list 				*remove_disjoint_vertix(t_mx *M, t_vertix **ver)
 {
 	t_path			*path;
 	t_list			*lst = NULL;
+	int 			shortest;
 
-//	print_mx(M->mx, M->size, ver);
+	path = get_shortest_path(M);
+	shortest = path_len(&path);
+	exclude_shortest(&path, M);
+	add_path_to_lst(&lst, path);
 	while (is_paths(M))
 	{
 		path = get_shortest_path(M);
-		if (line_is_busy(&lst, &path, M->size - 1))
+		if (line_is_busy(&lst, &path, M->size - 1)
+			|| path_len(&path) > shortest)
 		{
 			free_path(&path);
 			break ;
@@ -227,8 +232,6 @@ t_list 				*remove_disjoint_vertix(t_mx *M, t_vertix **ver)
 		exclude_shortest(&path, M);
 		add_path_to_lst(&lst, path);
 	}
-//	ft_printf("{red}final paths: {eoc}\n");
-//	print_paths(&lst, ver);
 	return (lst);
 }
 

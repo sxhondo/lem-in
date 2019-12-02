@@ -1,5 +1,9 @@
 #include "lem_in.h"
 
+#define	FLOW 		nums[0]
+#define	MAX_WAVE 	nums[1]
+#define LAST		nums[2]
+
 int 				all_finished(t_ants **ants, int finish)
 {
 	t_ants			*a;
@@ -7,7 +11,7 @@ int 				all_finished(t_ants **ants, int finish)
 	a = *ants;
 	while (a)
 	{
-		if (a->pos != finish)
+		if (a->pos != finish && a->pos != INT32_MAX)
 			return (0);
 		a = a->next;
 	}
@@ -110,30 +114,26 @@ void				mover(int amount, t_list **lst, t_vertix **ver)
 {
 	int 			i;
 	int 			tmp;
-	int 			max_wave;
-	int 			flow;
-	int 			last;
+	int 			nums[3];
 	t_ants			*a;
 	t_ants			*tmpr;
 
 	a = spawn_ants(amount);
-	flow = ft_lstlen(lst) < amount ? ft_lstlen(lst) : amount;
-	max_wave = flow;
-	last = get_i_path((t_path **)&(*lst)->content,
-					  path_len((t_path **)&(*lst)->content) - 1);
+	FLOW = ft_lstlen(lst) < amount ? ft_lstlen(lst) : amount;
+	MAX_WAVE = FLOW;
+	LAST = get_last_node((t_path **)&(*lst)->content);
 	i = 1;
 	go_forward(a, lst, ver, i++);
-	print_ants(&a, ver, last);
-	while (!all_finished(&a, last))
+	print_ants(&a, ver, LAST);
+	while (!all_finished(&a, LAST))
 	{
-		tmp = update_waves(&a, lst, ver, i, max_wave, flow);
-		if ((tmpr = get_i_ant(&a, max_wave)))
+		tmp = update_waves(&a, lst, ver, i++, MAX_WAVE, FLOW);
+		if ((tmpr = get_i_ant(&a, MAX_WAVE)))
 		{
 			go_forward(tmpr, lst, ver, tmp);
-			max_wave += flow;
+			MAX_WAVE += FLOW;
 		}
-		i++;
-		print_ants(&a, ver, last);
+		print_ants(&a, ver, LAST);
 	}
 	free_ants(&a);
 }
