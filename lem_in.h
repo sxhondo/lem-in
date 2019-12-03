@@ -147,6 +147,6 @@ int					exclude_overlap(int **mx, int size);
 int					*init_tab(int size, int c);
 void				print_tab(int *tab, int size);
 
-
+int       	visual(t_vertix **ver, t_edge **edge);
 
 #endif //LEM_IN_LEM_IN_H

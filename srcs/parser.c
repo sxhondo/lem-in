@@ -1,6 +1,6 @@
 #include "lem_in.h"
 
-#define 	ANTS			ptrs[0]
+#define 	ANTS				ptrs[0]
 #define		VER_LIST		(t_vertix **)&ptrs[1]
 #define		EDGE_LIST		(t_edge **)&ptrs[2]
 
@@ -77,6 +77,10 @@ static t_mx				*make_matrix(void *ants, t_vertix **ver, t_edge **edge)
 
 }
 
+//	if ((fd = open(path, O_RDONLY)) == -1)
+//		put_error(0, 0, NULL);
+//	reader(fd, ptrs);
+
 void 				**parser(char *path)
 {
 	int 			fd;
@@ -85,22 +89,18 @@ void 				**parser(char *path)
 	t_mx			*M;
 
 	ptrs = new_ptr_array(3);
-
 	reader(0, ptrs);
-//	if ((fd = open(path, O_RDONLY)) == -1)
-//		put_error(0, 0, NULL);
-//	reader(fd, ptrs);
-
 	M = make_matrix(ANTS, VER_LIST, EDGE_LIST);
 /*
 	vertix_print(VER_LIST);
 	edge_print(EDGE_LIST);
 */
-	edge_free(EDGE_LIST);
-	ret = new_ptr_array(3);
-	ret[0] = M;
+	// edge_free(EDGE_LIST);
+	ret = new_ptr_array(4);
+	ret[0] = (void *)ptrs[0];
 	ret[1] = ptrs[1];
-	ret[2] = (void *)ptrs[0];
+	ret[2] = ptrs[2];
+	ret[3] = M;
 	free(ptrs);
 //	close(fd);
 	return (ret);

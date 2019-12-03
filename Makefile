@@ -22,6 +22,7 @@ SRCS_LIST=\
 			validating_tools.c\
 			put_error.c\
 			mover.c\
+			visual.c\
 			main.c
 
 OBJ_LIST = $(SRCS_LIST:%.c=%.o)
@@ -29,7 +30,8 @@ OBJ_LIST = $(SRCS_LIST:%.c=%.o)
 all: $(LIBFT) $(NAME)
 
 $(NAME): $(OBJ_LIST) $(LIBFT)
-	$(CC) $(CFLAGS) $(OBJ_LIST) -L $(LDIR) -lft -o $(NAME)
+	$(CC) $(CFLAGS) $(OBJ_LIST) -L $(LDIR) -lft -o $(NAME) -I minilibx/ -L minilibx -lmlx -lXext -lX11
+
 
 %.o: $(SRCS_DIR)%.c $(INC)
 	$(CC) -c $(CFLAGS) -I./$(LINC) -I ./ $<

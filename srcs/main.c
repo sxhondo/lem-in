@@ -3,21 +3,28 @@
 int 				main(int ac, char **av)
 {
 	t_mx			*M;
-	t_vertix		**ver_list;
-	void			**mx_ver;
+	t_vertix		**ver;
+	t_edge			**edge;
+	// void			**mx_ver;
+	void 				**data;
 	t_list			*fin_paths;
-	int 			ants;
+	size_t 			ants;
 
-	mx_ver = parser(av[1]);
-	ants = (int)mx_ver[2];
-	M = mx_ver[0];
-	ver_list = (t_vertix **)&mx_ver[1];
-	fin_paths = solver(M, ver_list);
-	print_paths(&fin_paths, ver_list);
-	mover(ants, &fin_paths, ver_list);
-	vertix_free(ver_list);
+	data = parser(av[1]);
+	ants = (size_t)data[0];
+	ver = (t_vertix **)&data[1];
+	edge = (t_edge **)&data[2];
+	M = data[3];
+
+	fin_paths = solver(M, ver);
+	print_paths(&fin_paths, ver);
+
+	visual(ver, edge);
+	mover(ants, &fin_paths, ver);
+	vertix_free(ver);
+	edge_free(edge);
 	free_mx(M);
-	free(mx_ver);
 	free_list(&fin_paths);
+	free(data);
 	return (0);
 }
