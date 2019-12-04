@@ -1,6 +1,16 @@
 
 #include "lem_in.h"
 
+t_vertix 			*get_ver(t_vertix **ver, int val)
+{
+	t_vertix 		*v;
+
+	v = *ver;
+	while (v && val--)
+		v = v->next;
+	return (v);
+}
+
 char 					*get_i_ver(t_vertix **ver, int i)
 {
 	t_vertix 		*v;

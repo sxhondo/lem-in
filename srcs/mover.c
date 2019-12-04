@@ -1,3 +1,5 @@
+#include <mlx.h>
+#include <stdlib.h>
 #include "lem_in.h"
 
 #define	FLOW 		nums[0]
@@ -99,41 +101,39 @@ int 				get_last_node(t_path **path)
 	return (p->node);
 }
 
-static void			**init_stuff(t_list **lst, t_vertix **ver, int amount)
-{
-	void			**structs;
-
-	structs = new_ptr_array(3);
-	structs[0] = spawn_ants(amount);
-	structs[1] = *lst;
-	structs[2] = *ver;
-	return (structs);
-}
-
-void				mover(int amount, t_list **lst, t_vertix **ver)
+void				mover(int amount, t_list **lst, t_vertix **ver, t_edge **edge)
 {
 	int 			i;
 	int 			tmp;
 	int 			nums[3];
-	t_ants			*a;
-	t_ants			*tmpr;
+	t_ants		*ants;
+	t_ants		*tmpr;
+	t_vis 		*vis;
 
-	a = spawn_ants(amount);
+	ants = spawn_ants(amount);
 	FLOW = ft_lstlen(lst) < amount ? ft_lstlen(lst) : amount;
 	MAX_WAVE = FLOW;
 	LAST = get_last_node((t_path **)&(*lst)->content);
 	i = 1;
-	go_forward(a, lst, ver, i++);
-	print_ants(&a, ver, LAST);
-	while (!all_finished(&a, LAST))
+
+	vis = init_mlx((t_ants **)ants, ver, edge);
+	draw_start(vis);
+	mlx_key_hook(vis->win, handle_keys, vis);
+
+	go_forward(ants, lst, ver, i++);
+	print_ants(&ants, ver, LAST);
+
+	while (!all_finished(&ants, LAST))
 	{
-		tmp = update_waves(&a, lst, ver, i++, MAX_WAVE, FLOW);
-		if ((tmpr = get_i_ant(&a, MAX_WAVE)))
+
+		tmp = update_waves(&ants, lst, ver, i++, MAX_WAVE, FLOW);
+		if ((tmpr = get_i_ant(&ants, MAX_WAVE)))
 		{
 			go_forward(tmpr, lst, ver, tmp);
 			MAX_WAVE += FLOW;
 		}
-		print_ants(&a, ver, LAST);
+		print_ants(&ants, ver, LAST);
 	}
-	free_ants(&a);
+	free_ants(&ants);
+	mlx_loop(vis->mlx);
 }

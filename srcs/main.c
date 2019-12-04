@@ -2,10 +2,9 @@
 
 int 				main(int ac, char **av)
 {
-	t_mx			*M;
+	t_mx				*M;
 	t_vertix		**ver;
 	t_edge			**edge;
-	// void			**mx_ver;
 	void 				**data;
 	t_list			*fin_paths;
 	size_t 			ants;
@@ -15,12 +14,9 @@ int 				main(int ac, char **av)
 	ver = (t_vertix **)&data[1];
 	edge = (t_edge **)&data[2];
 	M = data[3];
-
 	fin_paths = solver(M, ver);
 	print_paths(&fin_paths, ver);
-
-	visual(ver, edge);
-	mover(ants, &fin_paths, ver);
+	mover(ants, &fin_paths, ver, edge);
 	vertix_free(ver);
 	edge_free(edge);
 	free_mx(M);

@@ -4,6 +4,16 @@
 #include "libft.h"
 #include "ft_printf.h"
 
+typedef struct 		s_vis
+{
+	void 						*mlx;
+	void 						*win;
+	void 						*img;
+	struct s_ants 	**ants;
+	struct s_vertix **ver;
+	struct s_edge 	**edge;
+}									t_vis;
+
 typedef struct		s_ants
 {
 	int 			pos;
@@ -44,7 +54,7 @@ typedef struct		s_mx
 /*
 **	mover.c
 */
-void 					mover(int ants, t_list **paths, t_vertix **ver);
+void 					mover(int ants, t_list **paths, t_vertix **ver, t_edge **edge);
 
 /*
 **	parser.c
@@ -94,7 +104,7 @@ void					**new_ptr_array(int size);
 **	s_ants.c
 */
 
-t_ants 					*spawn_ants(int amount);
+t_ants 				*spawn_ants(int amount);
 void					free_ants(t_ants **s);
 void					print_ants(t_ants **s, t_vertix **ver, int last);
 
@@ -118,6 +128,7 @@ void					vertix_print(t_vertix **ver);
 t_vertix				*vertix_init(unsigned mod, char *name, const int *xy);
 void					vertix_push_back(t_vertix **ver, t_vertix *elem, int lc);
 char 					*get_i_ver(t_vertix **ver, int i);
+t_vertix 			*get_ver(t_vertix **ver, int val);
 /*
 **	struct_path.c
 */
@@ -147,6 +158,15 @@ int					exclude_overlap(int **mx, int size);
 int					*init_tab(int size, int c);
 void				print_tab(int *tab, int size);
 
-int       	visual(t_vertix **ver, t_edge **edge);
+/*
+** visual.c
+*/
+t_vis     	*init_mlx(t_ants **ants, t_vertix **ver, t_edge **edge);
+void        connect_ver(t_vis *vis);
+void        draw_line(t_vis *vis, int *v1, int *v2);
+t_vertix    *find_ver(t_vertix **ver, char *name);
+void      	draw_start(t_vis *vis);
+void     		draw_square(t_vis *vis, int x, int y, int r, unsigned co);
+int     		handle_keys(int code, t_vis *vis);
 
 #endif //LEM_IN_LEM_IN_H
