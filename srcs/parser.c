@@ -4,20 +4,20 @@
 #define		VER_LIST		(t_vertix **)&ptrs[1]
 #define		EDGE_LIST		(t_edge **)&ptrs[2]
 
-static int		**allocate_mx(int size)
+int				**allocate_mx(int x, int y)
 {
 	int 		i;
 	int 		j;
 	int 		**mx;
 
-	if (!(mx = (int **)malloc(size * sizeof(int *))))
+	if (!(mx = (int **)malloc(x * sizeof(int *))))
 	{
 		put_error(12, 0, NULL);
 		return (NULL);
 	}
 	i = -1;
-	while (++i < size)
-		if (!(mx[i] = ft_new_array(size, 0)))
+	while (++i < x)
+		if (!(mx[i] = ft_new_array(y, 0)))
 			put_error(12, 0, NULL);
 	return (mx);
 }
@@ -64,7 +64,7 @@ static t_mx				*make_matrix(void *ants, t_vertix **ver, t_edge **edge)
 	put_to_start(ver);
 	put_to_end(ver);
 	size = lst_len((void *)ver, 0);
-	mx = allocate_mx(size);
+	mx = allocate_mx(size, size);
 	fill_mx(mx, edge, ver);
 	if (!(M = ft_memalloc(sizeof(t_mx))))
 	{
@@ -77,10 +77,6 @@ static t_mx				*make_matrix(void *ants, t_vertix **ver, t_edge **edge)
 
 }
 
-//	if ((fd = open(path, O_RDONLY)) == -1)
-//		put_error(0, 0, NULL);
-//	reader(fd, ptrs);
-
 void 				**parser(char *path)
 {
 	int 			fd;
@@ -89,7 +85,10 @@ void 				**parser(char *path)
 	t_mx			*M;
 
 	ptrs = new_ptr_array(3);
-	reader(0, ptrs);
+
+	fd = open(path, O_RDONLY);
+	reader(fd, ptrs);
+//	reader(0, ptrs);
 	M = make_matrix(ANTS, VER_LIST, EDGE_LIST);
 /*
 	vertix_print(VER_LIST);

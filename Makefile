@@ -29,9 +29,13 @@ OBJ_LIST = $(SRCS_LIST:%.c=%.o)
 
 all: $(LIBFT) $(NAME)
 
-$(NAME): $(OBJ_LIST) $(LIBFT)
-	$(CC) $(CFLAGS) $(OBJ_LIST) -L $(LDIR) -lft -o $(NAME) -I minilibx/ -L minilibx -lmlx -lXext -lX11
+# Linux
+# $(NAME): $(OBJ_LIST) $(LIBFT)
+# 	$(CC) $(CFLAGS) $(OBJ_LIST) -L $(LDIR) -lft -o $(NAME) -I minilibx/ -L minilibx -lmlx -lXext -lX11
 
+# MacOS
+$(NAME): $(OBJ_LIST) $(LIBFT)
+	$(CC) $(CFLAGS) $(OBJ_LIST) -L $(LDIR) -lft -o $(NAME) -I minilibx/ -L minilibx_macos -lmlx -framework OpenGL -framework AppKit
 
 %.o: $(SRCS_DIR)%.c $(INC)
 	$(CC) -c $(CFLAGS) -I./$(LINC) -I ./ $<

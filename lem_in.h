@@ -3,15 +3,30 @@
 
 #include "libft.h"
 #include "ft_printf.h"
+#include <mlx.h>
+
+typedef struct 		s_steps
+{
+	int 			*ids;
+	struct s_steps	*next;
+}					t_steps;
 
 typedef struct 		s_vis
 {
 	void 						*mlx;
 	void 						*win;
-	void 						*img;
-	struct s_ants 	**ants;
-	struct s_vertix **ver;
-	struct s_edge 	**edge;
+	void						*data;
+	int 						bpp;
+	int 						sl;
+	int 						en;
+	void 						*back;
+	void 						*skin;
+	int 						skin_w;
+	int 						skin_h;
+	struct s_steps				**steps;
+	struct s_vertix 			**ver;
+	struct s_edge 				**edge;
+	int 						amount;
 }									t_vis;
 
 typedef struct		s_ants
@@ -54,13 +69,13 @@ typedef struct		s_mx
 /*
 **	mover.c
 */
-void 					mover(int ants, t_list **paths, t_vertix **ver, t_edge **edge);
+t_steps					*mover(int ants, t_list **paths, t_vertix **ver, t_edge **edge);
 
 /*
 **	parser.c
 */
 void 					**parser(char *path);
-
+int						**allocate_mx(int x, int y);
 /*
 **	solver.c
 */
@@ -106,7 +121,7 @@ void					**new_ptr_array(int size);
 
 t_ants 				*spawn_ants(int amount);
 void					free_ants(t_ants **s);
-void					print_ants(t_ants **s, t_vertix **ver, int last);
+void					print_ants(t_ants **s, t_vertix **ver, t_steps **steps, int last, int amounts);
 
 /*
 **	struct_edge.c
@@ -159,14 +174,24 @@ int					*init_tab(int size, int c);
 void				print_tab(int *tab, int size);
 
 /*
-** visual.c
+** s_vis.c
 */
-t_vis     	*init_mlx(t_ants **ants, t_vertix **ver, t_edge **edge);
-void        connect_ver(t_vis *vis);
-void        draw_line(t_vis *vis, int *v1, int *v2);
 t_vertix    *find_ver(t_vertix **ver, char *name);
-void      	draw_start(t_vis *vis);
 void     		draw_square(t_vis *vis, int x, int y, int r, unsigned co);
 int     		handle_keys(int code, t_vis *vis);
+
+
+/*
+** s_eps.c
+*/
+
+void		fill_steps(t_steps **dst, t_ants **ants, int amount);
+void		print_steps(t_steps **steps, int amount);
+void		steps_free(t_steps **steps);
+
+void 		display_steps(t_steps **steps, t_vertix **ver, t_edge **edge, int amount);
+
+
+t_vis   	*init_mlx(t_vertix **ver, t_edge **edge, t_steps **steps, int amount);
 
 #endif //LEM_IN_LEM_IN_H

@@ -13,7 +13,7 @@ int 				all_finished(t_ants **ants, int finish)
 	a = *ants;
 	while (a)
 	{
-		if (a->pos != finish && a->pos != INT32_MAX)
+		if (a->pos != finish && a->pos != -1)
 			return (0);
 		a = a->next;
 	}
@@ -101,39 +101,32 @@ int 				get_last_node(t_path **path)
 	return (p->node);
 }
 
-void				mover(int amount, t_list **lst, t_vertix **ver, t_edge **edge)
+t_steps				*mover(int amount, t_list **lst, t_vertix **ver, t_edge **edge)
 {
 	int 			i;
 	int 			tmp;
 	int 			nums[3];
-	t_ants		*ants;
-	t_ants		*tmpr;
-	t_vis 		*vis;
+	t_ants			*ants;
+	t_ants			*tmpr;
+	t_steps			*steps = NULL;
 
 	ants = spawn_ants(amount);
 	FLOW = ft_lstlen(lst) < amount ? ft_lstlen(lst) : amount;
 	MAX_WAVE = FLOW;
 	LAST = get_last_node((t_path **)&(*lst)->content);
 	i = 1;
-
-	vis = init_mlx((t_ants **)ants, ver, edge);
-	draw_start(vis);
-	mlx_key_hook(vis->win, handle_keys, vis);
-
 	go_forward(ants, lst, ver, i++);
-	print_ants(&ants, ver, LAST);
-
+	print_ants(&ants, ver, &steps, LAST, amount);
 	while (!all_finished(&ants, LAST))
 	{
-
 		tmp = update_waves(&ants, lst, ver, i++, MAX_WAVE, FLOW);
 		if ((tmpr = get_i_ant(&ants, MAX_WAVE)))
 		{
 			go_forward(tmpr, lst, ver, tmp);
 			MAX_WAVE += FLOW;
 		}
-		print_ants(&ants, ver, LAST);
+		print_ants(&ants, ver, &steps, LAST, amount);
 	}
 	free_ants(&ants);
-	mlx_loop(vis->mlx);
+	return (steps);
 }

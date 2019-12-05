@@ -27,21 +27,24 @@ static t_ants	*init_ant(int id, int pos)
 	return (tmp);
 }
 
-void			print_ants(t_ants **s, t_vertix **ver, int last)
+void			print_ants(t_ants **ants, t_vertix **ver, t_steps **steps, int last, int amount)
 {
 	t_ants		*p;
+	int 		i;
 
-	p = *s;
+	i = 0;
+	p = *ants;
 	while (p)
 	{
-		if (p->pos != 0 && p->pos != INT32_MAX)
+		if (p->pos != 0 && p->pos != -1)
 		{
 			ft_printf("L%d-%s ", p->id, get_i_ver(ver, p->pos));
 		}
 		if (p->pos == last)
-			p->pos = INT32_MAX;
+			p->pos = -1;
 		p = p->next;
 	}
+	fill_steps(steps, ants, amount);
 	ft_printf("\n");
 }
 
