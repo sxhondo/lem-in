@@ -176,8 +176,6 @@ void				print_tab(int *tab, int size);
 /*
 ** s_vis.c
 */
-t_vertix    *find_ver(t_vertix **ver, char *name);
-void     		draw_square(t_vis *vis, int x, int y, int r, unsigned co);
 int     		handle_keys(int code, t_vis *vis);
 
 
