@@ -67,4 +67,3 @@ void				fill_steps(t_steps **dst, t_ants **ants, int amount)
 	}
 	push_back_steps(dst, n);
 }
-

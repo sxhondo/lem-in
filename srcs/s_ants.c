@@ -27,8 +27,9 @@ static t_ants	*init_ant(int id, int pos)
 	return (tmp);
 }
 
-void			print_ants(t_ants **ants, t_vertix **ver, t_steps **steps, int last, int amount)
+void			print_ants(t_ants **ants, t_vertix **ver, t_list **steps, int last, int amount)
 {
+	t_list 		*node;
 	t_ants		*p;
 	int 		i;
 
@@ -44,7 +45,9 @@ void			print_ants(t_ants **ants, t_vertix **ver, t_steps **steps, int last, int 
 			p->pos = -1;
 		p = p->next;
 	}
-	fill_steps(steps, ants, amount);
+	node = ft_lstnew(*ants, sizeof(t_ants *));
+	ft_lstpushback(steps, node);
+	// fill_steps(steps, ants, amount);
 	ft_printf("\n");
 }
 

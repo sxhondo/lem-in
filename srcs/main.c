@@ -8,7 +8,7 @@ int 				main(int ac, char **av)
 	void 			**data;
 	t_list			*fin_paths;
 	size_t 			ants;
-	t_steps			*eps;
+	t_list 			**steps;
 
 	data = parser(av[1]);
 	ants = (size_t)data[0];
@@ -18,11 +18,18 @@ int 				main(int ac, char **av)
 
 	fin_paths = solver(M, ver);
 	print_paths(&fin_paths, ver);
-	eps = mover(ants, &fin_paths, ver, edge);
+	steps = mover(ants, &fin_paths, ver, edge);
 
-	init_mlx(ver, edge, &eps, ants);
+	for (t_list *p = *steps; p; p = p->next)
+	{
+		for (t_ants *ptr = p->content; ptr; ptr = ptr->next)
+			ft_printf("id: [%d] pos: [%d] ", ptr->id, ptr->pos);
+		ft_printf("\n");
+	}
+	exit (0);
+	// init_mlx(ver, edge, &eps, ants);
 
-	steps_free(&eps);
+	// steps_free(&eps);
 	vertix_free(ver);
 	edge_free(edge);
 	free_mx(M);

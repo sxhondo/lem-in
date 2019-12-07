@@ -101,14 +101,14 @@ int 				get_last_node(t_path **path)
 	return (p->node);
 }
 
-t_steps				*mover(int amount, t_list **lst, t_vertix **ver, t_edge **edge)
+t_list				**mover(int amount, t_list **lst, t_vertix **ver, t_edge **edge)
 {
 	int 			i;
 	int 			tmp;
 	int 			nums[3];
 	t_ants			*ants;
 	t_ants			*tmpr;
-	t_steps			*steps = NULL;
+	t_list 			*steps = NULL;
 
 	ants = spawn_ants(amount);
 	FLOW = ft_lstlen(lst) < amount ? ft_lstlen(lst) : amount;
@@ -127,6 +127,6 @@ t_steps				*mover(int amount, t_list **lst, t_vertix **ver, t_edge **edge)
 		}
 		print_ants(&ants, ver, &steps, LAST, amount);
 	}
-	free_ants(&ants);
+	// free_ants(&ants);
 	return (steps);
 }

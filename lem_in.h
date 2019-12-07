@@ -5,17 +5,11 @@
 #include "ft_printf.h"
 #include <mlx.h>
 
-typedef struct 		s_steps
-{
-	int 			*ids;
-	struct s_steps	*next;
-}					t_steps;
-
 typedef struct 		s_vis
 {
 	void 						*mlx;
 	void 						*win;
-	void						*data;
+	char						*data;
 	int 						bpp;
 	int 						sl;
 	int 						en;
@@ -28,6 +22,12 @@ typedef struct 		s_vis
 	struct s_edge 				**edge;
 	int 						amount;
 }									t_vis;
+
+typedef struct 		s_steps
+{
+	int 			*ids;
+	struct s_steps	*next;
+}					t_steps;
 
 typedef struct		s_ants
 {
@@ -69,7 +69,7 @@ typedef struct		s_mx
 /*
 **	mover.c
 */
-t_steps					*mover(int ants, t_list **paths, t_vertix **ver, t_edge **edge);
+t_list					**mover(int ants, t_list **paths, t_vertix **ver, t_edge **edge);
 
 /*
 **	parser.c
@@ -121,7 +121,7 @@ void					**new_ptr_array(int size);
 
 t_ants 				*spawn_ants(int amount);
 void					free_ants(t_ants **s);
-void					print_ants(t_ants **s, t_vertix **ver, t_steps **steps, int last, int amounts);
+void					print_ants(t_ants **s, t_vertix **ver, t_list **steps, int last, int amounts);
 
 /*
 **	struct_edge.c
@@ -191,5 +191,6 @@ void 		display_steps(t_steps **steps, t_vertix **ver, t_edge **edge, int amount)
 
 
 t_vis   	*init_mlx(t_vertix **ver, t_edge **edge, t_steps **steps, int amount);
+
 
 #endif //LEM_IN_LEM_IN_H
