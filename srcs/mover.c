@@ -101,13 +101,55 @@ int 				get_last_node(t_path **path)
 	return (p->node);
 }
 
-t_list				**mover(int amount, t_list **lst, t_vertix **ver, t_edge **edge)
+void 				collect_turns(t_list **turns, t_ants **ants, int amount)
+{
+	t_ants			*a;
+	t_list			*tmp;
+	int 			*tab;
+
+	tab = ft_new_array(amount ,0);
+	a = *ants;
+	while (a)
+	{
+		tab[a->id - 1] = a->pos;
+		a = a->next;
+	}
+	tmp = ft_lstnew(tab, sizeof(int) * amount);
+	ft_lstpushback(turns, tmp);
+}
+
+void			print_ants(t_ants **ants, t_vertix **ver, t_list **turns,
+	int last, int amount)
+{
+	t_list 		*node;
+	t_ants		*p;
+	int 		i;
+
+	i = 0;
+	p = *ants;
+	while (p)
+	{
+		if (p->pos != 0 && p->pos != -1)
+		{
+			ft_printf("L%d-%s ", p->id, get_i_ver(ver, p->pos));
+		}
+		if (p->pos == last)
+			p->pos = -1;
+		p = p->next;
+	}
+	ft_printf("\n");
+	collect_turns(turns, ants, amount);
+}
+
+
+t_list 				*mover(int amount, t_list **lst, t_vertix **ver, t_edge **edge)
 {
 	int 			i;
 	int 			tmp;
 	int 			nums[3];
 	t_ants			*ants;
 	t_ants			*tmpr;
+	// t_steps 		*steps = NULL;
 	t_list 			*steps = NULL;
 
 	ants = spawn_ants(amount);
@@ -127,6 +169,6 @@ t_list				**mover(int amount, t_list **lst, t_vertix **ver, t_edge **edge)
 		}
 		print_ants(&ants, ver, &steps, LAST, amount);
 	}
-	// free_ants(&ants);
+	free_ants(&ants);
 	return (steps);
 }

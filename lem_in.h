@@ -17,17 +17,10 @@ typedef struct 		s_vis
 	void 						*skin;
 	int 						skin_w;
 	int 						skin_h;
-	struct s_steps				**steps;
 	struct s_vertix 			**ver;
 	struct s_edge 				**edge;
 	int 						amount;
 }									t_vis;
-
-typedef struct 		s_steps
-{
-	int 			*ids;
-	struct s_steps	*next;
-}					t_steps;
 
 typedef struct		s_ants
 {
@@ -65,11 +58,13 @@ typedef struct		s_mx
 	int 			size;
 }					t_mx;
 
+t_vis   			*init_mlx(t_vertix **ver, t_edge **edge, t_list **steps,
+						int amount);
 
 /*
 **	mover.c
 */
-t_list					**mover(int ants, t_list **paths, t_vertix **ver, t_edge **edge);
+t_list 					*mover(int ants, t_list **paths, t_vertix **ver, t_edge **edge);
 
 /*
 **	parser.c
@@ -121,7 +116,7 @@ void					**new_ptr_array(int size);
 
 t_ants 				*spawn_ants(int amount);
 void					free_ants(t_ants **s);
-void					print_ants(t_ants **s, t_vertix **ver, t_list **steps, int last, int amounts);
+void					print_ants(t_ants **s, t_vertix **ver, t_list **turns, int last, int amounts);
 
 /*
 **	struct_edge.c
@@ -160,37 +155,16 @@ void				free_list(t_list **tab);
 int 				is_paths(t_mx *M);
 
 /*
-**	Matrix tools
+**	s_mx.c
 */
 
 t_mx				*make_mx(int size);
 void				print_mx(int **mx, int size, t_vertix **ver);
 void				free_mx(t_mx *M);
 void				set_to_zero(int **mx, int size);
-
 int					exclude_overlap(int **mx, int size);
 
 int					*init_tab(int size, int c);
 void				print_tab(int *tab, int size);
-
-/*
-** s_vis.c
-*/
-int     		handle_keys(int code, t_vis *vis);
-
-
-/*
-** s_eps.c
-*/
-
-void		fill_steps(t_steps **dst, t_ants **ants, int amount);
-void		print_steps(t_steps **steps, int amount);
-void		steps_free(t_steps **steps);
-
-void 		display_steps(t_steps **steps, t_vertix **ver, t_edge **edge, int amount);
-
-
-t_vis   	*init_mlx(t_vertix **ver, t_edge **edge, t_steps **steps, int amount);
-
 
 #endif //LEM_IN_LEM_IN_H

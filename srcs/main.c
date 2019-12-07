@@ -1,5 +1,7 @@
 #include "lem_in.h"
 
+// t_mx 				*convert_steps_to_mx(t_steps **steps)
+
 int 				main(int ac, char **av)
 {
 	t_mx			*M;
@@ -8,7 +10,8 @@ int 				main(int ac, char **av)
 	void 			**data;
 	t_list			*fin_paths;
 	size_t 			ants;
-	t_list 			**steps;
+	t_list 			*steps;
+	// t_steps 		*steps;
 
 	data = parser(av[1]);
 	ants = (size_t)data[0];
@@ -20,16 +23,19 @@ int 				main(int ac, char **av)
 	print_paths(&fin_paths, ver);
 	steps = mover(ants, &fin_paths, ver, edge);
 
-	for (t_list *p = *steps; p; p = p->next)
+
+	for (t_list *p = steps; p; p = p->next)
 	{
-		for (t_ants *ptr = p->content; ptr; ptr = ptr->next)
-			ft_printf("id: [%d] pos: [%d] ", ptr->id, ptr->pos);
+		for (int i = 0; i < ants; i++)
+		{
+			ft_printf("%d ", ((int *)p->content)[i]);
+		}
 		ft_printf("\n");
 	}
-	exit (0);
-	// init_mlx(ver, edge, &eps, ants);
 
-	// steps_free(&eps);
+
+//	init_mlx(ver, edge, &steps, ants);
+	ft_lstfree(&steps);
 	vertix_free(ver);
 	edge_free(edge);
 	free_mx(M);
