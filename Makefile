@@ -31,9 +31,14 @@ OBJ = $(SRCS_LIST:%.c=%.o)
 
 all: $(LIBFT) $(NAME)
 
+# $(NAME): $(OBJ) $(LIBFT)
+# 	$(CC) $(CFLAGS) $(OBJ) -L $(LDIR) -lft -o $(NAME)\
+# 		-L $(LDIR) -lft -I $(MLXDIR) -L $(MLXDIR) -lmlx -framework OpenGL -framework AppKit -o $(NAME)
+
 $(NAME): $(OBJ) $(LIBFT)
 	$(CC) $(CFLAGS) $(OBJ) -L $(LDIR) -lft -o $(NAME)\
-		-L $(LDIR) -lft -I $(MLXDIR) -L $(MLXDIR) -lmlx -framework OpenGL -framework AppKit -o $(NAME)
+		-L $(LDIR) -lft -I $(MLXDIR) -L $(MLXDIR) -lmlx -lXext -lX11 -o $(NAME)
+
 
 %.o: $(SRCS_DIR)%.c
 	$(CC) -c $(CFLAGS) -I./$(LINC) -I ./ $<

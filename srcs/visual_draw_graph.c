@@ -101,7 +101,10 @@ static void			draw_square(t_vis *vis)
 
 void				draw_graph(t_vis *vis)
 {
+	t_list 			*tab;
 	t_vertix		*ver;
+	t_vertix 		*v1;
+	t_vertix 		*v2;
 	t_edge			*edge;
 
 	draw_square(vis);
@@ -109,14 +112,12 @@ void				draw_graph(t_vis *vis)
 	edge = *vis->edge;
 	while (edge)
 	{
-		draw_connections(vis,
-				find_ver_by_name(&ver, edge->e1)->x,
-				find_ver_by_name(&ver, edge->e1)->y,
-				find_ver_by_name(&ver, edge->e2)->x,
-				find_ver_by_name(&ver, edge->e2)->y);
+		v1 = find_ver_by_name(&ver, edge->e1);
+		v2 = find_ver_by_name(&ver, edge->e2);
+		draw_connections(vis, v1->x, v1->y, v2->x, v2->y);
+		edge->x = (v1->x + v2->x) / 2;
+		edge->y = (v1->y + v2->y) / 2;
 		edge = edge->next;
 	}
 	mlx_put_image_to_window(vis->mlx, vis->win, vis->back, 0, 0);
 }
-
-

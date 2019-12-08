@@ -25,6 +25,8 @@ typedef struct		s_edge
 {
 	char 			*e1;
 	char 			*e2;
+	int 			x;
+	int 			y;
 	struct s_edge 	*next;
 }					t_edge;
 
@@ -143,7 +145,7 @@ void					edge_print(t_edge **edge);
 t_edge					*edge_init(char *e1, char *e2);
 void					edge_push_back(t_edge **edge, t_edge *elem,
 											t_vertix **ver, int lc);
-
+t_edge 					*find_edge_by_name(t_edge **edge, char *name);
 
 /*
 **	struct_vertix.c
