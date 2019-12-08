@@ -1,6 +1,4 @@
-#include <mlx.h>
-#include <stdlib.h>
-#include "lem_in.h"
+#include "incs/lem_in.h"
 
 #define	FLOW 		nums[0]
 #define	MAX_WAVE 	nums[1]
@@ -30,14 +28,6 @@ static int 			get_i_path(t_path **path, int value)
 		p = p->next;
 	}
 	return (p->node);
-}
-
-static t_ants 		*set_ant(t_ants *ants, int value)
-{
-
-	while (value--)
-		ants = ants->next;
-	return (ants);
 }
 
 t_ants				*get_i_ant(t_ants **ants, int value)
@@ -73,7 +63,8 @@ void				go_forward(t_ants *ants, t_list **lst, t_vertix **ver, int i)
 	}
 }
 
-int				update_waves(t_ants **ants, t_list **lst, t_vertix **ver, int i, int max_wave, int flow)
+int				update_waves(t_ants **ants, t_list **lst, t_vertix **ver, int i,
+													int max_wave, int flow)
 {
 	int 		wave;
 	int 		tmp;
@@ -119,26 +110,23 @@ void 				collect_turns(t_list **turns, t_ants **ants, int amount)
 }
 
 void			print_ants(t_ants **ants, t_vertix **ver, t_list **turns,
-	int last, int amount)
+														int last, int amount)
 {
-	t_list 		*node;
 	t_ants		*p;
-	int 		i;
 
-	i = 0;
 	p = *ants;
 	while (p)
 	{
 		if (p->pos != 0 && p->pos != -1)
 		{
-			ft_printf("L%d-%s ", p->id, get_i_ver(ver, p->pos));
+			ft_printf("L%d-%s ", p->id, find_ver_by_index(ver, p->pos)->name);
 		}
 		if (p->pos == last)
 			p->pos = -1;
 		p = p->next;
 	}
-	ft_printf("\n");
 	collect_turns(turns, ants, amount);
+	ft_printf("\n");
 }
 
 
@@ -149,7 +137,6 @@ t_list 				*mover(int amount, t_list **lst, t_vertix **ver, t_edge **edge)
 	int 			nums[3];
 	t_ants			*ants;
 	t_ants			*tmpr;
-	// t_steps 		*steps = NULL;
 	t_list 			*steps = NULL;
 
 	ants = spawn_ants(amount);

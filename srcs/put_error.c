@@ -1,4 +1,18 @@
-#include "lem_in.h"
+#include "incs/lem_in.h"
+
+void		free_path(t_path **s)
+{
+	t_path	*p;
+	t_path	*next;
+
+	p = *s;
+	while (p)
+	{
+		next = p->next;
+		free(p);
+		p = next;
+	}
+}
 
 void 		*put_error1(int type, void **free)
 {

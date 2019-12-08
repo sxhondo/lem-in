@@ -1,30 +1,60 @@
 
-#include "lem_in.h"
+#include "incs/lem_in.h"
 
-t_vertix 			*get_ver(t_vertix **ver, int val)
+int 					ver_len(t_vertix **ver)
+{
+	int 				i;
+	t_vertix			*v;
+
+	i = 0;
+	v = *ver;
+	while (v)
+	{
+		i++;
+		v = v->next;
+	}
+	return (i);
+}
+
+t_vertix 			*find_ver_by_index(t_vertix **ver, int i)
 {
 	t_vertix 		*v;
 
 	v = *ver;
-	while (v && val--)
+	if (i < 0)
+		return (NULL);
+	while (v && i--)
 		v = v->next;
 	return (v);
 }
 
-char 					*get_i_ver(t_vertix **ver, int i)
-{
-	t_vertix 		*v;
-	int 				j;
+//char 					*find_ver_by_index(t_vertix **ver, int i)
+//{
+//	t_vertix 		*v;
+//	int 				j;
+//
+//	j = 0;
+//	v = *ver;
+//	while (v)
+//	{
+//		if (j == i)
+//			return (v->name);
+//		j++;
+//		v = v->next;
+//	}
+//}
 
-	j = 0;
+t_vertix     			 *find_ver_by_name(t_vertix **ver, char *name)
+{
+	t_vertix   			 *v;
 	v = *ver;
 	while (v)
 	{
-		if (j == i)
-			return (v->name);
-		j++;
+		if (ft_strequ(v->name, name))
+			return (v);
 		v = v->next;
 	}
+	return (0);
 }
 
 void				vertix_free(t_vertix **ver)
@@ -58,7 +88,6 @@ void				vertix_print(t_vertix **ver)
 		p = p->next;
 	}
 	ft_printf("--------------------\n");
-
 }
 
 t_vertix			*vertix_init(unsigned mod, char *name, const int *xy)
@@ -96,26 +125,4 @@ void					vertix_push_back(t_vertix **ver, t_vertix *elem, int lc)
 		tmp->next = elem;
 		elem->next = NULL;
 	}
-}
-
-int						lst_len(void **lst, unsigned mod)
-{
-	int 				i;
-	t_vertix			*v;
-	t_edge				*e;
-
-	i = 0;
-	if (mod == 0)
-	{
-		v = *lst;
-		while (v && ++i)
-			v = v->next;
-	}
-	else if (mod == 1)
-	{
-		e = *lst;
-		while (e && ++i)
-			e = e->next;
-	}
-	return (i);
 }

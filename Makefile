@@ -3,48 +3,45 @@ NAME = lem-in
 CC = gcc
 #CFLAGS = -Wall -Wextra -Werror
 
-SRCS_DIR = srcs/
-OBJ_DIR = obj/
 LDIR = libft/
 LINC = $(LDIR)incs
 LIBFT = $(LDIR)libft.a
+MLXDIR = minilibx/
+INC_DIR = incs/
 INC = lem_in.h
+SRCS_DIR = srcs/
 SRCS_LIST=\
- 			reader.c\
-			parser.c\
-			solver.c\
-			s_edge.c\
-			s_path.c\
-			s_vertix.c\
-			s_mx.c\
-			s_ants.c\
-			s_vis.c\
-			s_steps.c\
-			structurise_list.c\
-			validating_tools.c\
-			put_error.c\
-			mover.c\
-			main.c
+		main.c\
+		mover.c\
+		parser.c\
+		solver.c\
+		put_error.c\
+		reader.c\
+		s_ants.c\
+		s_edge.c\
+		s_mx.c\
+		s_path.c\
+		s_vertix.c\
+		structurise_list.c\
+		validating_tools.c\
+		visual.c\
+		visual_draw_graph.c
 
-OBJ_LIST = $(SRCS_LIST:%.c=%.o)
+OBJ = $(SRCS_LIST:%.c=%.o)
 
 all: $(LIBFT) $(NAME)
 
-# Linux
-$(NAME): $(OBJ_LIST) $(LIBFT)
-	$(CC) $(CFLAGS) $(OBJ_LIST) -L $(LDIR) -lft -o $(NAME) -I minilibx/ -L minilibx -lmlx -lXext -lX11
+$(NAME): $(OBJ) $(LIBFT)
+	$(CC) $(CFLAGS) $(OBJ) -L $(LDIR) -lft -o $(NAME)\
+		-L $(LDIR) -lft -I $(MLXDIR) -L $(MLXDIR) -lmlx -framework OpenGL -framework AppKit -o $(NAME)
 
-# MacOS
-# $(NAME): $(OBJ_LIST) $(LIBFT)
-# 	$(CC) $(CFLAGS) $(OBJ_LIST) -L $(LDIR) -lft -o $(NAME) -I minilibx/ -L minilibx_macos -lmlx -framework OpenGL -framework AppKit
-
-%.o: $(SRCS_DIR)%.c $(INC)
+%.o: $(SRCS_DIR)%.c
 	$(CC) -c $(CFLAGS) -I./$(LINC) -I ./ $<
 
 $(LIBFT): $(LDIR)
 	make -C $(LDIR)
 clean:
-	@rm -f $(OBJ_LIST)
+	@rm -f $(OBJ)
 	@make clean -C $(LDIR)
 
 fclean: clean

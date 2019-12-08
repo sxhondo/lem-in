@@ -1,8 +1,11 @@
-#include "lem_in.h"
+#include "incs/lem_in.h"
 
-#define 	ANTS				ptrs[0]
-#define		VER_LIST		(t_vertix **)&ptrs[1]
-#define		EDGE_LIST		(t_edge **)&ptrs[2]
+#define 	ANTS			ptrs[0]
+#define 	ANTS_C			(void *)ptrs[0]
+#define		VER_LIST		ptrs[1]
+#define		VER_LIST_C		(t_vertix **)&VER_LIST
+#define		EDGE_LIST		ptrs[2]
+#define 	EDGE_LIST_C		(t_edge **)&EDGE_LIST
 
 int				**allocate_mx(int x, int y)
 {
@@ -58,49 +61,35 @@ static t_mx				*make_matrix(void *ants, t_vertix **ver, t_edge **edge)
 	int 				**mx;
 	int 				size;
 
-//	ft_printf("number of ants: {cyan}%5d\n{eoc}", ants);
-//	vertix_print(ver);
-//	edge_print(edge);
 	put_to_start(ver);
 	put_to_end(ver);
-	size = lst_len((void *)ver, 0);
+	size = ver_len(ver);
 	mx = allocate_mx(size, size);
 	fill_mx(mx, edge, ver);
 	if (!(M = ft_memalloc(sizeof(t_mx))))
-	{
-		put_error(12, 0, NULL);
-		return (NULL);
-	}
+		return (put_error(12, 0, NULL));
 	M->mx = mx;
 	M->size = size;
 	return (M);
 
 }
 
-void 				**parser(char *path)
+void 				**parser()
 {
-	int 			fd;
 	void			**ptrs;
 	void			**ret;
 	t_mx			*M;
 
 	ptrs = new_ptr_array(3);
-
-	fd = open(path, O_RDONLY);
+	int fd = open("maps/8.1xmpl", O_RDONLY);
 	reader(fd, ptrs);
 //	reader(0, ptrs);
-	M = make_matrix(ANTS, VER_LIST, EDGE_LIST);
-/*
-	vertix_print(VER_LIST);
-	edge_print(EDGE_LIST);
-*/
-	// edge_free(EDGE_LIST);
+	M = make_matrix(ANTS, VER_LIST_C, EDGE_LIST_C);
 	ret = new_ptr_array(4);
-	ret[0] = (void *)ptrs[0];
-	ret[1] = ptrs[1];
-	ret[2] = ptrs[2];
+	ret[0] = ANTS_C;
+	ret[1] = VER_LIST;
+	ret[2] = EDGE_LIST;
 	ret[3] = M;
 	free(ptrs);
-//	close(fd);
 	return (ret);
 }

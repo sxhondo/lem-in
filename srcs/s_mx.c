@@ -1,4 +1,4 @@
-#include "lem_in.h"
+#include "incs/lem_in.h"
 
 void			print_mx(int **mx, int size, t_vertix **ver)
 {
@@ -83,14 +83,4 @@ void		free_mx(t_mx *M)
 		free(M->mx[i++]);
 	free (M->mx);
 	free (M);
-}
-
-int			*init_tab(int size, int c)
-{
-	int 	*tab;
-
-	if (!(tab = ft_new_array(size, c)))
-		return (0);
-	tab[0] = 0;
-	return (tab);
 }

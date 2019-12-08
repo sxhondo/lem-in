@@ -1,4 +1,4 @@
-#include "lem_in.h"
+#include "incs/lem_in.h"
 
 void				edge_free(t_edge **edge)
 {

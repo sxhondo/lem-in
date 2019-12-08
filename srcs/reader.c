@@ -1,4 +1,4 @@
-#include "lem_in.h"
+#include "incs/lem_in.h"
 
 static int				cut_after_symbol(const char *src, char **dst, char sym, int lc)
 {
@@ -151,25 +151,3 @@ void 					reader(int fd, void **ptrs)
 	ft_printf("%s\n\n", buf->data);
 	ft_vec_del(&buf);
 }
-
-/*
-void 					reader(int fd, void **ptrs)
-{
-	static unsigned 	mod = 0;
-	unsigned			m_flag;
-	int 				lc;
-	char 				*line;
-
-	m_flag = 0;
-	lc = 1;
-	while ((get_next_line(fd, &line)) > 0)
-	{
-		if (!*line)
-			put_error(4, lc);
-		if ((mod = validator(line, lc++, mod, ptrs)))
-			m_flag |= check_several_modifiers(mod, m_flag, lc);
-		ft_strdel(&line);
-	}
-	check_no_room_given(m_flag, lc);
-}
-*/

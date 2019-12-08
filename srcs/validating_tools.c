@@ -1,4 +1,14 @@
- #include "lem_in.h"
+ #include "incs/lem_in.h"
+
+ int			*init_tab(int size, int c)
+ {
+	 int 	*tab;
+
+	 if (!(tab = ft_new_array(size, c)))
+		 return (0);
+	 tab[0] = 0;
+	 return (tab);
+ }
 
 void					**new_ptr_array(int size)
 {

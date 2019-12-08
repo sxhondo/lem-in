@@ -5,23 +5,6 @@
 #include "ft_printf.h"
 #include <mlx.h>
 
-typedef struct 		s_vis
-{
-	void 						*mlx;
-	void 						*win;
-	char						*data;
-	int 						bpp;
-	int 						sl;
-	int 						en;
-	void 						*back;
-	void 						*skin;
-	int 						skin_w;
-	int 						skin_h;
-	struct s_vertix 			**ver;
-	struct s_edge 				**edge;
-	int 						amount;
-}									t_vis;
-
 typedef struct		s_ants
 {
 	int 			pos;
@@ -58,19 +41,57 @@ typedef struct		s_mx
 	int 			size;
 }					t_mx;
 
-t_vis   			*init_mlx(t_vertix **ver, t_edge **edge, t_list **steps,
-						int amount);
+
+typedef struct 		s_vis
+{
+	void 						*mlx;
+	void 						*win;
+	char						*data;
+	int 						bpp;
+	int 						sl;
+	int 						en;
+	void 						*back;
+	int 						width;
+	int 						height;
+	void 						*skin;
+	int 						skin_w;
+	int 						skin_h;
+	struct s_list				**turns;
+	struct s_list				*t_begin;
+	struct s_vertix 			**ver;
+	struct s_edge 				**edge;
+	int 						amount;
+}								t_vis;
+
+/*
+**	visual_draw_graph.c
+*/
+void					draw_graph(t_vis *vis);
+
+/*
+**	visual.c
+*/
+int 					key_handle(int code, t_vis *vis);
 
 /*
 **	mover.c
 */
 t_list 					*mover(int ants, t_list **paths, t_vertix **ver, t_edge **edge);
 
+
+/*
+**	reader.c
+*/
+void 					reader(int fd, void **ptrs);
+
+
 /*
 **	parser.c
 */
-void 					**parser(char *path);
+void 					**parser();
 int						**allocate_mx(int x, int y);
+
+
 /*
 **	solver.c
 */
@@ -85,10 +106,6 @@ t_path					*exclude_shortest(t_path **path, t_mx *M);
 void					put_to_start(t_vertix **ver);
 void					put_to_end(t_vertix **ver);
 int 					line_is_busy(t_list **lst, t_path **path, int last_node);
-/*
-**	reader.c
-*/
-void 					reader(int fd, void **ptrs);
 
 /*
 **	put_error.c
@@ -104,7 +121,6 @@ int 					ft_strequal(const char *s1, const char *s2);
 int 					skip_spaces(const char *str);
 int						lem_atoi(const char *str, int *num, int pos, int lc);
 unsigned				check_few_mod(unsigned mod, unsigned m_flag, int lc);
-int						lst_len(void **lst, unsigned mod);
 void					check_no_room_given(unsigned m_flag, int lc);
 unsigned				check_sharp(const char *line, int lc);
 size_t					check_ants_num(const char *line, int lc);
@@ -114,7 +130,7 @@ void					**new_ptr_array(int size);
 **	s_ants.c
 */
 
-t_ants 				*spawn_ants(int amount);
+t_ants 					*spawn_ants(int amount);
 void					free_ants(t_ants **s);
 void					print_ants(t_ants **s, t_vertix **ver, t_list **turns, int last, int amounts);
 
@@ -132,13 +148,16 @@ void					edge_push_back(t_edge **edge, t_edge *elem,
 /*
 **	struct_vertix.c
 */
-
+int 					ver_len(t_vertix **ver);
+t_vertix 				*find_ver_by_index(t_vertix **ver, int i);
+t_vertix     			*find_ver_by_name(t_vertix **ver, char *name);
 void					vertix_free(t_vertix **ver);
 void					vertix_print(t_vertix **ver);
 t_vertix				*vertix_init(unsigned mod, char *name, const int *xy);
 void					vertix_push_back(t_vertix **ver, t_vertix *elem, int lc);
-char 					*get_i_ver(t_vertix **ver, int i);
-t_vertix 			*get_ver(t_vertix **ver, int val);
+
+
+
 /*
 **	struct_path.c
 */

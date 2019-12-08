@@ -1,4 +1,4 @@
-#include "lem_in.h"
+#include "incs/lem_in.h"
 
 int 		is_paths(t_mx *M)
 {
@@ -84,11 +84,11 @@ void			print_path(t_path **path, t_vertix **ver)
 	while (ptr)
 	{
 		if (i == 1)
-			ft_printf("{red}%s->{eoc}", get_i_ver(ver, ptr->node));
+			ft_printf("{red}%s->{eoc}", find_ver_by_index(ver, ptr->node)->name);
 		else if (i != path_len(path))
-			ft_printf("{green}%s->{eoc}", get_i_ver(ver, ptr->node));
+			ft_printf("{green}%s->{eoc}", find_ver_by_index(ver, ptr->node)->name);
 		else if (i == path_len(path))
-			ft_printf("{blue}%s{eoc}", get_i_ver(ver, ptr->node));
+			ft_printf("{blue}%s{eoc}", find_ver_by_index(ver, ptr->node)->name);
 		i++;
 		ptr = ptr->next;
 	}
@@ -111,20 +111,6 @@ void		print_paths(t_list **lst, t_vertix **ver)
 		p = p->next;
 	}
 	ft_printf("\n");
-}
-
-void		free_path(t_path **s)
-{
-	t_path	*p;
-	t_path	*next;
-
-	p = *s;
-	while (p)
-	{
-		next = p->next;
-		free(p);
-		p = next;
-	}
 }
 
 void		free_list(t_list **tab)

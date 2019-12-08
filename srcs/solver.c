@@ -1,4 +1,4 @@
-#include "lem_in.h"
+#include "incs/lem_in.h"
 
 t_path					*exclude_shortest(t_path **path, t_mx *M)
 {
