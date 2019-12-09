@@ -81,7 +81,7 @@ void 				**parser()
 	t_mx			*M;
 
 	ptrs = new_ptr_array(3);
-	int fd = open("maps/8.1xmpl", O_RDONLY);
+	int fd = open("maps/pdf", O_RDONLY);
 	reader(fd, ptrs);
 //	reader(0, ptrs);
 	M = make_matrix(ANTS, VER_LIST_C, EDGE_LIST_C);

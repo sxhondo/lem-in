@@ -25,8 +25,6 @@ typedef struct		s_edge
 {
 	char 			*e1;
 	char 			*e2;
-	int 			x;
-	int 			y;
 	struct s_edge 	*next;
 }					t_edge;
 
@@ -59,6 +57,7 @@ typedef struct 		s_vis
 	int 						skin_w;
 	int 						skin_h;
 	struct s_list				**turns;
+	int 						*t_prev;
 	struct s_list				*t_begin;
 	struct s_vertix 			**ver;
 	struct s_edge 				**edge;

@@ -21,9 +21,9 @@ static t_vis				*init_mlx(t_vertix **ver, t_edge **edge,
 	vis->turns = turns;
 	vis->t_begin = *turns;
 	vis->amount = amount;
+	vis->t_prev = ft_new_array(vis->amount, 0);
 
 	draw_graph(vis);
-
 	mlx_key_hook(vis->win, key_handle, vis);
 	mlx_loop(vis->mlx);
 	return (vis);

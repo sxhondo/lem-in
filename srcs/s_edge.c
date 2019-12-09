@@ -78,7 +78,6 @@ t_edge 				*find_edge_by_name(t_edge **edge, char *name)
 
 t_edge				*edge_init(char *e1, char *e2)
 {
-	int 			*middle;
 	t_edge			*edge;
 
 	if (!(edge = ft_memalloc(sizeof(t_edge))))
@@ -88,8 +87,5 @@ t_edge				*edge_init(char *e1, char *e2)
 	}
 	edge->e1 = e1;
 	edge->e2 = e2;
-	middle = ft_new_array(2, 0);
-	edge->x = 0;
-	edge->y = 0;
 	return (edge);
 }
