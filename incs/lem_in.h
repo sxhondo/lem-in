@@ -5,6 +5,10 @@
 #include "ft_printf.h"
 #include <mlx.h>
 
+# define START		1u
+# define END		2u
+# define COMMENT	3u
+
 typedef struct		s_ants
 {
 	int 			pos;
@@ -41,6 +45,16 @@ typedef struct		s_mx
 	int 			size;
 }					t_mx;
 
+typedef struct		s_info
+{
+	unsigned 		mod;
+	unsigned 		flag;
+	int 			lc;
+	int 			i;
+	int 			fd;
+	int 			total;
+}					t_info;
+
 
 typedef struct 		s_vis
 {
@@ -64,6 +78,9 @@ typedef struct 		s_vis
 	int 						amount;
 }								t_vis;
 
+
+
+
 /*
 **	visual_draw_graph.c
 */
@@ -83,7 +100,7 @@ t_list 					*mover(int ants, t_list **paths, t_vertix **ver, t_edge **edge);
 /*
 **	reader.c
 */
-void 					reader(int fd, void **ptrs);
+void 					reader(void **ptrs, t_info *inf);
 
 
 /*
@@ -121,9 +138,9 @@ void					*put_error1(int type, void **free);
 int 					ft_strequal(const char *s1, const char *s2);
 int 					skip_spaces(const char *str);
 int						lem_atoi(const char *str, int *num, int pos, int lc);
-unsigned				check_few_mod(unsigned mod, unsigned m_flag, int lc);
-void					check_no_room_given(unsigned m_flag, int lc);
-unsigned				check_sharp(const char *line, int lc);
+//void					check_few_mod(t_info *inf);
+//void					check_no_room_given(unsigned m_flag, int lc);
+//unsigned				check_sharp(const char *line, int lc, unsigned mod);
 size_t					check_ants_num(const char *line, int lc);
 void					**new_ptr_array(int size);
 

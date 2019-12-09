@@ -98,7 +98,7 @@ void 				collect_turns(t_list **turns, t_ants **ants, int amount)
 	t_list			*tmp;
 	int 			*tab;
 
-	tab = ft_new_array(amount ,0);
+	tab = ft_new_array(amount,0);
 	a = *ants;
 	while (a)
 	{
@@ -125,7 +125,7 @@ void			print_ants(t_ants **ants, t_vertix **ver, t_list **turns,
 			p->pos = -1;
 		p = p->next;
 	}
-	collect_turns(turns, ants, amount);
+//	collect_turns(turns, ants, amount);
 	ft_printf("\n");
 }
 

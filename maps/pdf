@@ -1,9 +1,9 @@
 2
-##start
+##end
 A 400 50
 B 600 150
+##start
 D 200 150
-##end
 E 400 500
 A-B
 A-D

@@ -4,10 +4,10 @@
 static void			re_draw(t_vis *vis)
 {
 	mlx_clear_window(vis->mlx, vis->win);
-	draw_graph(vis);
+	mlx_put_image_to_window(vis->mlx, vis->win, vis->back, 0, 0);
 }
 
-/*
+
 static int 			start_animation(t_vis *vis)
 {
 	t_vertix		*v;
@@ -27,7 +27,7 @@ static int 			start_animation(t_vis *vis)
 		i++;
 	}
 }
-*/
+
 
 static int 			middle_animation(t_vis *vis)
 {
@@ -57,7 +57,6 @@ static int 			middle_animation(t_vis *vis)
 	}
 	vis->t_prev = curr;
 	*vis->turns = ((t_list *)*vis->turns)->next;
-
 }
 
 int 				animation1(t_vis *vis)
@@ -65,6 +64,7 @@ int 				animation1(t_vis *vis)
 	re_draw(vis);
 	middle_animation(vis);
 	usleep(900000);
+
 }
 
 int 				key_handle(int code, t_vis *vis)

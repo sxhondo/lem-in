@@ -1,11 +1,11 @@
 #include "incs/lem_in.h"
 
-#define 	ANTS			ptrs[0]
-#define 	ANTS_C			(void *)ptrs[0]
-#define		VER_LIST		ptrs[1]
-#define		VER_LIST_C		(t_vertix **)&VER_LIST
-#define		EDGE_LIST		ptrs[2]
-#define 	EDGE_LIST_C		(t_edge **)&EDGE_LIST
+//#define 	ANTS			ptrs[0]
+//#define 	ANTS_C			(void *)ptrs[0]
+//#define		VER_LIST		ptrs[1]
+//#define		VER_LIST_C		(t_vertix **)&VER_LIST
+//#define		EDGE_LIST		ptrs[2]
+//#define 	EDGE_LIST_C		(t_edge **)&EDGE_LIST
 
 int				**allocate_mx(int x, int y)
 {
@@ -74,22 +74,37 @@ static t_mx				*make_matrix(void *ants, t_vertix **ver, t_edge **edge)
 
 }
 
+t_info				*init_info()
+{
+	t_info			*i;
+
+	if (!(i = ft_memalloc(sizeof(t_info))))
+		return (put_error(12, 0, NULL));
+	i->fd = open("maps/pdf", O_RDONLY);
+	i->flag = 0;
+	i->mod = 0;
+	i->lc = 1;
+	i->total = 0;
+	return (i);
+}
+
 void 				**parser()
 {
-	void			**ptrs;
+	t_info			*inf;
+	void			**structs;
 	void			**ret;
 	t_mx			*M;
 
-	ptrs = new_ptr_array(3);
-	int fd = open("maps/pdf", O_RDONLY);
-	reader(fd, ptrs);
-//	reader(0, ptrs);
-	M = make_matrix(ANTS, VER_LIST_C, EDGE_LIST_C);
-	ret = new_ptr_array(4);
-	ret[0] = ANTS_C;
-	ret[1] = VER_LIST;
-	ret[2] = EDGE_LIST;
-	ret[3] = M;
-	free(ptrs);
-	return (ret);
+	inf = init_info();
+	structs = new_ptr_array(3);
+	reader(structs, inf);
+
+//	M = make_matrix(ANTS, VER_LIST_C, EDGE_LIST_C);
+//	ret = new_ptr_array(4);
+//	ret[0] = ANTS_C;
+//	ret[1] = VER_LIST;
+//	ret[2] = EDGE_LIST;
+//	ret[3] = M;
+//	free(ptrs);
+//	return (ret);
 }

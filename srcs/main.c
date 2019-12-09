@@ -40,18 +40,19 @@ int 				main(int ac, char **av)
 	size_t 			amount;
 
 	data = parser();
-	amount = (size_t)data[0];
-	ver = (t_vertix **)&data[1];
-	edge = (t_edge **)&data[2];
-	M = data[3];
-	fin_paths = solver(M, ver);
-	steps = mover(amount, &fin_paths, ver, edge);
-	free_mx(M);
-	if (av[1] && ft_strequ(av[1], "-v"))
-		init_mlx(ver, edge, &steps, amount);
-	free_list(&fin_paths);
-	vertix_free(ver);
-	edge_free(edge);
-	free(data);
-	return (0);
+
+//	amount = (size_t)data[0];
+//	ver = (t_vertix **)&data[1];
+//	edge = (t_edge **)&data[2];
+//	M = data[3];
+//	fin_paths = solver(M, ver);
+//	steps = mover(amount, &fin_paths, ver, edge);
+//	free_mx(M);
+//	if (av[1] && ft_strequ(av[1], "-v"))
+//		init_mlx(ver, edge, &steps, amount);
+//	free_list(&fin_paths);
+//	vertix_free(ver);
+//	edge_free(edge);
+//	free(data);
+//	return (0);
 }
