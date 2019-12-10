@@ -1,8 +1,4 @@
-#include "incs/lem_in.h"
-
-#define	FLOW 		nums[0]
-#define	MAX_WAVE 	nums[1]
-#define LAST		nums[2]
+#include "lem_in.h"
 
 int 				all_finished(t_ants **ants, int finish)
 {
@@ -42,7 +38,7 @@ t_ants				*get_i_ant(t_ants **ants, int value)
 	return (a);
 }
 
-void				go_forward(t_ants *ants, t_list **lst, t_vertix **ver, int i)
+static void			go_forward(t_ants *ants, t_list **lst, int i)
 {
 	t_list			*l;
 	t_path			*p;
@@ -63,7 +59,7 @@ void				go_forward(t_ants *ants, t_list **lst, t_vertix **ver, int i)
 	}
 }
 
-int				update_waves(t_ants **ants, t_list **lst, t_vertix **ver, int i,
+int				update_waves(t_ants **ants, t_list **lst, t_vertex **ver, int i,
 													int max_wave, int flow)
 {
 	int 		wave;
@@ -75,87 +71,59 @@ int				update_waves(t_ants **ants, t_list **lst, t_vertix **ver, int i,
 	while (wave < max_wave)
 	{
 		tmpr = get_i_ant(ants, wave);
-		go_forward(tmpr, lst, ver, tmp);
+		go_forward(tmpr, lst, tmp);
 		wave += flow;
 		tmp--;
 	}
 	return (tmp);
 }
 
-int 				get_last_node(t_path **path)
+static void			print_ants(t_ants **ants, t_vertex **ver, int last)
 {
-	t_path			*p;
-
-	p = *path;
-	while (p->next)
-		p = p->next;
-	return (p->node);
-}
-
-void 				collect_turns(t_list **turns, t_ants **ants, int amount)
-{
-	t_ants			*a;
-	t_list			*tmp;
-	int 			*tab;
-
-	tab = ft_new_array(amount,0);
-	a = *ants;
-	while (a)
-	{
-		tab[a->id - 1] = a->pos;
-		a = a->next;
-	}
-	tmp = ft_lstnew(tab, sizeof(int) * amount);
-	ft_lstpushback(turns, tmp);
-}
-
-void			print_ants(t_ants **ants, t_vertix **ver, t_list **turns,
-														int last, int amount)
-{
-	t_ants		*p;
+	t_ants			*p;
 
 	p = *ants;
 	while (p)
 	{
 		if (p->pos != 0 && p->pos != -1)
 		{
-			ft_printf("L%d-%s ", p->id, find_ver_by_index(ver, p->pos)->name);
+			ft_printf("L%d-%s ", p->id,
+					find_ver_by_index(ver, p->pos)->name);
 		}
 		if (p->pos == last)
 			p->pos = -1;
 		p = p->next;
 	}
-//	collect_turns(turns, ants, amount);
 	ft_printf("\n");
 }
 
-
-t_list 				*mover(int amount, t_list **lst, t_vertix **ver, t_edge **edge)
+t_ants 				*mover(int amount, t_vertex **ver, t_list **paths)
 {
-	int 			i;
-	int 			tmp;
-	int 			nums[3];
 	t_ants			*ants;
+	int 			i;
+	int 			flow;
+	int 			max_wave;
+	int 			last;
+	int 			tmp;
 	t_ants			*tmpr;
-	t_list 			*steps = NULL;
 
 	ants = spawn_ants(amount);
-	FLOW = ft_lstlen(lst) < amount ? ft_lstlen(lst) : amount;
-	MAX_WAVE = FLOW;
-	LAST = get_last_node((t_path **)&(*lst)->content);
+	flow = MIN(ft_lstlen(paths), amount);
+	max_wave = flow;
+	last = get_last_node(paths);
 	i = 1;
-	go_forward(ants, lst, ver, i++);
-	print_ants(&ants, ver, &steps, LAST, amount);
-	while (!all_finished(&ants, LAST))
+	go_forward(ants, paths, i++);
+	print_ants(&ants, ver, last);
+	while (!all_finished(&ants, last))
 	{
-		tmp = update_waves(&ants, lst, ver, i++, MAX_WAVE, FLOW);
-		if ((tmpr = get_i_ant(&ants, MAX_WAVE)))
+		tmp = update_waves(&ants, paths, ver, i++, max_wave, flow);
+		if ((tmpr = get_i_ant(&ants, max_wave)))
 		{
-			go_forward(tmpr, lst, ver, tmp);
-			MAX_WAVE += FLOW;
+			go_forward(tmpr, paths, tmp);
+			max_wave += flow;
 		}
-		print_ants(&ants, ver, &steps, LAST, amount);
+		print_ants(&ants, ver, amount);
 	}
 	free_ants(&ants);
-	return (steps);
+	return (ants);
 }

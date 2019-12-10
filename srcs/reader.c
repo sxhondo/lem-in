@@ -1,16 +1,71 @@
-#include "incs/lem_in.h"
+#include "lem_in.h"
 
-static int				cut_after_symbol(const char *src, char **dst, char sym, int lc)
+t_info					*init_info()
 {
-	int 				i;
+	t_info				*i;
+
+	if (!(i = ft_memalloc(sizeof(t_info))))
+	{
+		put_error("cannot allocate memory", 0);
+		return (NULL);
+	}
+	i->mod = 0;
+	i->flag = 0;
+	i->lc = 1;
+	i->fd = open("maps/pdf", O_RDONLY);
+	return (i);
+}
+
+/* check_ants_num */
+
+int					mini_atoi(const char *str)
+{
+	long			res;
+
+	res = 0;
+	while (*str && ft_isdigit(*str))
+	{
+		res = res * 10 + (*str++ - '0');
+		if (res > INT32_MAX)
+			return (-1);
+	}
+	return ((int)res);
+}
+
+static int					check_ants_num(const char *line, int lc)
+{
+	int						i;
+	int 					ants;
 
 	i = 0;
-	while (src[i] && src[i] != sym)
+	while (line[i])
+	{
+		if (!ft_isdigit(line[i]) && line[i] != ' ')
+			put_error("ants number not well formatted", lc);
 		i++;
-	if (!i)
-		put_error(4, lc, NULL);
-	if (!(*dst = ft_strndup(src, i)))
-		put_error(12, 0, NULL);
+	}
+	ants = mini_atoi(line);
+	if (ants < 0)
+		put_error("ants number not well formatted", lc);
+	if (ants == 0)
+		put_error("ants number cannot be 0", lc);
+	return (ants);
+}
+
+/* *** */
+
+/* read and cut line */
+
+static int 		skip_spaces(const char *str)
+{
+	int 		i;
+
+	i = 0;
+	while (*str && (*str == ' ' || *str == '\t'))
+	{
+		str++;
+		i++;
+	}
 	return (i);
 }
 
@@ -20,15 +75,15 @@ static t_vec			*vec_read(int fd)
 	char 				buf[1];
 
 	if (fd < 0 || read(fd, NULL, 0) < 0)
-		put_error(0, 0, NULL);
+		put_error("cannot open file", 0);
 	if (!(vec = ft_vec_init(1, sizeof(char))))
-		put_error(12, 0, NULL);
+		put_error("cannot allocate memory", 0);
 	while (read(fd, buf, sizeof(buf)) > 0)
 	{
 		if (vec->total >= 4194304)
 		{
 			ft_vec_del(&vec);
-			put_error(-1, 0, NULL);
+			put_error("file is too big", 0);
 		}
 		ft_vec_add(&vec, buf);
 	}
@@ -36,9 +91,37 @@ static t_vec			*vec_read(int fd)
 	if (!(ft_vec_resize(&vec)))
 	{
 		ft_vec_del(&vec);
-		put_error(12, 0, NULL);
+		put_error("cannot allocate memory", 0);
 	}
 	return (vec);
+}
+
+/* *** */
+
+int					lem_atoi(const char *str, int *num, int pos, int lc)
+{
+	int				sign;
+	long			res;
+	int				i;
+
+	i = 0;
+	res = 0;
+	sign = 1;
+	if ((*str == '-' || *str == '+') && ++i)
+		sign = *str++ == '-' ? -1 : 1;
+	if (!ft_isdigit(*str))
+		put_error("bad modifier", lc);
+	while (*str && ft_isdigit(*str) && ++i)
+	{
+		if (!*str || *str < '0' || *str > '9')
+			put_error("bad modifier", lc);
+		res = res * 10 + (*str++ - '0');
+		if ((sign == 1 && res > INT32_MAX)
+			|| (sign == -1 && res - 2 >= INT32_MAX))
+			put_error("bad modifier", lc);
+	}
+	num[pos] = (int)res * sign;
+	return (i);
 }
 
 static int				parse_room_name(const char *line, char **name, int lc)
@@ -49,146 +132,129 @@ static int				parse_room_name(const char *line, char **name, int lc)
 	start = line;
 	line += skip_spaces(line);
 	if (*line == 'L')
-		put_error(2, lc, NULL);
-	i = cut_after_symbol(line, name, ' ', lc);
+		put_error("room name cannot stars with 'L'", lc);
+	i = cut_after_symbol(line, name, ' ');
 	line += i;
 	line += skip_spaces(line);
 	return ((int)(line - start));
 }
 
-static t_edge			*proceed_links(unsigned mod, char *name, int lc)
+static void					check_no_room_given(unsigned flag, int lc)
 {
-	int 				i;
-	char 				*a;
-	char 				*b;
-	t_edge				*tmp;
-
-	if (mod)
-		put_error(5, lc, NULL);
-	i = cut_after_symbol(name, &a, '-', lc);
-	name += i;
-	if (!*name || !(*name + 1))
-		put_error(3, lc, NULL);
-	name += 1;
-	if (!(b = ft_strdup(name)))
-		put_error(12, 0, NULL);
-	tmp = edge_init(a, b);
-	return (tmp);
+	if (!flag)
+		put_error("start and end rooms are not given", lc);
+	if (!(flag & 1u) && (flag & 2u))
+		put_error("start room is not given", lc);
+	if (flag & 1u && !(flag & 2u))
+		put_error("end room is not given", lc);
 }
 
-static unsigned			proceed_rooms(const char *line, void **ptrs, t_info *inf)
-{
-	char 				*name;
-	int 				*xy;
-	int 				i;
-
-	i = 0;
-	xy = ft_new_array(2, -1);
-	line += parse_room_name(line, &name, inf->lc);
-	if (*line)
-	{
-		while (*line)
-		{
-			line += skip_spaces(line);
-			if (*line && i >= 2)
-				put_error(3, inf->lc, NULL);
-			line += lem_atoi(line, xy, i++, inf->lc);
-		}
-		if (xy[0] < 0 || xy[1] < 0)
-			put_error(3, inf->lc, NULL);
-		vertix_push_back((t_vertix **)&ptrs[1], vertix_init(inf->mod, name, xy), inf->lc);
-	}
-	else
-		edge_push_back((t_edge **)&ptrs[2], proceed_links(inf->mod, name, inf->lc),
-				(t_vertix **)&ptrs[1], inf->lc);
-	ft_strdel(&name);
-	free(xy);
-	return 0;
-}
-
-static unsigned			get_command(const char *line, int lc)
+static unsigned			get_command(const char *line, t_info *inf)
 {
 	if (*line++ == '#')
 	{
 		if (*line == '#')
 		{
+			if (inf->mod)
+				put_error("cannot modify modifier", inf->lc - 1);
 			line++;
 			if (ft_strequ(line, "start"))
 				return (START);
 			else if (ft_strequ(line, "end"))
 				return (END);
 			else
-				put_error(1, lc, NULL);
+				put_error("unknown command", inf->lc);
 		}
 		else
 		{
 			ft_printf("{yellow}C: %s{eoc}\n", line);
-			return (COMMENT);
+			return (inf->mod);
 		}
 	}
 	return (0);
 }
 
-static void					check_no_room_given(unsigned flag, int lc)
+static void				proceed_rooms(t_structs *structs, t_info *inf,
+										 const char *line)
 {
-	if (!flag)
-		put_error(8, lc, NULL);
-	if (!(flag & 1u) && (flag & 2u))
-		put_error(9, lc, NULL);
-	if (flag & 1u && !(flag & 2u))
-		put_error(10, lc, NULL);
+	int 				i;
+	int 				*xy;
+
+	i = 0;
+	inf->name = NULL;
+	xy = ft_new_array(2, -1);
+	line += parse_room_name(line, &inf->name, inf->lc);
+	if (*line)
+	{
+		while (*line)
+		{
+			line += skip_spaces(line);
+			if (*line && i >= 2)
+				put_error("!!!", 0);
+			line += lem_atoi(line, xy, i++, inf->lc);
+		}
+		if (xy[0] < 0 || xy[1] < 0)
+			put_error("room not well formatted", inf->lc);
+		vertex_add(structs, inf, xy[0], xy[1]);
+	}
+	else
+		edge_add(structs, inf);
+	free(xy);
 }
 
 unsigned 				check_few_rooms(unsigned flag, unsigned mod, int lc)
 {
 	if (flag & mod)
 	{
-		flag == 1 ? put_error(6, lc, NULL) : put_error(7, lc, NULL);
+		flag == 1 ? put_error("several start rooms", lc)
+			: put_error("several end rooms", lc);
 	}
 	return (mod);
 }
 
-static void				validator(const char *line, void **structures, t_info *inf)
+static void				validator(t_structs *structs, t_info *inf, const char *line)
 {
 	line += skip_spaces(line);
 	if (inf->lc == 1)
 	{
-		structures[0] = (void *)check_ants_num(line, inf->lc);
+		structs->ants_amount = check_ants_num(line, inf->lc);
 		return ;
 	}
 	else if (*line == '#')
 	{
-		inf->mod = get_command(line, inf->lc);
+		inf->mod = get_command(line, inf);
 		return ;
 	}
 	else
 	{
 		inf->flag |= check_few_rooms(inf->flag, inf->mod, inf->lc);
-		proceed_rooms(line, structures, inf);
+		proceed_rooms(structs, inf, line);
 		inf->mod = 0;
 		return ;
 	}
 }
 
-void 					reader(void **ptrs, t_info *inf)
+void 					reader(t_structs *structs)
 {
-	int 				i;
-	char 				*file;
-	char 				*name;
+	t_info				*inf;
 	t_vec				*vec;
+	char 				*file;
+	char 				*line;
+	int 				i;
 
-	name = NULL;
+	inf = init_info();
 	vec = vec_read(inf->fd);
 	file = vec->data;
 	inf->total = vec->total;
 	while (inf->total > 1)
 	{
-		i = cut_after_symbol(file, &name, '\n', inf->lc) + 1;
+		i = cut_after_symbol(file, &line, '\n') + 1;
+		validator(structs, inf, line);
 		file += i;
 		inf->total -= i;
-		validator(name, ptrs, inf);
-		ft_strdel(&name);
 		inf->lc++;
+		ft_strdel(&line);
+		ft_strdel(&inf->name);
 	}
 	check_no_room_given(inf->flag, inf->lc);
 	ft_printf("%s\n\n", vec->data);

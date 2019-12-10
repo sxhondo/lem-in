@@ -1,6 +1,21 @@
-#include "incs/lem_in.h"
+#include "lem_in.h"
 
-static void		ant_push_back(t_ants **dst, t_ants *ant)
+void			free_ants(t_ants **s)
+{
+	t_ants			*a;
+	t_ants			*next;
+
+	a = *s;
+	while (a)
+	{
+		next = a->next;
+		free(a);
+		a = next;
+	}
+	a = NULL;
+}
+
+static void		push_back(t_ants **dst, t_ants *ant)
 {
 	t_ants		*a;
 
@@ -21,38 +36,27 @@ static t_ants	*init_ant(int id, int pos)
 	t_ants		*tmp;
 
 	if (!(tmp = ft_memalloc(sizeof(t_ants))))
-		return (put_error(12, 0, NULL));
+	{
+		put_error("cannot allocate memory", 0);
+		return (NULL);
+	}
 	tmp->pos = pos;
 	tmp->id = id;
 	return (tmp);
 }
 
-
-
-void			free_ants(t_ants **s)
-{
-	t_ants			*a;
-	t_ants			*next;
-
-	a = *s;
-	while (a)
-	{
-		next = a->next;
-		free(a);
-		a = next;
-	}
-	a = NULL;
-}
-
 t_ants 			*spawn_ants(int amount)
 {
 	int 	i;
+	t_ants	*node;
 	t_ants	*ants = NULL;
+
 
 	i = 1;
 	while (amount--)
 	{
-		ant_push_back(&ants, init_ant(i, 0));
+		node = init_ant(i, 0);
+		push_back(&ants, node);
 		i++;
 	}
 	return (ants);

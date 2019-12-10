@@ -1,16 +1,57 @@
-#include "incs/lem_in.h"
+#include "lem_in.h"
 
-int 		is_paths(t_mx *M)
+int 				line_is_busy(t_list **lst, t_path **path, int last_node)
+{
+	int 			val;
+	t_list			*l;
+	t_path			*p;
+	t_path			*ptr;
+
+	p = *path;
+	while (p)
+	{
+		val = p->node;
+		l = *lst;
+		while (l)
+		{
+			ptr = l->content;
+			while (ptr)
+			{
+				if (ptr->node == val && ptr->node != 0 && ptr->node != last_node)
+					return (1);
+				ptr = ptr->next;
+			}
+			l = l->next;
+		}
+		p = p->next;
+	}
+	return (0);
+}
+
+int 		is_paths(int **mx, int m_size)
 {
 	t_path	*f;
-	int 	i;
 
-	if ((f = get_shortest_path(M)))
+	if ((f = get_shortest_path(mx, m_size)))
 	{
-		free_path(&f);
+		path_free(&f);
 		return (1);
 	}
 	return (0);
+}
+
+void		path_free(t_path **s)
+{
+	t_path	*p;
+	t_path	*next;
+
+	p = *s;
+	while (p)
+	{
+		next = p->next;
+		free(p);
+		p = next;
+	}
 }
 
 void		add_path_to_lst(t_list **lst, t_path *path)
@@ -38,18 +79,21 @@ int 		path_len(t_path **dst)
 	return (i);
 }
 
-t_path 		*create_node(int v, int par)
+t_path 			*path_create_node(int v, int par)
 {
-	t_path	*p;
+	t_path		*p;
 
 	if (!(p = ft_memalloc(sizeof(t_path))))
+	{
+		put_error("cannot allocate memory", 0);
 		return (NULL);
+	}
 	p->node = v;
 	p->parent = par;
 	return (p);
 }
 
-void		push_back(t_path **path, t_path *node)
+void			path_push_back(t_path **path, t_path *node)
 {
 	t_path		*tmp;
 
@@ -65,7 +109,7 @@ void		push_back(t_path **path, t_path *node)
 	}
 }
 
-void		push_front(t_path **dst, t_path *node)
+void			path_push_front(t_path **dst, t_path *node)
 {
 	if (node != NULL)
 	{
@@ -74,32 +118,65 @@ void		push_front(t_path **dst, t_path *node)
 	}
 }
 
-void			print_path(t_path **path, t_vertix **ver)
+void			path_print(t_path **path, t_vertex **ver)
 {
-	t_path	*ptr;
 	int 		i;
+	t_path		*ptr;
 
 	i = 1;
 	ptr = *path;
 	while (ptr)
 	{
 		if (i == 1)
-			ft_printf("{red}%s->{eoc}", find_ver_by_index(ver, ptr->node)->name);
+			ft_printf("{red}%s->{eoc}",
+					find_ver_by_index(ver, ptr->node)->name);
 		else if (i != path_len(path))
-			ft_printf("{green}%s->{eoc}", find_ver_by_index(ver, ptr->node)->name);
+			ft_printf("{green}%s->{eoc}",
+					find_ver_by_index(ver, ptr->node)->name);
 		else if (i == path_len(path))
-			ft_printf("{blue}%s{eoc}", find_ver_by_index(ver, ptr->node)->name);
+			ft_printf("{blue}%s{eoc}",
+					find_ver_by_index(ver, ptr->node)->name);
 		i++;
 		ptr = ptr->next;
 	}
 	ft_printf("\n");
 }
 
-void		print_paths(t_list **lst, t_vertix **ver)
+void			list_free(t_list **tab)
 {
-	t_list	*p;
-	t_path	*ptr;
-	int 	i;
+	t_list		*lst;
+	t_list		*next;
+	t_path		*ptr;
+
+	lst = *tab;
+	while (lst)
+	{
+		next = lst->next;
+		ptr = lst->content;
+		path_free(&ptr);
+		free(lst);
+		lst = next;
+	}
+	*tab = NULL;
+}
+
+int 			get_last_node(t_list **paths)
+{
+	t_list		*l;
+	t_path		*p;
+
+	l = *paths;
+	p = l->content;
+	while (p->next)
+		p = p->next;
+	return (p->node);
+}
+
+void			paths_print(t_list **lst, t_vertex **ver)
+{
+	t_list		*p;
+	t_path		*ptr;
+	int 		i;
 
 	i = 0;
 	p = *lst;
@@ -107,26 +184,8 @@ void		print_paths(t_list **lst, t_vertix **ver)
 	{
 		ft_printf("Path [%d]: ", i++);
 		ptr = p->content;
-		print_path(&ptr, ver);
+		path_print(&ptr, ver);
 		p = p->next;
 	}
 	ft_printf("\n");
-}
-
-void		free_list(t_list **tab)
-{
-	t_list	*lst;
-	t_list	*next;
-	t_path	*ptr;
-
-	lst = *tab;
-	while (lst)
-	{
-		next = lst->next;
-		ptr = lst->content;
-		free_path(&ptr);
-		free(lst);
-		lst = next;
-	}
-	*tab = NULL;
 }
