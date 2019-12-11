@@ -3,17 +3,16 @@ CC = gcc
 #CFLAGS = -Wall -Wextra -Werror
 
 
-IDIR = incs/
-LDIR = libft/
-LINC = $(LDIR)incs
-LIBFT = $(LDIR)libft.a
-INC = lem_in.h
+INC_DIR = incs/
+LIB_DIR = libft/
+LIB_FT = libft.a
 
 SRCS_DIR = srcs/
 SRCS_LIST=\
 		main.c\
 		mover.c\
 		solver.c\
+		reader.c\
 		put_error.c\
 		tools.c\
 		s_vertex.c\
@@ -22,25 +21,31 @@ SRCS_LIST=\
 		s_path.c\
 		s_mx.c
 
-OBJ = $(SRCS_LIST:%.c=%.o)
+OBJ_DIR = obj/
+OBJ_LIST = $(SRCS_LIST:%.c=%.o)
+OBJECTS = $(addprefix $(OBJ_DIR), $(OBJ_LIST))
 
-all: $(LIBFT) $(NAME)
+all: $(LIB_FT) $(NAME)
 
-$(NAME): $(OBJ) $(LIBFT)
-	$(CC) $(CFLAGS) $(OBJ) -L $(LDIR) -lft -o $(NAME)
+$(NAME): $(OBJ_DIR) $(OBJECTS)
+	$(CC) $(CFLAGS) $(OBJECTS) -L $(LIB_DIR) -lft -o $(NAME)
 
-%.o: $(SRCS_DIR)%.c
-	$(CC) -c $(CFLAGS) -I./$(LINC) -I ./ $<
+$(OBJ_DIR)%.o: $(SRCS_DIR)%.c
+	$(CC) -c $< -o $@ $(CFLAGS) -I $(INC_DIR) -I $(addprefix $(LIB_DIR), $(INC_DIR))
 
-$(LIBFT): $(LDIR)
-	make -C $(LDIR)
+$(OBJ_DIR):
+	mkdir -p $(OBJ_DIR)
+
+$(LIB_FT): $(LIB_DIR)
+	@make -C $(LIB_DIR)
+
 clean:
-	@rm -f $(OBJ)
-	@make clean -C $(LDIR)
+	@rm -rf $(OBJ_DIR)
+	@make clean -C $(LIB_DIR)
 
 fclean: clean
 	@rm -f $(NAME)
-	@make fclean -C $(LDIR)
+	@make fclean -C $(LIB_DIR)
 
 re: fclean all
 
