@@ -26,6 +26,16 @@ static int 			get_i_path(t_path **path, int value)
 	return (p->node);
 }
 
+static int 		get_last_node(t_path **path)
+{
+	t_path		*p;
+
+	p = *path;
+	while (p->next)
+		p = p->next;
+	return (p->node);
+}
+
 t_ants				*get_i_ant(t_ants **ants, int value)
 {
 	t_ants			*a;
@@ -59,25 +69,6 @@ static void			go_forward(t_ants *ants, t_list **lst, int i)
 	}
 }
 
-int				update_waves(t_ants **ants, t_list **lst, t_vertex **ver, int i,
-													int max_wave, int flow)
-{
-	int 		wave;
-	int 		tmp;
-	t_ants		*tmpr;
-
-	tmp = i;
-	wave = 0;
-	while (wave < max_wave)
-	{
-		tmpr = get_i_ant(ants, wave);
-		go_forward(tmpr, lst, tmp);
-		wave += flow;
-		tmp--;
-	}
-	return (tmp);
-}
-
 static void			print_ants(t_ants **ants, t_vertex **ver, int last)
 {
 	t_ants			*p;
@@ -97,33 +88,49 @@ static void			print_ants(t_ants **ants, t_vertex **ver, int last)
 	ft_printf("\n");
 }
 
-t_ants 				*mover(int amount, t_vertex **ver, t_list **paths)
+int				update_waves(t_ants **ants, t_list **lst, int i,
+		int max_wave, int flow)
 {
-	t_ants			*ants;
+	int 		wave;
+	int 		tmp;
+	t_ants		*tmpr;
+
+	tmp = i;
+	wave = 0;
+	while (wave < max_wave)
+	{
+		tmpr = get_i_ant(ants, wave);
+		go_forward(tmpr, lst, tmp);
+		wave += flow;
+		tmp--;
+	}
+	return (tmp);
+}
+
+void 				mover(int amount, t_vertex **ver, t_list **paths, t_ants *ants)
+{
+	t_ants			*tmpr;
 	int 			i;
 	int 			flow;
 	int 			max_wave;
 	int 			last;
 	int 			tmp;
-	t_ants			*tmpr;
 
-	ants = spawn_ants(amount);
 	flow = MIN(ft_lstlen(paths), amount);
 	max_wave = flow;
-	last = get_last_node(paths);
+	last = get_last_node((t_path **)&(*paths)->content);
 	i = 1;
 	go_forward(ants, paths, i++);
 	print_ants(&ants, ver, last);
 	while (!all_finished(&ants, last))
 	{
-		tmp = update_waves(&ants, paths, ver, i++, max_wave, flow);
+		tmp = update_waves(&ants, paths, i++, max_wave, flow);
 		if ((tmpr = get_i_ant(&ants, max_wave)))
 		{
 			go_forward(tmpr, paths, tmp);
 			max_wave += flow;
 		}
-		print_ants(&ants, ver, amount);
+		print_ants(&ants, ver, last);
 	}
 	free_ants(&ants);
-	return (ants);
 }

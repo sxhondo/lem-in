@@ -1,6 +1,6 @@
 #include "lem_in.h"
 
-t_info					*init_info()
+t_info					*init_info(char *path)
 {
 	t_info				*i;
 
@@ -12,7 +12,9 @@ t_info					*init_info()
 	i->mod = 0;
 	i->flag = 0;
 	i->lc = 1;
-	i->fd = open("maps/pdf", O_RDONLY);
+	i->fd = 0;
+//	i->fd = open(path, O_RDONLY);
+	i->skip_comments = 0;
 	return (i);
 }
 
@@ -98,32 +100,6 @@ static t_vec			*vec_read(int fd)
 
 /* *** */
 
-int					lem_atoi(const char *str, int *num, int pos, int lc)
-{
-	int				sign;
-	long			res;
-	int				i;
-
-	i = 0;
-	res = 0;
-	sign = 1;
-	if ((*str == '-' || *str == '+') && ++i)
-		sign = *str++ == '-' ? -1 : 1;
-	if (!ft_isdigit(*str))
-		put_error("bad modifier", lc);
-	while (*str && ft_isdigit(*str) && ++i)
-	{
-		if (!*str || *str < '0' || *str > '9')
-			put_error("bad modifier", lc);
-		res = res * 10 + (*str++ - '0');
-		if ((sign == 1 && res > INT32_MAX)
-			|| (sign == -1 && res - 2 >= INT32_MAX))
-			put_error("bad modifier", lc);
-	}
-	num[pos] = (int)res * sign;
-	return (i);
-}
-
 static int				parse_room_name(const char *line, char **name, int lc)
 {
 	const char 			*start;
@@ -155,23 +131,19 @@ static unsigned			get_command(const char *line, t_info *inf)
 	{
 		if (*line == '#')
 		{
-			if (inf->mod)
-				put_error("cannot modify modifier", inf->lc - 1);
 			line++;
+			line += skip_spaces(line);
 			if (ft_strequ(line, "start"))
 				return (START);
 			else if (ft_strequ(line, "end"))
 				return (END);
 			else
-				put_error("unknown command", inf->lc);
+				ft_printf("{yellow}C: %s{eoc}\n", line);
 		}
 		else
-		{
 			ft_printf("{yellow}C: %s{eoc}\n", line);
-			return (inf->mod);
-		}
 	}
-	return (0);
+	return (inf->mod);
 }
 
 static void				proceed_rooms(t_structs *structs, t_info *inf,
@@ -189,8 +161,10 @@ static void				proceed_rooms(t_structs *structs, t_info *inf,
 		while (*line)
 		{
 			line += skip_spaces(line);
+			if (!*line)
+				break ;
 			if (*line && i >= 2)
-				put_error("!!!", 0);
+				put_error("room not well formatted", inf->lc);
 			line += lem_atoi(line, xy, i++, inf->lc);
 		}
 		if (xy[0] < 0 || xy[1] < 0)
@@ -215,9 +189,12 @@ unsigned 				check_few_rooms(unsigned flag, unsigned mod, int lc)
 static void				validator(t_structs *structs, t_info *inf, const char *line)
 {
 	line += skip_spaces(line);
-	if (inf->lc == 1)
+	if (inf->lc - inf->skip_comments == 1)
 	{
-		structs->ants_amount = check_ants_num(line, inf->lc);
+		if (*line == '#')
+			inf->skip_comments++;
+		else
+			structs->ants_amount = check_ants_num(line, inf->lc);
 		return ;
 	}
 	else if (*line == '#')
@@ -225,6 +202,8 @@ static void				validator(t_structs *structs, t_info *inf, const char *line)
 		inf->mod = get_command(line, inf);
 		return ;
 	}
+	else if (!*line)
+		put_error("empty line", inf->lc);
 	else
 	{
 		inf->flag |= check_few_rooms(inf->flag, inf->mod, inf->lc);
@@ -234,7 +213,7 @@ static void				validator(t_structs *structs, t_info *inf, const char *line)
 	}
 }
 
-void 					reader(t_structs *structs)
+void 					reader(t_structs *structs, char *path)
 {
 	t_info				*inf;
 	t_vec				*vec;
@@ -242,7 +221,7 @@ void 					reader(t_structs *structs)
 	char 				*line;
 	int 				i;
 
-	inf = init_info();
+	inf = init_info(path);
 	vec = vec_read(inf->fd);
 	file = vec->data;
 	inf->total = vec->total;
@@ -257,7 +236,7 @@ void 					reader(t_structs *structs)
 		ft_strdel(&inf->name);
 	}
 	check_no_room_given(inf->flag, inf->lc);
-	ft_printf("%s\n\n", vec->data);
+	ft_printf("%s\n", vec->data);
 	ft_vec_del(&vec);
 	free(inf);
 }

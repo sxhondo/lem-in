@@ -5,7 +5,7 @@ CC = gcc
 
 INC_DIR = incs/
 LIB_DIR = libft/
-LIB_FT = libft.a
+LIB_FT = $(LIB_DIR)libft.a
 
 SRCS_DIR = srcs/
 SRCS_LIST=\
@@ -14,7 +14,8 @@ SRCS_LIST=\
 		solver.c\
 		reader.c\
 		put_error.c\
-		tools.c\
+		parsing_tools.c\
+		parsing_lists.c\
 		s_vertex.c\
 		s_ants.c\
 		s_edge.c\
@@ -25,9 +26,9 @@ OBJ_DIR = obj/
 OBJ_LIST = $(SRCS_LIST:%.c=%.o)
 OBJECTS = $(addprefix $(OBJ_DIR), $(OBJ_LIST))
 
-all: $(LIB_FT) $(NAME)
+all: $(NAME)
 
-$(NAME): $(OBJ_DIR) $(OBJECTS)
+$(NAME):  $(LIB_FT) $(OBJ_DIR) $(OBJECTS)
 	$(CC) $(CFLAGS) $(OBJECTS) -L $(LIB_DIR) -lft -o $(NAME)
 
 $(OBJ_DIR)%.o: $(SRCS_DIR)%.c

@@ -109,21 +109,6 @@ static void					vertex_push_back(t_vertex **dst, t_vertex *elem)
 	}
 }
 
-static void				check_existing_vertex(t_vertex **dst, t_vertex *elem, int lc)
-{
-	t_vertex			*v;
-
-	if (!dst)
-		return ;
-	v = *dst;
-	while (v)
-	{
-		if (ft_strequ(v->name, elem->name))
-			put_error("rooms name already exist", lc);
-		v = v->next;
-	}
-}
-
 void 					vertex_add(t_structs *structs,
 												t_info *inf, int x, int y)
 {
@@ -142,6 +127,6 @@ void 					vertex_add(t_structs *structs,
 	elem->mod = inf->mod;
 	elem->x = x;
 	elem->y = y;
-	check_existing_vertex((t_vertex **)&structs->ver, elem, inf->lc);
+//	check_existing_vertex((t_vertex **)&structs->ver, elem, inf->lc);
 	vertex_push_back((t_vertex **)&structs->ver, elem);
 }

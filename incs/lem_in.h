@@ -7,7 +7,6 @@
 
 # define START		1u
 # define END		2u
-# define COMMENT	3u
 
 typedef struct		s_ants
 {
@@ -47,6 +46,7 @@ typedef struct		s_info
 	int 			lc;
 	int 			fd;
 	int 			total;
+	int 			skip_comments;
 }					t_info;
 
 typedef struct 		s_structs
@@ -69,7 +69,7 @@ void					put_error(char *err, int lc);
 /*
 **	reader.c
 */
-void 					reader(t_structs *structs);
+void 					reader(t_structs *structs, char *path);
 
 /*
 **	s_vertex.c
@@ -89,13 +89,17 @@ void 					edge_add(t_structs *structs, t_info *inf);
 void					edge_print(t_edge **edge);
 void					edge_free(t_edge **edge);
 
+/*
+**	parsing_lists.c
+*/
+void 					check_lists(t_vertex **ver, t_edge **edge);
 
 /*
-**	tools.c
+**	parsing_tools.c
 */
-void					put_to_begin(t_vertex **ver);
-void					put_to_end(t_vertex **ver);
 int						cut_after_symbol(const char *src, char **dst, char sym);
+int						lem_atoi(const char *str, int *num, int pos, int lc);
+
 /*
 **	s_mx.c
 */
@@ -117,7 +121,6 @@ void					add_path_to_lst(t_list **lst, t_path *path);
 int 					is_paths(int **mx, int m_size);
 int 					line_is_busy(t_list **lst, t_path **path, int last_node);
 void					list_free(t_list **tab);
-int 					get_last_node(t_list **paths);
 
 /*
 **	solver.c
@@ -128,7 +131,8 @@ t_path 					*get_shortest_path(int **mx, int m_size);
 /*
 **	mover.c
 */
-t_ants 					*mover(int amount, t_vertex **ver, t_list **paths);
+void					mover(int amount, t_vertex **ver, t_list **paths,
+		t_ants *ants);
 
 /*
 **	s_ants.c

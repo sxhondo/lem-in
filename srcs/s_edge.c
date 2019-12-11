@@ -69,28 +69,6 @@ static t_edge 				*proceed_edge(t_info *inf)
 	return (edge_init(v1, v2));
 }
 
-static void				check_non_existing_link(t_vertex **ver, int lc,
-									char *v1, char *v2)
-{
-	int 				i;
-	int 				j;
-	t_vertex			*v;
-
-	i = 0;
-	j = 0;
-	v = *ver;
-	while (v)
-	{
-		if (ft_strequ(v->name, v1))
-			i++;
-		if (ft_strequ(v->name, v2))
-			j++;
-		v = v->next;
-	}
-	if (i == 0 || j == 0)
-		put_error("room name doesnt exist", lc);
-}
-
 static void					edge_push_back(t_edge **dst, t_edge *elem)
 {
 	t_edge					*tmp;
@@ -112,7 +90,7 @@ void 						edge_add(t_structs *structs, t_info *inf)
 	t_edge					*elem;
 
 	elem = proceed_edge(inf);
-	check_non_existing_link((t_vertex **)&structs->ver,
-			inf->lc, elem->v1, elem->v2);
+//	check_non_existing_link((t_vertex **)&structs->ver,
+//			inf->lc, elem->v1, elem->v2);
 	edge_push_back((t_edge **)&structs->edge, elem);
 }

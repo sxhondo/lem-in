@@ -160,18 +160,6 @@ void			list_free(t_list **tab)
 	*tab = NULL;
 }
 
-int 			get_last_node(t_list **paths)
-{
-	t_list		*l;
-	t_path		*p;
-
-	l = *paths;
-	p = l->content;
-	while (p->next)
-		p = p->next;
-	return (p->node);
-}
-
 void			paths_print(t_list **lst, t_vertex **ver)
 {
 	t_list		*p;

@@ -61,17 +61,18 @@ void				print_all(t_structs *str)
 
 int 				main(int ac, char **av)
 {
+	t_ants			*ants;
 	t_structs		*structs;
 
 	structs = init_structs();
-	reader(structs);
-	put_to_begin((t_vertex **)&structs->ver);
-	put_to_end((t_vertex **)&structs->ver);
+	reader(structs, av[1]);
+	check_lists((t_vertex **)&structs->ver, (t_edge **)&structs->edge);
 	create_matrix(structs);
 	structs->paths = solver(structs->mx, structs->m_size, (t_vertex **)&structs->ver);
-	print_all(structs);
+//	print_all(structs);
+	ants = spawn_ants(structs->ants_amount);
 	mover(structs->ants_amount, (t_vertex **)&structs->ver,
-			(t_list **)&structs->paths);
+			(t_list **)&structs->paths, ants);
 	free_structs(structs);
 	return (0);
 }
