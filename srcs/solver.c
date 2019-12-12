@@ -112,7 +112,7 @@ t_path 					*get_shortest_path(int **mx, int m_size)
 	return (get_reverse_path(&s, m_size - 1));
 }
 
-static void			disjoint_path_finding(t_list **ways, int **mx, int m_size)
+static t_list		*disjoint_path_finding(t_list **ways, int **mx, int m_size)
 {
 	t_list			*lst;
 	t_path			*ptr;
@@ -130,7 +130,7 @@ static void			disjoint_path_finding(t_list **ways, int **mx, int m_size)
 		lst = lst->next;
 	}
 	exclude_overlap(mx, m_size);
-	list_free(ways);
+	return (NULL);
 }
 
 static int			bellman_ford(int **mx, int m_size, int *costs, int *tab)
@@ -187,6 +187,7 @@ static t_path 		*calculate_min_cost(int **mx, int m_size)
 	return (path);
 }
 
+/*
 t_list 				*remove_disjoint_vertex(int **mx, int m_size, t_vertex **ver)
 {
 	t_list			*lst = NULL;
@@ -199,6 +200,7 @@ t_list 				*remove_disjoint_vertex(int **mx, int m_size, t_vertex **ver)
 	add_path_to_lst(&lst, path);
 	while (is_paths(mx, m_size))
 	{
+
 		path = get_shortest_path(mx, m_size);
 		if (line_is_busy(&lst, &path, m_size - 1)
 			|| path_len(&path) > shortest)
@@ -210,6 +212,74 @@ t_list 				*remove_disjoint_vertex(int **mx, int m_size, t_vertex **ver)
 		add_path_to_lst(&lst, path);
 	}
 	return (lst);
+}
+*/
+
+static int 				find_min_path(t_list **lst)
+{
+	t_list				*i;
+	t_list				*j;
+	t_path				*path_i;
+	t_path				*path_j;
+	int 				c;
+
+	c = 0;
+	i = *lst;
+	while (i)
+	{
+		path_i = i->content;
+		j = *lst;
+		while (j)
+		{
+			path_j = j->content;
+			if (path_len(&path_i) > path_len(&path_j))
+				break ;
+			j = j->next;
+		}
+		if (j == NULL)
+			return (c);
+		i = i->next;
+		c++;
+	}
+	return (-1);
+}
+
+static void				put_i_to_begin(t_list **lst, int i)
+{
+	t_list				*l;
+	t_list				*prev;
+	t_list				*next;
+	int 				j;
+
+	if (i == 0)
+		return ;
+	j = 0;
+	l = *lst;
+	while (l)
+	{
+		if ((j + 1) == i)
+		{
+			prev = l;
+			next = l->next->next;
+			l->next->next = *lst;
+			(*lst) = l->next;
+			prev->next = next;
+			break ;
+		}
+		l = l->next;
+		j++;
+	}
+}
+
+static t_list 			*prioritize_paths(t_list **lst)
+{
+	int 				i;
+
+	while ((i = find_min_path(lst)) > 0)
+	{
+		put_i_to_begin(lst, i);
+	}
+	return (NULL);
 }
 
 t_list 					*solver(int **mx, int m_size, t_vertex **ver)
@@ -231,5 +301,7 @@ t_list 					*solver(int **mx, int m_size, t_vertex **ver)
 		add_path_to_lst(&lst, path);
 	}
 	disjoint_path_finding(&lst, mx, m_size);
-	return (remove_disjoint_vertex(mx, m_size, ver));
+	/* not working */
+//		prioritize_paths(&lst);
+	return (lst);
 }

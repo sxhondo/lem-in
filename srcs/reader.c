@@ -12,8 +12,8 @@ t_info					*init_info(char *path)
 	i->mod = 0;
 	i->flag = 0;
 	i->lc = 1;
-	i->fd = 0;
-//	i->fd = open(path, O_RDONLY);
+//	i->fd = 0;
+	i->fd = open(path, O_RDONLY);
 	i->skip_comments = 0;
 	return (i);
 }

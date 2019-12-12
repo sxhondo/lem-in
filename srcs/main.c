@@ -69,7 +69,8 @@ int 				main(int ac, char **av)
 	check_lists((t_vertex **)&structs->ver, (t_edge **)&structs->edge);
 	create_matrix(structs);
 	structs->paths = solver(structs->mx, structs->m_size, (t_vertex **)&structs->ver);
-//	print_all(structs);
+	exit (0);
+	print_all(structs);
 	ants = spawn_ants(structs->ants_amount);
 	mover(structs->ants_amount, (t_vertex **)&structs->ver,
 			(t_list **)&structs->paths, ants);
