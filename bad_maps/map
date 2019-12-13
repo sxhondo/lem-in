@@ -1,12 +1,13 @@
-#comment
-#comment
-1
-#comment
-#comment
-#comment
+3
+B 0 2
 ##start
-#comment
-A 1 1
+A 2 0
 ##end
-B 2 2
+E 2 6
+C 4 2
+D 4 4
 A-B
+A-C
+C-D
+D-E
+E-B

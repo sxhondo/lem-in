@@ -56,8 +56,6 @@ static int					check_ants_num(const char *line, int lc)
 
 /* *** */
 
-/* read and cut line */
-
 static int 		skip_spaces(const char *str)
 {
 	int 		i;
@@ -108,7 +106,7 @@ static int				parse_room_name(const char *line, char **name, int lc)
 	start = line;
 	line += skip_spaces(line);
 	if (*line == 'L')
-		put_error("room name cannot stars with 'L'", lc);
+		put_error("room name cannot starts with 'L'", lc);
 	i = cut_after_symbol(line, name, ' ');
 	line += i;
 	line += skip_spaces(line);

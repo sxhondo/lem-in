@@ -1,5 +1,27 @@
 #include "lem_in.h"
 
+void				ants_print(t_ants **ants, t_vertex **ver)
+{
+	t_ants			*an;
+
+	an = *ants;
+	while (an)
+	{
+		ft_printf("{red}id:[%d]\t", an->id);
+		ft_printf(" {cyan}path: %d\t", an->path);
+		if (an->pos)
+		{
+			ft_printf("{green} pos: %d",  an->pos->node);
+			ft_printf("{green} (%s)\n",
+					  find_ver_by_index(ver, an->pos->node)->name);
+		}
+		else
+			ft_printf("{magenta} finished! {eoc}\n");
+		an = an->next;
+	}
+	ft_printf("\n");
+}
+
 void			free_list(t_list **tab)
 {
 	t_list		*lst;
@@ -32,6 +54,7 @@ static void			free_structs(t_structs *structs)
 		free(m[i]);
 	free(structs->mx);
 	free_list((t_list **)&structs->paths);
+	free_ants(&structs->ants);
 	free(structs);
 }
 
@@ -57,11 +80,11 @@ void				print_all(t_structs *str)
 	edge_print((t_edge **)&str->edge);
 	print_mx(str->mx, str->m_size, (t_vertex **)&str->ver);
 	paths_print(&str->paths, (t_vertex **)&str->ver);
+	ants_print((t_ants **)&str->ants, (t_vertex **)&str->ver);
 }
 
 int 				main(int ac, char **av)
 {
-	t_ants			*ants;
 	t_structs		*structs;
 
 	structs = init_structs();
@@ -69,11 +92,9 @@ int 				main(int ac, char **av)
 	check_lists((t_vertex **)&structs->ver, (t_edge **)&structs->edge);
 	create_matrix(structs);
 	structs->paths = solver(structs->mx, structs->m_size, (t_vertex **)&structs->ver);
-	exit (0);
+	structs->ants = spawn_ants(structs->ants_amount, (t_list **)&structs->paths);
 	print_all(structs);
-	ants = spawn_ants(structs->ants_amount);
-	mover(structs->ants_amount, (t_vertex **)&structs->ver,
-			(t_list **)&structs->paths, ants);
+	mover((t_vertex **)&structs->ver, (t_ants **)&structs->ants);
 	free_structs(structs);
 	return (0);
 }

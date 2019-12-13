@@ -3,16 +3,17 @@
 
 #include "libft.h"
 #include "ft_printf.h"
-#include <mlx.h>
 
 # define START		1u
 # define END		2u
 
 typedef struct		s_ants
 {
-	int 			pos;
 	int 			id;
+	int 			path;
 	struct s_ants 	*next;
+	struct s_path 	*pos;
+	int 			indx;
 }					t_ants;
 
 typedef struct		s_vertex
@@ -61,10 +62,6 @@ typedef struct 		s_structs
 }					t_structs;
 
 
-/*
-**	put_error.c
-*/
-void					put_error(char *err, int lc);
 
 /*
 **	reader.c
@@ -101,6 +98,11 @@ int						cut_after_symbol(const char *src, char **dst, char sym);
 int						lem_atoi(const char *str, int *num, int pos, int lc);
 
 /*
+**	put_error.c
+*/
+void					put_error(char *err, int lc);
+
+/*
 **	s_mx.c
 */
 void 					create_matrix(t_structs *structs);
@@ -121,6 +123,7 @@ void					add_path_to_lst(t_list **lst, t_path *path);
 int 					is_paths(int **mx, int m_size);
 int 					line_is_busy(t_list **lst, t_path **path, int last_node);
 void					list_free(t_list **tab);
+t_path					*get_i_path_node(t_path **path, int value);
 
 /*
 **	solver.c
@@ -131,14 +134,17 @@ t_path 					*get_shortest_path(int **mx, int m_size);
 /*
 **	mover.c
 */
-void					mover(int amount, t_vertex **ver, t_list **paths,
-		t_ants *ants);
+void					mover(t_vertex **ver, t_ants **ants);
 
 /*
 **	s_ants.c
 */
-t_ants 					*spawn_ants(int amount);
+t_ants 					*spawn_ants(int amount, t_list **paths);
+t_list					*get_i_paths(t_list **paths, int value);
 void					free_ants(t_ants **s);
+
+
+void					ants_print(t_ants **ants, t_vertex **ver);
 
 
 #endif //LEM_IN_LEM_IN_H

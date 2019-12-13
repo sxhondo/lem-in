@@ -10,7 +10,7 @@ int						cut_after_symbol(const char *src, char **dst, char sym)
 	if (!(*dst = ft_strndup(src, i)))
 	{
 		ft_strdel(dst);
-		return (0);
+		put_error("cannot allocate memory", 0);
 	}
 	return (i);
 }

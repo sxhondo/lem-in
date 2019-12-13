@@ -61,7 +61,20 @@ void		add_path_to_lst(t_list **lst, t_path *path)
 	if (!(node = ft_lstnew(path, sizeof(t_path))))
 		return ;
 	free (path);
-	ft_lstadd(lst, node);
+	ft_lstpushback(lst, node);
+//	ft_lstadd(lst, node);
+}
+
+t_path				*get_i_path_node(t_path **path, int value)
+{
+	t_path			*p;
+
+//	if (value < 0)
+//		return (NULL);
+	p = *path;
+	while (p && value--)
+		p = p->next;
+	return (p);
 }
 
 int 		path_len(t_path **dst)

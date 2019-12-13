@@ -1,147 +1,85 @@
 #include "lem_in.h"
 
-int 				all_finished(t_ants **ants, int finish)
+static int			all_finished(t_ants **ants)
 {
 	t_ants			*a;
 
 	a = *ants;
 	while (a)
 	{
-		if (a->pos != finish && a->pos != -1)
+		if (a->pos)
 			return (0);
 		a = a->next;
 	}
 	return (1);
 }
 
-static int 			get_i_path(t_path **path, int value)
-{
-	t_path			*p;
 
-	p = *path;
-	while (value--)
+static void			display_moves(t_ants **ants, t_vertex **ver)
+{
+	t_ants			*an;
+
+	an = *ants;
+	while (an)
 	{
-		p = p->next;
+		if (an->pos && an->pos->node > 0)
+			ft_printf("{red}L%d-{green}%s{eoc} ",
+				an->id, find_ver_by_index(ver, an->pos->node)->name);
+		an = an->next;
 	}
-	return (p->node);
+	ft_printf("\n");
 }
 
-static int 		get_last_node(t_path **path)
+static void			push_new(t_ants **ants)
 {
-	t_path		*p;
-
-	p = *path;
-	while (p->next)
-		p = p->next;
-	return (p->node);
-}
-
-t_ants				*get_i_ant(t_ants **ants, int value)
-{
+	int 			i;
+	int 			new_id;
 	t_ants			*a;
 
+	i = 0;
+	new_id = 1;
 	a = *ants;
-	if (!*ants)
-		return (NULL);
-	while (a && value--)
+	while (a)
+	{
+		if (a->path == i && a->pos && a->pos->node == 0)
+		{
+			a->pos = a->pos->next;
+			a->id += new_id;
+			new_id++;
+			i++;
+		}
 		a = a->next;
-	return (a);
+	}
 }
 
-void				pri(t_ants **ants, t_vertex **ver)
+static int			update(t_ants **ants)
 {
-	for (t_ants *a = *ants; a; a = a->next)
-		ft_printf("ID: %d, POS: %d [%s]\n", a->id, a->pos,
-				  find_ver_by_index(ver, a->pos)->name);
-	ft_printf("\n");
-}
-
-static void			go_forward(t_ants *ants, t_list **lst, int i)
-{
+	t_ants			*a;
 	t_list			*l;
-	t_path			*p;
 
-
-	l = *lst;
-	while (l)
+	a = *ants;
+	while (a)
 	{
-		p = l->content;
-		if (i >= path_len(&p))
-			return ;
-		if (ants)
-		{
-			ants->pos = get_i_path(&p, i);
-			ants = ants->next;
-		}
-		l = l->next;
+		if (a->pos && a->pos->node != 0)
+			a->pos = a->pos->next;
+		a = a->next;
 	}
+
 }
 
-static void			print_ants(t_ants **ants, t_vertex **ver, int last)
+void 				mover(t_vertex **ver, t_ants **ants)
 {
-	t_ants			*p;
 
-	p = *ants;
-	while (p)
+
+	push_new(ants);
+//	display_moves(ants, ver);
+	ants_print(ants, ver);
+/*
+	while (!all_finished(ants))
 	{
-		if (p->pos != 0 && p->pos != -1)
-		{
-			ft_printf("L%d-%s ", p->id,
-					find_ver_by_index(ver, p->pos)->name);
-		}
-		if (p->pos == last)
-			p->pos = -1;
-		p = p->next;
+		update(ants);
+		push_new(ants);
+		display_moves(ants, ver);
 	}
-	ft_printf("\n");
-}
-
-int				update_waves(t_ants **ants, t_list **lst, int pos,
-		int max_wave, int flow)
-{
-	int 		wave;
-	int 		tmp;
-	t_ants		*tmpr;
-
-	tmp = pos;
-	wave = 0;
-	while (wave < max_wave)
-	{
-		tmpr = get_i_ant(ants, wave);
-		go_forward(tmpr, lst, tmp);
-		wave += flow;
-		tmp--;
-	}
-	return (tmp);
-}
-
-void 				mover(int amount, t_vertex **ver, t_list **paths, t_ants *ants)
-{
-	t_ants			*tmpr;
-	int 			pos;
-	int 			flow;
-	int 			max_wave;
-	int 			last;
-	int 			tmp;
-
-	flow = MIN(ft_lstlen(paths), amount);
-	max_wave = flow;
-	last = get_last_node((t_path **)&(*paths)->content);
-	pos = 1;
-
-	pri(&ants, ver);
-
-	go_forward(ants, paths, pos++);
-	print_ants(&ants, ver, last);
-	while (!all_finished(&ants, last))
-	{
-		tmp = update_waves(&ants, paths, pos++, max_wave, flow);
-		if ((tmpr = get_i_ant(&ants, max_wave)))
-		{
-			go_forward(tmpr, paths, tmp);
-			max_wave += flow;
-		}
-		print_ants(&ants, ver, last);
-	}
-	free_ants(&ants);
+*/
 }

@@ -244,44 +244,6 @@ static int 				find_min_path(t_list **lst)
 	return (-1);
 }
 
-static void				put_i_to_begin(t_list **lst, int i)
-{
-	t_list				*l;
-	t_list				*prev;
-	t_list				*next;
-	int 				j;
-
-	if (i == 0)
-		return ;
-	j = 0;
-	l = *lst;
-	while (l)
-	{
-		if ((j + 1) == i)
-		{
-			prev = l;
-			next = l->next->next;
-			l->next->next = *lst;
-			(*lst) = l->next;
-			prev->next = next;
-			break ;
-		}
-		l = l->next;
-		j++;
-	}
-}
-
-static t_list 			*prioritize_paths(t_list **lst)
-{
-	int 				i;
-
-	while ((i = find_min_path(lst)) > 0)
-	{
-		put_i_to_begin(lst, i);
-	}
-	return (NULL);
-}
-
 t_list 					*solver(int **mx, int m_size, t_vertex **ver)
 {
 	t_list				*lst = NULL;
@@ -301,7 +263,5 @@ t_list 					*solver(int **mx, int m_size, t_vertex **ver)
 		add_path_to_lst(&lst, path);
 	}
 	disjoint_path_finding(&lst, mx, m_size);
-	/* not working */
-//		prioritize_paths(&lst);
 	return (lst);
 }
