@@ -4,6 +4,8 @@ CC = gcc
 
 
 INC_DIR = incs/
+INC  = $(INC_DIR)lem_in.h
+
 LIB_DIR = libft/
 LIB_FT = $(LIB_DIR)libft.a
 
@@ -31,7 +33,7 @@ all: $(NAME)
 $(NAME):  $(LIB_FT) $(OBJ_DIR) $(OBJECTS)
 	$(CC) $(CFLAGS) $(OBJECTS) -L $(LIB_DIR) -lft -o $(NAME)
 
-$(OBJ_DIR)%.o: $(SRCS_DIR)%.c
+$(OBJ_DIR)%.o: $(SRCS_DIR)%.c $(INC)
 	$(CC) -c $< -o $@ $(CFLAGS) -I $(INC_DIR) -I $(addprefix $(LIB_DIR), $(INC_DIR))
 
 $(OBJ_DIR):

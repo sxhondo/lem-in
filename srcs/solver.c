@@ -1,6 +1,6 @@
 #include "lem_in.h"
 
-t_path					*exclude_shortest(t_path **path, int **mx)
+void					exclude_shortest(t_path **path, int **mx)
 {
 	t_path				*ptr;
 
@@ -13,7 +13,6 @@ t_path					*exclude_shortest(t_path **path, int **mx)
 		mx[ptr->node][ptr->parent] = -1;
 		ptr = ptr->next;
 	}
-	return (NULL);
 }
 
 int 					check_parent(t_path **s, int value, unsigned size)
@@ -112,7 +111,7 @@ t_path 					*get_shortest_path(int **mx, int m_size)
 	return (get_reverse_path(&s, m_size - 1));
 }
 
-static t_list		*disjoint_path_finding(t_list **ways, int **mx, int m_size)
+static void			disjoint_path_finding(t_list **ways, int **mx, int m_size)
 {
 	t_list			*lst;
 	t_path			*ptr;
@@ -130,7 +129,7 @@ static t_list		*disjoint_path_finding(t_list **ways, int **mx, int m_size)
 		lst = lst->next;
 	}
 	exclude_overlap(mx, m_size);
-	return (NULL);
+	free_list(ways);
 }
 
 static int			bellman_ford(int **mx, int m_size, int *costs, int *tab)
@@ -187,61 +186,62 @@ static t_path 		*calculate_min_cost(int **mx, int m_size)
 	return (path);
 }
 
-/*
-t_list 				*remove_disjoint_vertex(int **mx, int m_size, t_vertex **ver)
+static int 				check_match(int node, t_path **pth, int last)
 {
-	t_list			*lst = NULL;
-	t_path			*path;
-	int 			shortest;
+	t_path				*p;
 
-	path = get_shortest_path(mx, m_size);
-	shortest = path_len(&path);
-	exclude_shortest(&path, mx);
-	add_path_to_lst(&lst, path);
+	p = *pth;
+	while (p)
+	{
+		if (p->node != 0 && p->node != last && node == p->node)
+			return (0);
+		p = p->next;
+	}
+	return (1);
+}
+
+static int				check_incident_vertex(t_path **check, t_list **lst, int last)
+{
+	t_path				*p;
+	t_path				*t;
+	t_list				*l;
+
+	p = *check;
+	while (p)
+	{
+		if (p->node != 0 && p->node != last && *lst)
+		{
+			l = *lst;
+			while (l)
+			{
+				if (!(check_match(p->node, (t_path **)&l->content, last)))
+					return (0);
+				l = l->next;
+			}
+		}
+		p = p->next;
+	}
+	return (1);
+}
+
+static t_list			*remove_disjoint_vertex(int **mx, int m_size,
+																t_vertex **ver)
+{
+	int 				last;
+	t_list				*lst = NULL;
+	t_path				*path;
+
+	last = vertex_len(ver) - 1;
 	while (is_paths(mx, m_size))
 	{
-
 		path = get_shortest_path(mx, m_size);
-		if (line_is_busy(&lst, &path, m_size - 1)
-			|| path_len(&path) > shortest)
-		{
-			path_free(&path);
-			break ;
-		}
 		exclude_shortest(&path, mx);
-		add_path_to_lst(&lst, path);
+		if (check_incident_vertex(&path, &lst, last))
+			add_path_to_lst(&lst, path);
+		else
+			path_free(&path);
 	}
 	return (lst);
-}
-*/
-
-static int 				find_min_path(t_list **lst)
-{
-	t_list				*i;
-	t_list				*j;
-	t_path				*path_i;
-	t_path				*path_j;
-	int 				c;
-
-	c = 0;
-	i = *lst;
-	while (i)
-	{
-		path_i = i->content;
-		j = *lst;
-		while (j)
-		{
-			path_j = j->content;
-			if (path_len(&path_i) > path_len(&path_j))
-				break ;
-			j = j->next;
-		}
-		if (j == NULL)
-			return (c);
-		i = i->next;
-		c++;
-	}
-	return (-1);
 }
 
 t_list 					*solver(int **mx, int m_size, t_vertex **ver)
@@ -263,5 +263,5 @@ t_list 					*solver(int **mx, int m_size, t_vertex **ver)
 		add_path_to_lst(&lst, path);
 	}
 	disjoint_path_finding(&lst, mx, m_size);
-	return (lst);
+	return (remove_disjoint_vertex(mx, m_size, ver));
 }

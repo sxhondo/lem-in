@@ -9,6 +9,7 @@
 
 # define DEBUG		1u
 # define COLORS		2u
+# define OPEN		4u
 
 typedef struct		s_ants
 {
@@ -68,7 +69,7 @@ typedef struct 		s_structs
 /*
 **	reader.c
 */
-void 					reader(t_structs *structs, char *path);
+void 					reader(t_structs *structs, unsigned  flags, char *path);
 
 /*
 **	s_vertex.c
@@ -148,5 +149,6 @@ t_ants 					*spawn_ants(int amount, t_list **paths);
 t_list					*get_i_paths(t_list **paths, int value);
 void					free_ants(t_ants **s);
 
+void					free_list(t_list **tab);
 
 #endif

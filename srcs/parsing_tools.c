@@ -49,7 +49,7 @@ int					lem_atoi(const char *str, int *num, int pos, int lc)
 		res = res * 10 + (*str++ - '0');
 		if ((sign == 1 && res > INT32_MAX)
 			|| (sign == -1 && res - 2 >= INT32_MAX))
-			put_error("bad modifier", lc);
+			put_error("overflow value in modifier", lc);
 	}
 	num[pos] = (int)res * sign;
 	return (i);

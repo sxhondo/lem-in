@@ -119,7 +119,7 @@ static void				check_duplicate_vertex(t_vertex **ver)
 			j = j->next;
 		}
 		if (err > 1)
-			put_error("duplicate room names", 0);
+			put_error("duplicated room names", 0);
 		i = i->next;
 	}
 }

@@ -19,7 +19,7 @@ void				print_all(t_structs *str)
 	ft_printf("{cyan}ANTS: %14d\n{eoc}", str->ants_amount);
 	vertex_print((t_vertex **)&str->ver);
 	edge_print((t_edge **)&str->edge);
-	print_mx(str->mx, str->m_size, (t_vertex **)&str->ver);
+//	print_mx(str->mx, str->m_size, (t_vertex **)&str->ver);
 	paths_print(&str->paths, (t_vertex **)&str->ver);
 	ants_print((t_ants **)&str->ants, (t_vertex **)&str->ver);
 }
@@ -51,6 +51,7 @@ void			path_print(t_path **path, t_vertex **ver)
 	ptr = *path;
 	while (ptr)
 	{
+//		ft_printf("(%d)", ptr->node);
 		if (i == 1)
 			ft_printf("{red}%s->{eoc}",
 					  find_ver_by_index(ver, ptr->node)->name);
@@ -157,5 +158,6 @@ void		put_error(char *err, int lc)
 	lc ? ft_printf("%d: {red}error: {eoc}", lc) :
 		ft_printf("{red}error: {eoc}");
 	ft_printf("%s\n", err);
+//	ft_printf("ERROR\n");
 	exit (1);
 }

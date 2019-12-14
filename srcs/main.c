@@ -65,6 +65,8 @@ static unsigned 	parse_arguments(int ac, char **arg)
 			flag |= COLORS;
 		if (ft_strequ(arg[i], "-d"))
 			flag |= DEBUG;
+		if (ft_strequ(arg[i], "-o"))
+			flag |= OPEN;
 		i++;
 	}
 	return (flag);
@@ -75,13 +77,13 @@ int 				main(int ac, char **av)
 	unsigned 		flags = 0;
 	t_structs		*structs;
 
+	flags = parse_arguments(ac, av);
 	structs = init_structs();
-	reader(structs, av[2]);
+	reader(structs, flags, av[3]);
 	check_lists((t_vertex **)&structs->ver, (t_edge **)&structs->edge);
 	create_matrix(structs);
 	structs->paths = solver(structs->mx, structs->m_size, (t_vertex **)&structs->ver);
 	structs->ants = spawn_ants(structs->ants_amount, (t_list **)&structs->paths);
-	flags = parse_arguments(ac, av);
 	if (flags & DEBUG)
 		print_all(structs);
 	mover((t_vertex **)&structs->ver, (t_ants **)&structs->ants, flags);

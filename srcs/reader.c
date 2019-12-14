@@ -1,6 +1,6 @@
 #include "lem_in.h"
 
-t_info					*init_info(char *path)
+t_info					*init_info(char *path, unsigned flags)
 {
 	t_info				*i;
 
@@ -13,7 +13,10 @@ t_info					*init_info(char *path)
 	i->flag = 0;
 	i->lc = 1;
 	i->fd = 0;
-//	i->fd = open(path, O_RDONLY);
+	if (flags & OPEN)
+		i->fd = open(path, O_RDONLY);
+	else
+		i->fd = 0;
 	i->skip_comments = 0;
 	return (i);
 }
@@ -115,7 +118,9 @@ static unsigned			get_command(const char *line, t_info *inf)
 	if (*line++ == '#')
 	{
 		if (*line == '#')
-		{
+		{	//?
+			if (inf->mod)
+				put_error("cannot modify modifier", inf->lc);
 			line++;
 			line += skip_spaces(line);
 			if (ft_strequ(line, "start"))
@@ -123,7 +128,11 @@ static unsigned			get_command(const char *line, t_info *inf)
 			else if (ft_strequ(line, "end"))
 				return (END);
 			else
-				ft_printf("{yellow}C: %s{eoc}\n", line);
+			{
+				put_error("unkown modifier", inf->lc);
+// ??			ft_printf("{yellow}C: %s{eoc}\n", line);
+			}
+
 		}
 		else
 			ft_printf("{yellow}C: %s{eoc}\n", line);
@@ -171,15 +180,45 @@ unsigned 				check_few_rooms(unsigned flag, unsigned mod, int lc)
 	return (mod);
 }
 
-static void				validator(t_structs *structs, t_info *inf, const char *line)
+static int 				only_digits(const char *str)
 {
-	line += skip_spaces(line);
-	if (inf->lc - inf->skip_comments == 1)
+	int 				i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (!ft_isdigit(str[i]))
+			return (0);
+		i++;
+	}
+	return (1);
+}
+
+/* this is leaving comments before ant number
+	if (*line == '#')
+	{
+		inf->mod = get_command(line, inf);
+		return ;
+	}
+	else if (inf->lc - inf->skip_comments == 1)
 	{
 		if (*line == '#')
 			inf->skip_comments++;
 		else
 			structs->ants_amount = check_ants_num(line, inf->lc);
+		return ;
+	}
+*/
+
+static void				validator(t_structs *structs, t_info *inf,
+		const char *line)
+{
+	line += skip_spaces(line);
+	if (inf->lc == 1)
+	{
+		if (!(only_digits(line)))
+			put_error("symbols before ant-number", inf->lc);
+		structs->ants_amount = check_ants_num(line, inf->lc);
 		return ;
 	}
 	else if (*line == '#')
@@ -198,7 +237,7 @@ static void				validator(t_structs *structs, t_info *inf, const char *line)
 	}
 }
 
-void 					reader(t_structs *structs, char *path)
+void 					reader(t_structs *structs, unsigned flags, char *path)
 {
 	t_info				*inf;
 	t_vec				*vec;
@@ -206,7 +245,7 @@ void 					reader(t_structs *structs, char *path)
 	char 				*line;
 	int 				i;
 
-	inf = init_info(path);
+	inf = init_info(path, flags);
 	vec = vec_read(inf->fd);
 	file = vec->data;
 	inf->total = vec->total;
