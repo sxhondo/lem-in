@@ -131,30 +131,6 @@ void			path_push_front(t_path **dst, t_path *node)
 	}
 }
 
-void			path_print(t_path **path, t_vertex **ver)
-{
-	int 		i;
-	t_path		*ptr;
-
-	i = 1;
-	ptr = *path;
-	while (ptr)
-	{
-		if (i == 1)
-			ft_printf("{red}%s->{eoc}",
-					find_ver_by_index(ver, ptr->node)->name);
-		else if (i != path_len(path))
-			ft_printf("{green}%s->{eoc}",
-					find_ver_by_index(ver, ptr->node)->name);
-		else if (i == path_len(path))
-			ft_printf("{blue}%s{eoc}",
-					find_ver_by_index(ver, ptr->node)->name);
-		i++;
-		ptr = ptr->next;
-	}
-	ft_printf("\n");
-}
-
 void			list_free(t_list **tab)
 {
 	t_list		*lst;
@@ -171,22 +147,4 @@ void			list_free(t_list **tab)
 		lst = next;
 	}
 	*tab = NULL;
-}
-
-void			paths_print(t_list **lst, t_vertex **ver)
-{
-	t_list		*p;
-	t_path		*ptr;
-	int 		i;
-
-	i = 0;
-	p = *lst;
-	while (p)
-	{
-		ft_printf("Path [%d]: ", i++);
-		ptr = p->content;
-		path_print(&ptr, ver);
-		p = p->next;
-	}
-	ft_printf("\n");
 }

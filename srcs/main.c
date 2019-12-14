@@ -51,28 +51,40 @@ static t_structs			*init_structs()
 	return (s);
 }
 
-void				print_all(t_structs *str)
+
+static unsigned 	parse_arguments(int ac, char **arg)
 {
-	ft_printf("{cyan}%d\n{eoc}", str->ants_amount);
-	vertex_print((t_vertex **)&str->ver);
-	edge_print((t_edge **)&str->edge);
-	print_mx(str->mx, str->m_size, (t_vertex **)&str->ver);
-	paths_print(&str->paths, (t_vertex **)&str->ver);
-	ants_print((t_ants **)&str->ants, (t_vertex **)&str->ver);
+	unsigned 		flag;
+	int 			i;
+
+	flag = 0;
+	i = 1;
+	while (i < ac)
+	{
+		if (ft_strequ(arg[i], "-c"))
+			flag |= COLORS;
+		if (ft_strequ(arg[i], "-d"))
+			flag |= DEBUG;
+		i++;
+	}
+	return (flag);
 }
 
 int 				main(int ac, char **av)
 {
+	unsigned 		flags = 0;
 	t_structs		*structs;
 
 	structs = init_structs();
-	reader(structs, av[1]);
+	reader(structs, av[2]);
 	check_lists((t_vertex **)&structs->ver, (t_edge **)&structs->edge);
 	create_matrix(structs);
 	structs->paths = solver(structs->mx, structs->m_size, (t_vertex **)&structs->ver);
 	structs->ants = spawn_ants(structs->ants_amount, (t_list **)&structs->paths);
-	print_all(structs);
-	mover((t_vertex **)&structs->ver, (t_ants **)&structs->ants);
+	flags = parse_arguments(ac, av);
+	if (flags & DEBUG)
+		print_all(structs);
+	mover((t_vertex **)&structs->ver, (t_ants **)&structs->ants, flags);
 	free_structs(structs);
 	return (0);
 }

@@ -7,6 +7,9 @@
 # define START		1u
 # define END		2u
 
+# define DEBUG		1u
+# define COLORS		2u
+
 typedef struct		s_ants
 {
 	int 			id;
@@ -14,6 +17,7 @@ typedef struct		s_ants
 	struct s_ants 	*next;
 	struct s_path 	*pos;
 	int 			indx;
+	int 			super_way;
 }					t_ants;
 
 typedef struct		s_vertex
@@ -61,8 +65,6 @@ typedef struct 		s_structs
 	int 			m_size;
 }					t_structs;
 
-
-
 /*
 **	reader.c
 */
@@ -94,6 +96,7 @@ void 					check_lists(t_vertex **ver, t_edge **edge);
 */
 int						cut_after_symbol(const char *src, char **dst, char sym);
 int						lem_atoi(const char *str, int *num, int pos, int lc);
+int 					skip_spaces(const char *str);
 
 /*
 **	display_info.c
@@ -103,6 +106,9 @@ void					edge_print(t_edge **edge);
 void					vertex_print(t_vertex **ver);
 void					print_mx(int **mx, int size, t_vertex **ver);
 void					ants_print(t_ants **ants, t_vertex **ver);
+void					path_print(t_path **path, t_vertex **ver);
+void					paths_print(t_list **lst, t_vertex **ver);
+void					print_all(t_structs *str);
 
 /*
 **	s_mx.c
@@ -113,8 +119,6 @@ int						exclude_overlap(int **mx, int size);
 /*
 **	s_path.c
 */
-void					path_print(t_path **path, t_vertex **ver);
-void					paths_print(t_list **lst, t_vertex **ver);
 t_path 					*path_create_node(int v, int par);
 void					path_push_back(t_path **path, t_path *node);
 void					path_push_front(t_path **dst, t_path *node);
@@ -135,7 +139,7 @@ t_path 					*get_shortest_path(int **mx, int m_size);
 /*
 **	mover.c
 */
-void					mover(t_vertex **ver, t_ants **ants);
+void					mover(t_vertex **ver, t_ants **ants, unsigned flags);
 
 /*
 **	s_ants.c

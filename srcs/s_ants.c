@@ -65,8 +65,8 @@ t_list				*get_i_paths(t_list **paths, int value)
 {
 	t_list			*l;
 
-	if (value == ft_lstlen(paths))
-		return (NULL);
+//	if (value == ft_lstlen(paths))
+//		return (NULL);
 	l = *paths;
 	while (l && value--)
 		l = l->next;
@@ -105,6 +105,35 @@ static void			dispatcher(int amount, t_list **paths, t_ants **ants)
 	}
 }
 
+static int 		is_super_way(t_list **paths)
+{
+	t_list		*l;
+	t_path		*p;
+
+	l = *paths;
+	while (l)
+	{
+		p = l->content;
+		if (path_len(&p) == 2)
+			return (1);
+		l = l->next;
+	}
+	return (0);
+}
+
+static void		set_super_flag(t_ants **ants)
+{
+	t_ants		*a;
+
+	a = *ants;
+	while (a)
+	{
+		a->path = 0;
+		a->super_way = 1;
+		a = a->next;
+	}
+}
+
 static void		link_nodes(t_ants **ants, t_list **paths)
 {
 	t_ants		*a;
@@ -134,7 +163,10 @@ t_ants 			*spawn_ants(int amount, t_list **paths)
 		push_back(&ants, node);
 		i++;
 	}
-	dispatcher(amount, paths, &ants);
+	if (is_super_way(paths))
+		set_super_flag(&ants);
+	else
+		dispatcher(amount, paths, &ants);
 	link_nodes(&ants, paths);
 	return (ants);
 }

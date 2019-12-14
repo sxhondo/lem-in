@@ -1,5 +1,19 @@
 #include "lem_in.h"
 
+int 			skip_spaces(const char *str)
+{
+	int 		i;
+
+	i = 0;
+	while (*str && (*str == ' ' || *str == '\t'))
+	{
+		str++;
+		i++;
+	}
+	return (i);
+}
+
+
 int						cut_after_symbol(const char *src, char **dst, char sym)
 {
 	int 				i;

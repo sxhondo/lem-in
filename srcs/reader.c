@@ -12,8 +12,8 @@ t_info					*init_info(char *path)
 	i->mod = 0;
 	i->flag = 0;
 	i->lc = 1;
-//	i->fd = 0;
-	i->fd = open(path, O_RDONLY);
+	i->fd = 0;
+//	i->fd = open(path, O_RDONLY);
 	i->skip_comments = 0;
 	return (i);
 }
@@ -55,19 +55,6 @@ static int					check_ants_num(const char *line, int lc)
 }
 
 /* *** */
-
-static int 		skip_spaces(const char *str)
-{
-	int 		i;
-
-	i = 0;
-	while (*str && (*str == ' ' || *str == '\t'))
-	{
-		str++;
-		i++;
-	}
-	return (i);
-}
 
 static t_vec			*vec_read(int fd)
 {
@@ -234,7 +221,7 @@ void 					reader(t_structs *structs, char *path)
 		ft_strdel(&inf->name);
 	}
 	check_no_room_given(inf->flag, inf->lc);
-	ft_printf("%s\n", vec->data);
+	ft_printf("%s\n\n", vec->data);
 	ft_vec_del(&vec);
 	free(inf);
 }

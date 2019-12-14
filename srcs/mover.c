@@ -15,47 +15,56 @@ static int			all_finished(t_ants **ants)
 }
 
 
-static void			display_moves(t_ants **ants, t_vertex **ver)
+static void			display_moves(t_ants **ants, t_vertex **ver, unsigned flags)
 {
+	int 			last;
+	int 			sup;
 	t_ants			*an;
 
+	last = 0;
 	an = *ants;
 	while (an)
 	{
 		if (an->pos && an->pos->node > 0)
-			ft_printf("{red}L%d-{green}%s{eoc} ",
-				an->id, find_ver_by_index(ver, an->pos->node)->name);
+		{
+			if (flags & COLORS)
+				ft_printf("{red}L%d-{blue}%s{eoc} ",
+					 	 an->id, find_ver_by_index(ver, an->pos->node)->name);
+			else
+				ft_printf("L%d-%s ",
+						  an->id, find_ver_by_index(ver, an->pos->node)->name);
+			last++;
+		}
 		an = an->next;
 	}
-	ft_printf("\n");
 }
 
-static void			push_new(t_ants **ants)
+static int			push_new(t_ants **ants, int new_id)
 {
 	int 			i;
-	int 			new_id;
+	int 			tmp;
 	t_ants			*a;
 
-	i = 0;
-	new_id = 1;
+	tmp = 0;
 	a = *ants;
 	while (a)
 	{
+		i = a->super_way ? 0 : tmp;
 		if (a->path == i && a->pos && a->pos->node == 0)
 		{
 			a->pos = a->pos->next;
-			a->id += new_id;
+			a->id = new_id;
 			new_id++;
-			i++;
+			tmp++;
 		}
 		a = a->next;
 	}
+	return (new_id);
 }
 
 static int			update(t_ants **ants)
 {
 	t_ants			*a;
-	t_list			*l;
 
 	a = *ants;
 	while (a)
@@ -64,22 +73,19 @@ static int			update(t_ants **ants)
 			a->pos = a->pos->next;
 		a = a->next;
 	}
-
 }
 
-void 				mover(t_vertex **ver, t_ants **ants)
+void 				mover(t_vertex **ver, t_ants **ants, unsigned flags)
 {
+	int 			id;
 
-
-	push_new(ants);
-//	display_moves(ants, ver);
-	ants_print(ants, ver);
-/*
+	id = push_new(ants, 1);
+	display_moves(ants, ver, flags);
 	while (!all_finished(ants))
 	{
 		update(ants);
-		push_new(ants);
-		display_moves(ants, ver);
+		id = push_new(ants, id);
+		ft_printf("\n");
+		display_moves(ants, ver, flags);
 	}
-*/
 }

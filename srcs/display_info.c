@@ -14,6 +14,58 @@ void		free_path(t_path **s)
 	}
 }
 
+void				print_all(t_structs *str)
+{
+	ft_printf("{cyan}ANTS: %14d\n{eoc}", str->ants_amount);
+	vertex_print((t_vertex **)&str->ver);
+	edge_print((t_edge **)&str->edge);
+	print_mx(str->mx, str->m_size, (t_vertex **)&str->ver);
+	paths_print(&str->paths, (t_vertex **)&str->ver);
+	ants_print((t_ants **)&str->ants, (t_vertex **)&str->ver);
+}
+
+void			paths_print(t_list **lst, t_vertex **ver)
+{
+	t_list		*p;
+	t_path		*ptr;
+	int 		i;
+
+	i = 0;
+	p = *lst;
+	while (p)
+	{
+		ft_printf("Path [%d]: ", i++);
+		ptr = p->content;
+		path_print(&ptr, ver);
+		p = p->next;
+	}
+	ft_printf("\n");
+}
+
+void			path_print(t_path **path, t_vertex **ver)
+{
+	int 		i;
+	t_path		*ptr;
+
+	i = 1;
+	ptr = *path;
+	while (ptr)
+	{
+		if (i == 1)
+			ft_printf("{red}%s->{eoc}",
+					  find_ver_by_index(ver, ptr->node)->name);
+		else if (i != path_len(path))
+			ft_printf("{green}%s->{eoc}",
+					  find_ver_by_index(ver, ptr->node)->name);
+		else if (i == path_len(path))
+			ft_printf("{blue}%s{eoc}",
+					  find_ver_by_index(ver, ptr->node)->name);
+		i++;
+		ptr = ptr->next;
+	}
+	ft_printf("\n");
+}
+
 void				ants_print(t_ants **ants, t_vertex **ver)
 {
 	t_ants			*an;
@@ -21,12 +73,12 @@ void				ants_print(t_ants **ants, t_vertex **ver)
 	an = *ants;
 	while (an)
 	{
-		ft_printf("{red}id:[%d]\t", an->id);
-		ft_printf(" {cyan}path: %d\t", an->path);
+		ft_printf("{red}id:[%d]{eoc}\t", an->id);
+		ft_printf(" {cyan}path: %d{eoc}\t", an->path);
 		if (an->pos)
 		{
-			ft_printf("{green} pos: %d",  an->pos->node);
-			ft_printf("{green} (%s)\n",
+			ft_printf("{green} pos: %d{eoc}",  an->pos->node);
+			ft_printf("{green} (%s){eoc}\n",
 					  find_ver_by_index(ver, an->pos->node)->name);
 		}
 		else
@@ -41,7 +93,7 @@ void				vertex_print(t_vertex **ver)
 	t_vertex		*p;
 
 	p = *ver;
-	ft_printf("------{red}vertexes{eoc}------\n");
+	ft_printf("------{red}vertexes{eoc}-------\n");
 	while (p)
 	{
 		p->mod == 1 ? ft_printf("{blue}[%s] {eoc}", p->name) :
@@ -50,7 +102,7 @@ void				vertex_print(t_vertex **ver)
 		ft_printf("X: [%2d], Y: [%2d]\n", p->x, p->y);
 		p = p->next;
 	}
-	ft_printf("--------------------\n");
+	ft_printf("---------------------\n");
 }
 
 void				edge_print(t_edge **edge)
@@ -58,13 +110,13 @@ void				edge_print(t_edge **edge)
 	t_edge			*p;
 
 	p = *edge;
-	ft_printf("------{blue}LINKS{eoc}---------\n");
+	ft_printf("------{blue}edges{eoc}----------\n");
 	while (p)
 	{
 		ft_printf("{red} %s-{blue}%s{eoc}\n", p->v1, p->v2);
 		p = p->next;
 	}
-	ft_printf("--------------------\n");
+	ft_printf("---------------------\n");
 }
 
 void			print_mx(int **mx, int size, t_vertex **ver)
@@ -73,7 +125,7 @@ void			print_mx(int **mx, int size, t_vertex **ver)
 	t_vertex 	*p;
 
 	p = NULL;
-	ft_printf("\n   ");
+	ft_printf("------{magenta}matrix{eoc}---------\n   ");
 	p = *ver;
 	while (p)
 	{
@@ -97,7 +149,7 @@ void			print_mx(int **mx, int size, t_vertex **ver)
 			: ft_printf("{red}%3d{eoc}", mx[i][j]);
 		ft_printf("\n");
 	}
-	ft_printf("\n");
+	ft_printf("---------------------\n\n");
 }
 
 void		put_error(char *err, int lc)
