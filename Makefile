@@ -13,7 +13,7 @@ SRCS_LIST=\
 		mover.c\
 		solver.c\
 		reader.c\
-		put_error.c\
+		display_info.c\
 		parsing_tools.c\
 		parsing_lists.c\
 		s_vertex.c\

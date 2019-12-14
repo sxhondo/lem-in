@@ -76,14 +76,12 @@ void					vertex_add(t_structs *structs, t_info *inf, int x, int y);
 int						get_i_by_name(t_vertex **ver, char *name);
 t_vertex     			*find_ver_by_name(t_vertex **ver, char *name);
 t_vertex 				*find_ver_by_index(t_vertex **ver, int i);
-void					vertex_print(t_vertex **ver);
 void					vertex_free(t_vertex **ver);
 
 /*
 **	s_edge.c
 */
 void 					edge_add(t_structs *structs, t_info *inf);
-void					edge_print(t_edge **edge);
 void					edge_free(t_edge **edge);
 
 /*
@@ -98,15 +96,18 @@ int						cut_after_symbol(const char *src, char **dst, char sym);
 int						lem_atoi(const char *str, int *num, int pos, int lc);
 
 /*
-**	put_error.c
+**	display_info.c
 */
 void					put_error(char *err, int lc);
+void					edge_print(t_edge **edge);
+void					vertex_print(t_vertex **ver);
+void					print_mx(int **mx, int size, t_vertex **ver);
+void					ants_print(t_ants **ants, t_vertex **ver);
 
 /*
 **	s_mx.c
 */
 void 					create_matrix(t_structs *structs);
-void					print_mx(int **mx, int size, t_vertex **ver);
 int						exclude_overlap(int **mx, int size);
 
 /*
@@ -144,7 +145,4 @@ t_list					*get_i_paths(t_list **paths, int value);
 void					free_ants(t_ants **s);
 
 
-void					ants_print(t_ants **ants, t_vertex **ver);
-
-
-#endif //LEM_IN_LEM_IN_H
+#endif

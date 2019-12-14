@@ -1,38 +1,5 @@
 #include "lem_in.h"
 
-void			print_mx(int **mx, int size, t_vertex **ver)
-{
-	int 		i, j;
-	t_vertex 	*p;
-
-	p = NULL;
-	ft_printf("\n   ");
-	p = *ver;
-	while (p)
-	{
-		p->mod == 0 ? ft_printf("%3s", p->name) :
-			p->mod == 1 ? ft_printf("{red}%3s{eoc}", p->name) :
-				ft_printf("{blue}%3s{eoc}", p->name);
-		p = p->next;
-	}
-	p = *ver;
-	ft_printf("\n");
-	i = -1;
-	while (++i < size)
-	{
-		p->mod == 0 ? ft_printf("%3s", p->name) :
-			p->mod == 1 ? ft_printf("{red}%3s{eoc}", p->name) :
-				ft_printf("{blue}%3s{eoc}", p->name);
-		p = p->next;
-		j = -1;
-		while (++j < size)
-			mx[i][j] == 0 ? ft_printf("%3d", mx[i][j])
-			: ft_printf("{red}%3d{eoc}", mx[i][j]);
-		ft_printf("\n");
-	}
-	ft_printf("\n");
-}
-
 int			exclude_overlap(int **mx, int size)
 {
 	int 	i;

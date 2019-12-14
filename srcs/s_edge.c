@@ -17,20 +17,6 @@ void				edge_free(t_edge **edge)
 	p = NULL;
 }
 
-void				edge_print(t_edge **edge)
-{
-	t_edge			*p;
-
-	p = *edge;
-	ft_printf("------{blue}LINKS{eoc}---------\n");
-	while (p)
-	{
-		ft_printf("{red} %s-{blue}%s{eoc}\n", p->v1, p->v2);
-		p = p->next;
-	}
-	ft_printf("--------------------\n");
-}
-
 static t_edge				*edge_init(char *e1, char *e2)
 {
 	t_edge					*edge;

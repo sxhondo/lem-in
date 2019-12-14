@@ -75,24 +75,6 @@ void				vertex_free(t_vertex **ver)
 	p = NULL;
 }
 
-void				vertex_print(t_vertex **ver)
-{
-	t_vertex		*p;
-
-	p = *ver;
-	ft_printf("------{red}vertexes{eoc}------\n");
-	while (p)
-	{
-		p->mod == 1 ? ft_printf("{blue}[%s] {eoc}", p->name) :
-			p->mod == 2 ? ft_printf("{red}[%s] {eoc}", p->name) :
-				ft_printf("[%s] ", p->name);
-		ft_printf("X: [%2d], Y: [%2d]\n", p->x, p->y);
-		p = p->next;
-	}
-	ft_printf("--------------------\n");
-}
-
-
 static void					vertex_push_back(t_vertex **dst, t_vertex *elem)
 {
 	t_vertex				*tmp;

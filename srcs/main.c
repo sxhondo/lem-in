@@ -1,27 +1,5 @@
 #include "lem_in.h"
 
-void				ants_print(t_ants **ants, t_vertex **ver)
-{
-	t_ants			*an;
-
-	an = *ants;
-	while (an)
-	{
-		ft_printf("{red}id:[%d]\t", an->id);
-		ft_printf(" {cyan}path: %d\t", an->path);
-		if (an->pos)
-		{
-			ft_printf("{green} pos: %d",  an->pos->node);
-			ft_printf("{green} (%s)\n",
-					  find_ver_by_index(ver, an->pos->node)->name);
-		}
-		else
-			ft_printf("{magenta} finished! {eoc}\n");
-		an = an->next;
-	}
-	ft_printf("\n");
-}
-
 void			free_list(t_list **tab)
 {
 	t_list		*lst;
