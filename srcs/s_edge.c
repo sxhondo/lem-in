@@ -9,8 +9,8 @@ void				edge_free(t_edge **edge)
 	while (p)
 	{
 		next = p->next;
-		ft_strdel(&p->v1);
-		ft_strdel(&p->v2);
+		ft_strdel(&p->v1_name);
+		ft_strdel(&p->v2_name);
 		free(p);
 		p = next;
 	}
@@ -26,10 +26,11 @@ static t_edge				*edge_init(char *e1, char *e2)
 		put_error("cannot alocate memory", 0);
 		return (NULL);
 	}
-	if (!(edge->v1 = ft_strdup(e1)))
+	if (!(edge->v1_name = ft_strdup(e1)))
 		put_error("cannot alocate memory", 0);
-	if (!(edge->v2 = ft_strdup(e2)))
+	if (!(edge->v2_name = ft_strdup(e2)))
 		put_error("cannot alocate memory", 0);
+	edge->cost = 1;
 	ft_strdel(&e1);
 	ft_strdel(&e2);
 	return (edge);
@@ -71,12 +72,55 @@ static void					edge_push_back(t_edge **dst, t_edge *elem)
 	}
 }
 
+t_edge						*find_edge(t_edge **edge, char *v1, char *v2)
+{
+	t_edge					*e;
+
+	e = *edge;
+	while (e)
+	{
+		if ((ft_strequ(e->v1->name, v1) && ft_strequ(e->v2->name, v2)) ||
+				(ft_strequ(e->v1->name, v2) && ft_strequ(e->v2->name, v1)))
+			return (e);
+		e = e->next;
+	}
+	return (NULL);
+}
+
+t_vertex					*find_start(t_edge **edge)
+{
+	t_edge					*e;
+
+	e = *edge;
+	while (e)
+	{
+		if (e->v1->mod == 1)
+			return (e->v1);
+		if (e->v2->mod == 1)
+			return (e->v2);
+	}
+	return (NULL);
+}
+
+int 						edge_len(t_edge **edge)
+{
+	t_edge					*e;
+	int 					i;
+
+	i = 0;
+	e = *edge;
+	while (e)
+	{
+		e = e->next;
+		i++;
+	}
+	return (i);
+}
+
 void 						edge_add(t_structs *structs, t_info *inf)
 {
 	t_edge					*elem;
 
 	elem = proceed_edge(inf);
-//	check_non_existing_link((t_vertex **)&structs->ver,
-//			inf->lc, elem->v1, elem->v2);
 	edge_push_back((t_edge **)&structs->edge, elem);
 }

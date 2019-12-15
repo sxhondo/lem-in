@@ -56,7 +56,7 @@ t_vertex     			 *find_ver_by_name(t_vertex **ver, char *name)
 			return (v);
 		v = v->next;
 	}
-	return (0);
+	return (NULL);
 }
 
 void				vertex_free(t_vertex **ver)
@@ -109,6 +109,5 @@ void 					vertex_add(t_structs *structs,
 	elem->mod = inf->mod;
 	elem->x = x;
 	elem->y = y;
-//	check_existing_vertex((t_vertex **)&structs->ver, elem, inf->lc);
 	vertex_push_back((t_vertex **)&structs->ver, elem);
 }

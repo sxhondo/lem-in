@@ -80,13 +80,12 @@ int 				main(int ac, char **av)
 	flags = parse_arguments(ac, av);
 	structs = init_structs();
 	reader(structs, flags, av[3]);
-	check_lists((t_vertex **)&structs->ver, (t_edge **)&structs->edge);
-	create_matrix(structs);
-	structs->paths = solver(structs->mx, structs->m_size, (t_vertex **)&structs->ver);
-	structs->ants = spawn_ants(structs->ants_amount, (t_list **)&structs->paths);
-	if (flags & DEBUG)
-		print_all(structs);
-	mover((t_vertex **)&structs->ver, (t_ants **)&structs->ants, flags);
-	free_structs(structs);
-	return (0);
+	parse_lists((t_vertex **)&structs->ver, (t_edge **)&structs->edge);
+	structs->paths = solver((t_edge **)&structs->edge, (t_vertex **)&structs->ver);
+//	structs->ants = spawn_ants(structs->ants_amount, (t_list **)&structs->paths);
+//	if (flags & DEBUG)
+//		print_all(structs);
+//	mover((t_vertex **)&structs->ver, (t_ants **)&structs->ants, flags);
+//	free_structs(structs);
+//	return (0);
 }

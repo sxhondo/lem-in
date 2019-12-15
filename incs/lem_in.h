@@ -30,17 +30,29 @@ typedef struct		s_vertex
 	struct s_vertex *next;
 }					t_vertex;
 
+//typedef struct		s_edge
+//{
+//	char 			*v1;
+//	char 			*v2;
+//	struct s_edge 	*next;
+//}					t_edge;
+
 typedef struct		s_edge
 {
-	char 			*v1;
-	char 			*v2;
+	char 			*v1_name;
+	char 			*v2_name;
+	t_vertex		*v1;
+	t_vertex 		*v2;
+	int 			cost;
 	struct s_edge 	*next;
 }					t_edge;
 
 typedef struct		s_path
 {
-	int				node;
-	int				parent;
+	t_vertex		*curr;
+	t_vertex		*prev;
+//	int				node;
+//	int				parent;
 	struct 	s_path	*next;
 }					t_path;
 
@@ -84,13 +96,16 @@ void					vertex_free(t_vertex **ver);
 /*
 **	s_edge.c
 */
+t_edge					*find_edge(t_edge **edge, char *v1, char *v2);
+t_vertex				*find_start(t_edge **edge);
 void 					edge_add(t_structs *structs, t_info *inf);
 void					edge_free(t_edge **edge);
+int 					edge_len(t_edge **edge);
 
 /*
 **	parsing_lists.c
 */
-void 					check_lists(t_vertex **ver, t_edge **edge);
+void 					parse_lists(t_vertex **ver, t_edge **edge);
 
 /*
 **	parsing_tools.c
@@ -120,22 +135,33 @@ int						exclude_overlap(int **mx, int size);
 /*
 **	s_path.c
 */
-t_path 					*path_create_node(int v, int par);
-void					path_push_back(t_path **path, t_path *node);
-void					path_push_front(t_path **dst, t_path *node);
-void					path_free(t_path **s);
+t_path 					*path_init(t_vertex **ver);
+void					path_add(t_path **dst, t_vertex *elem, t_vertex *prev);
+void					path_push(t_path **dst, t_path *elem);
 int 					path_len(t_path **dst);
-void					add_path_to_lst(t_list **lst, t_path *path);
-int 					is_paths(int **mx, int m_size);
-int 					line_is_busy(t_list **lst, t_path **path, int last_node);
-void					list_free(t_list **tab);
-t_path					*get_i_path_node(t_path **path, int value);
+void					path_free(t_path **s);
+t_path 					*path_duplicate(t_path *dupl);
+int 					is_paths(t_edge **edge);
+
+//void					path_push_back(t_path **path, t_path *node);
+//void					path_push_front(t_path **dst, t_path *node);
+//void					path_free(t_path **s);
+//int 					path_len(t_path **dst);
+//void					add_path_to_lst(t_list **lst, t_path *path);
+//int 					is_paths(int **mx, int m_size);
+//int 					line_is_busy(t_list **lst, t_path **path, int last_node);
+//void					list_free(t_list **tab);
+//t_path					*get_i_path_node(t_path **path, int value);
 
 /*
 **	solver.c
 */
-t_list 					*solver(int **mx, int m, t_vertex **ver);
-t_path 					*get_shortest_path(int **mx, int m_size);
+t_list					*solver(t_edge **edge, t_vertex **ver);
+
+/*
+**	bfs.c
+*/
+t_path					*get_shortest_path(t_edge **edge);
 
 /*
 **	mover.c

@@ -139,9 +139,9 @@ static void				check_non_existing_vertex(t_vertex **ver, t_edge **edge)
 		v = *ver;
 		while (v)
 		{
-			if (ft_strequ(e->v1, v->name))
+			if (ft_strequ(e->v1_name, v->name))
 				i++;
-			if (ft_strequ(e->v2, v->name))
+			if (ft_strequ(e->v2_name, v->name))
 				j++;
 			v = v->next;
 		}
@@ -151,10 +151,29 @@ static void				check_non_existing_vertex(t_vertex **ver, t_edge **edge)
 	}
 }
 
-void 			check_lists(t_vertex **ver, t_edge **edge)
+static void		link_edges_to_vertex(t_vertex **ver, t_edge **edge)
 {
+	t_edge		*e;
+
+	e = *edge;
+	while (e)
+	{
+		e->v1 = find_ver_by_name(ver, e->v1_name);
+		e->v2 = find_ver_by_name(ver, e->v2_name);
+		ft_strdel(&e->v1_name);
+		ft_strdel(&e->v2_name);
+		e = e->next;
+	}
+}
+
+void 			parse_lists(t_vertex **ver, t_edge **edge)
+{
+	t_edge		*e;
+
+
 	check_duplicate_vertex(ver);
 	check_non_existing_vertex(ver, edge);
-	put_to_end(ver);
-	put_to_begin(ver);
+	link_edges_to_vertex(ver, edge);
+//	put_to_end(ver);
+//	put_to_begin(ver);
 }
