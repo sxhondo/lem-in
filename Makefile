@@ -14,6 +14,7 @@ SRCS_LIST=\
 		main.c\
 		mover.c\
 		solver.c\
+		bfs.c\
 		reader.c\
 		display_info.c\
 		parsing_tools.c\

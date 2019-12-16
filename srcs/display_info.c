@@ -4,7 +4,7 @@ void		edge_print(t_edge **edge)
 {
 	t_edge	*e;
 
-	ft_printf("\t---edges---\n");
+	ft_printf("---edges---\n");
 	e = *edge;
 	while (e)
 	{
@@ -22,7 +22,7 @@ void		free_path(t_path **s)
 	p = *s;
 	while (p)
 	{
-		next = p->next;
+		next = p->next_p;
 		free(p);
 		p = next;
 	}
@@ -44,64 +44,44 @@ void			paths_print(t_list **lst, t_vertex **ver)
 	t_path		*ptr;
 	int 		i;
 
-	i = 0;
-	p = *lst;
-	while (p)
+	// i = 0;
+	// p = *lst;
+	// while (p)
+	// {
+	// 	ft_printf("Path [%d]: ", i++);
+	// 	ptr = p->content;
+	// 	path_print(&ptr, ver);
+	// 	p = p->next;
+	// }
+	// ft_printf("\n");
+}
+
+/* f == from front, b = from back */
+
+void 			path_print(t_path **path, char mode)
+{
+	t_path		*tmp;
+
+ 	ft_printf("from %s\n", mode == 'f' ? "back" : "front");
+	tmp = *path;
+	if (mode == 'b')
 	{
-		ft_printf("Path [%d]: ", i++);
-		ptr = p->content;
-		path_print(&ptr, ver);
-		p = p->next;
+		while (tmp->next_p)
+			tmp = tmp->next_p;
+		while (tmp)
+		{
+			ft_printf("%s ", tmp->curr_v->name);
+			tmp = tmp->prev_p;
+		}
 	}
+	else
+		while (tmp)
+		{
+			ft_printf("%s ", tmp->curr_v->name);
+			tmp = tmp->next_p;
+		}
 	ft_printf("\n");
 }
-
-void			path_print(t_path **path, t_vertex **ver)
-{
-	int 		i;
-	t_path		*ptr;
-
-//	i = 1;
-//	ptr = *path;
-//	while (ptr)
-//	{
-////		ft_printf("(%d)", ptr->node);
-//		if (i == 1)
-//			ft_printf("{red}%s->{eoc}",
-//					  find_ver_by_index(ver, ptr->node)->name);
-//		else if (i != path_len(path))
-//			ft_printf("{green}%s->{eoc}",
-//					  find_ver_by_index(ver, ptr->node)->name);
-//		else if (i == path_len(path))
-//			ft_printf("{blue}%s{eoc}",
-//					  find_ver_by_index(ver, ptr->node)->name);
-//		i++;
-//		ptr = ptr->next;
-//	}
-//	ft_printf("\n");
-}
-
-//void				ants_print(t_ants **ants, t_vertex **ver)
-//{
-//	t_ants			*an;
-//
-//	an = *ants;
-//	while (an)
-//	{
-//		ft_printf("{red}id:[%d]{eoc}\t", an->id);
-//		ft_printf(" {cyan}path: %d{eoc}\t", an->path);
-//		if (an->pos)
-//		{
-//			ft_printf("{green} pos: %d{eoc}",  an->pos->node);
-//			ft_printf("{green} (%s){eoc}\n",
-//					  find_ver_by_index(ver, an->pos->node)->name);
-//		}
-//		else
-//			ft_printf("{magenta} finished! {eoc}\n");
-//		an = an->next;
-//	}
-//	ft_printf("\n");
-//}
 
 void				vertex_print(t_vertex **ver)
 {
@@ -114,60 +94,14 @@ void				vertex_print(t_vertex **ver)
 	while (p)
 	{
 		ft_printf("[%d] ", i++);
-		p->mod == 1 ? ft_printf("{blue}[%s] {eoc}", p->name) :
-			p->mod == 2 ? ft_printf("{red}[%s] {eoc}", p->name) :
-				ft_printf("[%s] ", p->name);
-		ft_printf("X: [%2d], Y: [%2d]\n", p->x, p->y);
+		p->mod == 1 ? ft_printf("{blue}%s {eoc}", p->name) :
+			p->mod == 2 ? ft_printf("{red}%s {eoc}", p->name) :
+				ft_printf("%s ", p->name);
+		ft_printf("\n");
+		// ft_printf("X: [%2d], Y: [%2d]\n", p->x, p->y);
 		p = p->next;
 	}
 	ft_printf("---------------------\n");
-}
-
-//void				edge_print(t_edge **edge)
-//{
-//	t_edge			*p;
-//
-//	p = *edge;
-//	ft_printf("------{blue}edges{eoc}----------\n");
-//	while (p)
-//	{
-//		ft_printf("{red} %s-{blue}%s{eoc}\n", p->v1, p->v2);
-//		p = p->next;
-//	}
-//	ft_printf("---------------------\n");
-//}
-
-void			print_mx(int **mx, int size, t_vertex **ver)
-{
-	int 		i, j;
-	t_vertex 	*p;
-
-	p = NULL;
-	ft_printf("------{magenta}matrix{eoc}---------\n   ");
-	p = *ver;
-	while (p)
-	{
-		p->mod == 0 ? ft_printf("%3s", p->name) :
-			p->mod == 1 ? ft_printf("{red}%3s{eoc}", p->name) :
-				ft_printf("{blue}%3s{eoc}", p->name);
-		p = p->next;
-	}
-	p = *ver;
-	ft_printf("\n");
-	i = -1;
-	while (++i < size)
-	{
-		p->mod == 0 ? ft_printf("%3s", p->name) :
-			p->mod == 1 ? ft_printf("{red}%3s{eoc}", p->name) :
-				ft_printf("{blue}%3s{eoc}", p->name);
-		p = p->next;
-		j = -1;
-		while (++j < size)
-			mx[i][j] == 0 ? ft_printf("%3d", mx[i][j])
-			: ft_printf("{red}%3d{eoc}", mx[i][j]);
-		ft_printf("\n");
-	}
-	ft_printf("---------------------\n\n");
 }
 
 void		put_error(char *err, int lc)

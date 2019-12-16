@@ -30,13 +30,6 @@ typedef struct		s_vertex
 	struct s_vertex *next;
 }					t_vertex;
 
-//typedef struct		s_edge
-//{
-//	char 			*v1;
-//	char 			*v2;
-//	struct s_edge 	*next;
-//}					t_edge;
-
 typedef struct		s_edge
 {
 	char 			*v1_name;
@@ -49,11 +42,11 @@ typedef struct		s_edge
 
 typedef struct		s_path
 {
-	t_vertex		*curr;
-	t_vertex		*prev;
-//	int				node;
-//	int				parent;
-	struct 	s_path	*next;
+	t_vertex		*curr_v;
+	t_vertex		*prev_v;
+	struct 	s_path	*next_p;
+	struct 	s_path	*prev_p;
+
 }					t_path;
 
 typedef struct		s_info
@@ -122,7 +115,7 @@ void					edge_print(t_edge **edge);
 void					vertex_print(t_vertex **ver);
 void					print_mx(int **mx, int size, t_vertex **ver);
 void					ants_print(t_ants **ants, t_vertex **ver);
-void					path_print(t_path **path, t_vertex **ver);
+void 					path_print(t_path **path, char mode);
 void					paths_print(t_list **lst, t_vertex **ver);
 void					print_all(t_structs *str);
 
@@ -135,6 +128,7 @@ int						exclude_overlap(int **mx, int size);
 /*
 **	s_path.c
 */
+void 					path_pback(t_path **dst, t_path *elem);
 t_path 					*path_init(t_vertex **ver);
 void					path_add(t_path **dst, t_vertex *elem, t_vertex *prev);
 void					path_push(t_path **dst, t_path *elem);
@@ -142,6 +136,10 @@ int 					path_len(t_path **dst);
 void					path_free(t_path **s);
 t_path 					*path_duplicate(t_path *dupl);
 int 					is_paths(t_edge **edge);
+t_path 					*path_new();
+t_path					*get_i_path_node(t_path **path, int value);
+void					path_push_init(t_path **dst, t_vertex *v1, t_vertex *v2);
+
 
 //void					path_push_back(t_path **path, t_path *node);
 //void					path_push_front(t_path **dst, t_path *node);
@@ -161,7 +159,7 @@ t_list					*solver(t_edge **edge, t_vertex **ver);
 /*
 **	bfs.c
 */
-t_path					*get_shortest_path(t_edge **edge);
+t_path					*get_shortest_path(t_edge **edge, int check);
 
 /*
 **	mover.c

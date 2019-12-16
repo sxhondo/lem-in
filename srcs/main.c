@@ -26,13 +26,9 @@ static void			free_structs(t_structs *structs)
 	vertex_free((t_vertex **)&structs->ver);
 	edge_free((t_edge **)&structs->edge);
 
-	i = -1;
-	m = structs->mx;
-	while (++i < structs->m_size)
-		free(m[i]);
-	free(structs->mx);
-	free_list((t_list **)&structs->paths);
-	free_ants(&structs->ants);
+
+	// free_list((t_list **)&structs->paths);
+	// free_ants(&structs->ants);
 	free(structs);
 }
 
@@ -86,6 +82,6 @@ int 				main(int ac, char **av)
 //	if (flags & DEBUG)
 //		print_all(structs);
 //	mover((t_vertex **)&structs->ver, (t_ants **)&structs->ants, flags);
-//	free_structs(structs);
-//	return (0);
+	free_structs(structs);
+	return (0);
 }

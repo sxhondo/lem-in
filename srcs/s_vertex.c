@@ -21,8 +21,6 @@ t_vertex 			*find_ver_by_index(t_vertex **ver, int i)
 	t_vertex 		*v;
 
 	v = *ver;
-	if (i < 0)
-		return (NULL);
 	while (v && i--)
 		v = v->next;
 	return (v);

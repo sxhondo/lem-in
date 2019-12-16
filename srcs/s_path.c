@@ -4,7 +4,7 @@ int 			is_paths(t_edge **edge)
 {
 	t_path		*f;
 
-	if ((f = get_shortest_path(edge)))
+	if ((f = get_shortest_path(edge, 1)))
 	{
 		path_free(&f);
 		return (1);
@@ -20,7 +20,7 @@ void		path_free(t_path **s)
 	p = *s;
 	while (p)
 	{
-		next = p->next;
+		next = p->next_p;
 		free(p);
 		p = next;
 	}
@@ -42,7 +42,7 @@ t_path				*get_i_path_node(t_path **path, int value)
 
 	p = *path;
 	while (p && value--)
-		p = p->next;
+		p = p->next_p;
 	return (p);
 }
 
@@ -55,31 +55,43 @@ int 				path_len(t_path **dst)
 	p = *dst;
 	while (p)
 	{
-		p = p->next;
+		p = p->next_p;
 		i++;
 	}
 	return (i);
 }
 
-t_path 					*path_init(t_vertex **ver)
+t_path 					*path_new()
 {
-	t_path				*p;
+	t_path 				*p;
 
 	if (!(p = ft_memalloc(sizeof(t_path))))
 	{
 		put_error("cannot allocate memory", 0);
 		return (NULL);
 	}
-	p->curr = *ver;
-	p->prev = NULL;
 	return (p);
+}
+
+void 					path_pback(t_path **dst, t_path *elem)
+{
+	t_path 				*tmp;
+
+	tmp = *dst;
+	while (tmp->next_p)
+		tmp = tmp->next_p;
+	tmp->next_p = elem;
+	elem->prev_p = elem;
+	elem->next_p = NULL;
 }
 
 void					path_push(t_path **dst, t_path *elem)
 {
 	if (elem != NULL)
 	{
-		elem->next = *dst;
+		elem->next_p = *dst;
+		elem->next_p->prev_p = elem;
+		elem->prev_p = NULL;
 		*dst = elem;
 	}
 }
@@ -88,14 +100,28 @@ t_path 					*path_duplicate(t_path *dupl)
 {
 	t_path				*p;
 
-	if (!(p = ft_memalloc(sizeof(t_path))))
-	{
-		put_error("cannot allocate memory", 0);
-		return (NULL);
-	}
-	p->curr = dupl->curr;
-	p->prev = dupl->prev;
+	p = path_new();
+	p->curr_v = dupl->curr_v;
+	p->prev_v = dupl->prev_v;
 	return (p);
+}
+
+void					path_push_init(t_path **dst, t_vertex *v1, t_vertex *v2)
+{
+	t_path 				*elem;
+
+	elem = path_new();
+	elem->curr_v = v1;
+	if (v2)
+		elem->prev_v = v2;
+	if (elem != NULL)
+	{
+		elem->next_p = *dst;
+		if (path_len(dst) > 2)
+			elem->next_p->prev_p = elem;
+		elem->prev_p = NULL;
+		*dst = elem;
+	}
 }
 
 void					path_add(t_path **dst, t_vertex *elem, t_vertex *prev)
@@ -103,14 +129,9 @@ void					path_add(t_path **dst, t_vertex *elem, t_vertex *prev)
 	t_path				*p;
 	t_path				*tmp;
 
-	if (!(p = ft_memalloc(sizeof(t_path))))
-		return (put_error("cannot allocate memory", 0));
-	p->curr = elem;
-	p->prev = prev;
-
-	tmp = *dst;
-	while (tmp->next)
-		tmp = tmp->next;
-	tmp->next = p;
-	p->next = NULL;
+	p = path_new();
+	p->curr_v = elem;
+	if (prev)
+		p->prev_v = prev;
+	path_pback(dst, p);
 }
