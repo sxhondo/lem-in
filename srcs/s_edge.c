@@ -98,6 +98,7 @@ t_vertex					*find_start(t_edge **edge)
 			return (e->v1);
 		if (e->v2->mod == 1)
 			return (e->v2);
+		e = e->next;
 	}
 	return (NULL);
 }

@@ -62,7 +62,7 @@ void 			path_print(t_path **path, char mode)
 {
 	t_path		*tmp;
 
- 	ft_printf("from %s\n", mode == 'f' ? "back" : "front");
+ 	ft_printf("from %s\n", mode == 'f' ? "front" : "back");
 	tmp = *path;
 	if (mode == 'b')
 	{
@@ -75,11 +75,13 @@ void 			path_print(t_path **path, char mode)
 		}
 	}
 	else
+	{
 		while (tmp)
 		{
 			ft_printf("%s ", tmp->curr_v->name);
 			tmp = tmp->next_p;
 		}
+	}
 	ft_printf("\n");
 }
 

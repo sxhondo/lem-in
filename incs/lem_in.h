@@ -128,38 +128,24 @@ int						exclude_overlap(int **mx, int size);
 /*
 **	s_path.c
 */
-void 					path_pback(t_path **dst, t_path *elem);
-t_path 					*path_init(t_vertex **ver);
-void					path_add(t_path **dst, t_vertex *elem, t_vertex *prev);
+t_path 					*path_init(t_vertex *curr, t_vertex *prev);
+void 					path_push_back(t_path **dst, t_path *elem);
+//void					path_add(t_path **dst, t_vertex *elem, t_vertex *prev);
 void					path_push(t_path **dst, t_path *elem);
 int 					path_len(t_path **dst);
 void					path_free(t_path **s);
-t_path 					*path_duplicate(t_path *dupl);
-int 					is_paths(t_edge **edge);
-t_path 					*path_new();
 t_path					*get_i_path_node(t_path **path, int value);
 void					path_push_init(t_path **dst, t_vertex *v1, t_vertex *v2);
 
-
-//void					path_push_back(t_path **path, t_path *node);
-//void					path_push_front(t_path **dst, t_path *node);
-//void					path_free(t_path **s);
-//int 					path_len(t_path **dst);
-//void					add_path_to_lst(t_list **lst, t_path *path);
-//int 					is_paths(int **mx, int m_size);
-//int 					line_is_busy(t_list **lst, t_path **path, int last_node);
-//void					list_free(t_list **tab);
-//t_path					*get_i_path_node(t_path **path, int value);
 
 /*
 **	solver.c
 */
 t_list					*solver(t_edge **edge, t_vertex **ver);
-
 /*
 **	bfs.c
 */
-t_path					*get_shortest_path(t_edge **edge, int check);
+t_path					*get_shortest_path(t_edge **edge);
 
 /*
 **	mover.c
