@@ -37,6 +37,7 @@ typedef struct		s_edge
 	t_vertex		*v1;
 	t_vertex 		*v2;
 	int 			cost;
+	int 			del;
 	struct s_edge 	*next;
 }					t_edge;
 
@@ -66,7 +67,7 @@ typedef struct 		s_structs
 	t_edge			**edge;
 	t_vertex		**ver;
 	t_ants			*ants;
-	t_list			*paths;
+	t_list			*ways;
 	int 			**mx;
 	int 			m_size;
 }					t_structs;
@@ -96,16 +97,17 @@ void					edge_free(t_edge **edge);
 int 					edge_len(t_edge **edge);
 
 /*
-**	parsing_lists.c
+**	parse_lists.c
 */
 void 					parse_lists(t_vertex **ver, t_edge **edge);
 
 /*
-**	parsing_tools.c
+**	parse_reading.c
 */
 int						cut_after_symbol(const char *src, char **dst, char sym);
 int						lem_atoi(const char *str, int *num, int pos, int lc);
 int 					skip_spaces(const char *str);
+unsigned 				parse_arguments(int ac, char **arg);
 
 /*
 **	display_info.c
@@ -113,17 +115,10 @@ int 					skip_spaces(const char *str);
 void					put_error(char *err, int lc);
 void					edge_print(t_edge **edge);
 void					vertex_print(t_vertex **ver);
-void					print_mx(int **mx, int size, t_vertex **ver);
-void					ants_print(t_ants **ants, t_vertex **ver);
+void					ants_print(t_ants **ants);
 void 					path_print(t_path **path, char mode);
-void					paths_print(t_list **lst, t_vertex **ver);
+void 					ways_print(t_list **ways);
 void					print_all(t_structs *str);
-
-/*
-**	s_mx.c
-*/
-void 					create_matrix(t_structs *structs);
-int						exclude_overlap(int **mx, int size);
 
 /*
 **	s_path.c
@@ -139,6 +134,14 @@ void					path_push_init(t_path **dst, t_vertex *v1, t_vertex *v2);
 
 
 /*
+**	graph_tools.c
+*/
+void 					direct_to_finish(t_path **queue, t_edge **edge);
+void				    exclude_route(t_path **route, t_edge **edge);
+int						not_in_queue(t_path **que, char *name);
+t_path					*get_parent(t_path **queue, char *name);
+
+/*
 **	solver.c
 */
 t_list					*solver(t_edge **edge, t_vertex **ver);
@@ -150,7 +153,7 @@ t_path					*get_shortest_path(t_edge **edge);
 /*
 **	mover.c
 */
-void					mover(t_vertex **ver, t_ants **ants, unsigned flags);
+void					mover(t_ants **ants, unsigned flags);
 
 /*
 **	s_ants.c

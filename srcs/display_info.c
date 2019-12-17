@@ -4,14 +4,16 @@ void		edge_print(t_edge **edge)
 {
 	t_edge	*e;
 
-	ft_printf("---edges---\n");
+	ft_printf("{blue}------edges----------{eoc}\n");
 	e = *edge;
 	while (e)
 	{
-		ft_printf("{blue}%s - %s{eoc} %d\n",
+		ft_printf("{blue}%s - %s{eoc} co: %d \n",
 				  e->v1->name, e->v2->name, e->cost);
 		e = e->next;
 	}
+	ft_printf("\n");
+
 }
 
 void		free_path(t_path **s)
@@ -33,27 +35,8 @@ void				print_all(t_structs *str)
 	ft_printf("{cyan}ANTS: %14d\n{eoc}", str->ants_amount);
 	vertex_print((t_vertex **)&str->ver);
 	edge_print((t_edge **)&str->edge);
-//	print_mx(str->mx, str->m_size, (t_vertex **)&str->ver);
-	paths_print(&str->paths, (t_vertex **)&str->ver);
-//	ants_print((t_ants **)&str->ants, (t_vertex **)&str->ver);
-}
-
-void			paths_print(t_list **lst, t_vertex **ver)
-{
-	t_list		*p;
-	t_path		*ptr;
-	int 		i;
-
-	// i = 0;
-	// p = *lst;
-	// while (p)
-	// {
-	// 	ft_printf("Path [%d]: ", i++);
-	// 	ptr = p->content;
-	// 	path_print(&ptr, ver);
-	// 	p = p->next;
-	// }
-	// ft_printf("\n");
+	ways_print((t_list **)&str->ways);
+	ants_print((t_ants **)&str->ants);
 }
 
 /* f == from front, b = from back */
@@ -62,7 +45,7 @@ void 			path_print(t_path **path, char mode)
 {
 	t_path		*tmp;
 
- 	ft_printf("from %s\n", mode == 'f' ? "front" : "back");
+ 	ft_printf("%s\n", mode == 'f' ? "front" : "back");
 	tmp = *path;
 	if (mode == 'b')
 	{
@@ -85,6 +68,39 @@ void 			path_print(t_path **path, char mode)
 	ft_printf("\n");
 }
 
+void				ants_print(t_ants **ants)
+{
+	t_ants			*an;
+
+	an = *ants;
+	while (an)
+	{
+		ft_printf("{red}id:[%d]{eoc}\t", an->id);
+		ft_printf(" {cyan}path: %d{eoc}\t", an->path);
+		if (an->pos)
+			ft_printf("{green} pos: %s{eoc}\n",  an->pos->curr_v->name);
+		else
+			ft_printf("{magenta} finished! {eoc}\n");
+		an = an->next;
+	}
+	ft_printf("\n");
+}
+
+void 				ways_print(t_list **ways)
+{
+	int 			i;
+	t_list 			*w;
+
+	i = 0;
+	w = *ways;
+	while (w)
+	{
+		ft_printf("[%d] ", i++);
+		path_print((t_path **)&w->content, 'f');
+		w = w->next;
+	}
+}
+
 void				vertex_print(t_vertex **ver)
 {
 	int 			i;
@@ -92,7 +108,7 @@ void				vertex_print(t_vertex **ver)
 
 	i = 0;
 	p = *ver;
-	ft_printf("------{red}vertexes{eoc}-------\n");
+	ft_printf("{red}------vertexes-------{eoc}\n");
 	while (p)
 	{
 		ft_printf("[%d] ", i++);
@@ -103,7 +119,6 @@ void				vertex_print(t_vertex **ver)
 		// ft_printf("X: [%2d], Y: [%2d]\n", p->x, p->y);
 		p = p->next;
 	}
-	ft_printf("---------------------\n");
 }
 
 void		put_error(char *err, int lc)

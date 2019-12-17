@@ -12,18 +12,18 @@ LIB_FT = $(LIB_DIR)libft.a
 SRCS_DIR = srcs/
 SRCS_LIST=\
 		main.c\
-		mover.c\
-		solver.c\
-		bfs.c\
-		reader.c\
+		alg_mover.c\
+		alg_solver.c\
+		alg_graph_tools.c\
+		alg_bfs.c\
 		display_info.c\
-		parsing_tools.c\
-		parsing_lists.c\
+		parse_tools.c\
+		parse_lists.c\
+		parse_reader.c\
 		s_vertex.c\
 		s_ants.c\
 		s_edge.c\
-		s_path.c\
-		s_mx.c
+		s_path.c
 
 OBJ_DIR = obj/
 OBJ_LIST = $(SRCS_LIST:%.c=%.o)

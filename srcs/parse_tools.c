@@ -54,3 +54,23 @@ int					lem_atoi(const char *str, int *num, int pos, int lc)
 	num[pos] = (int)res * sign;
 	return (i);
 }
+
+unsigned 			parse_arguments(int ac, char **arg)
+{
+	unsigned 		flag;
+	int 			i;
+
+	flag = 0;
+	i = 1;
+	while (i < ac)
+	{
+		if (ft_strequ(arg[i], "-c"))
+			flag |= COLORS;
+		if (ft_strequ(arg[i], "-d"))
+			flag |= DEBUG;
+		if (ft_strequ(arg[i], "-o"))
+			flag |= OPEN;
+		i++;
+	}
+	return (flag);
+}

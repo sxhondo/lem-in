@@ -148,7 +148,7 @@ static void		link_nodes(t_ants **ants, t_list **paths)
 	}
 }
 
-t_ants 			*spawn_ants(int amount, t_list **paths)
+t_ants 			*spawn_ants(int amount, t_list **ways)
 {
 	int 	i;
 	int 	tmp;
@@ -163,10 +163,10 @@ t_ants 			*spawn_ants(int amount, t_list **paths)
 		push_back(&ants, node);
 		i++;
 	}
-	if (is_super_way(paths))
+	if (is_super_way(ways))
 		set_super_flag(&ants);
 	else
-		dispatcher(amount, paths, &ants);
-	link_nodes(&ants, paths);
+		dispatcher(amount, ways, &ants);
+	link_nodes(&ants, ways);
 	return (ants);
 }

@@ -1,33 +1,5 @@
 #include "lem_in.h"
 
-static t_path			*get_parent(t_path **queue, char *name)
-{
-	t_path				*q;
-
-	q = *queue;
-	while (q)
-	{
-		if (ft_strequ(q->curr_v->name, name))
-			return (q);
-		q = q->next_p;
-	}
-	return (NULL);
-}
-
-static int				not_in_queue(t_path **que, char *name)
-{
-	t_path				*q;
-
-	q = *que;
-	while (q)
-	{
-		if (ft_strequ(q->curr_v->name, name))
-			return (0);
-		q = q->next_p;
-	}
-	return (1);
-}
-
 static t_vertex			*find_adj(t_edge **edge, t_path **que, char *name)
 {
 	t_edge				*e;
@@ -35,6 +7,11 @@ static t_vertex			*find_adj(t_edge **edge, t_path **que, char *name)
 	e = *edge;
 	while (e)
 	{
+		if (e->cost < 0)
+		{
+			e = e->next;
+			continue ;
+		}
 		if (ft_strequ(e->v1->name, name) && not_in_queue(que, e->v2->name))
 			return (e->v2);
 		if (ft_strequ(e->v2->name, name) && not_in_queue(que, e->v1->name))
@@ -42,29 +19,6 @@ static t_vertex			*find_adj(t_edge **edge, t_path **que, char *name)
 		e = e->next;
 	}
 	return (NULL);
-}
-
-static void 			make_graph_directed(t_path **queue, t_edge **edge)
-{
-	t_path 				*a;
-	t_edge 				*tmp;
-	t_vertex 			*t_ver;
-
-	a = (*queue)->next_p;
-	while (a)
-	{
-		tmp = find_edge(edge, a->curr_v->name, a->prev_v->name);
-		if (!ft_strequ(a->prev_v->name, tmp->v1->name))
-		{
-			ft_printf("%s swapped with %s | ",
-					a->prev_v->name, tmp->v1->name);
-			t_ver = tmp->v1;
-			tmp->v1 = tmp->v2;
-			tmp->v2 = t_ver;
-		}
-		a = a->next_p;
-	}
-	ft_printf("\n");
 }
 
 static t_path			*get_reverse_path(t_path *ptr, t_path **queue,
@@ -81,6 +35,8 @@ static t_path			*get_reverse_path(t_path *ptr, t_path **queue,
 		node = path_init(tmp->curr_v, tmp->prev_v);
 		path_push(&ret, node);
 	}
+	direct_to_finish(queue, edge);
+	path_free(queue);
 	return (ret);
 }
 
@@ -96,7 +52,6 @@ t_path					*breadth_first_search(t_path *ptr, t_path **queue,
 	{
 		tmp = path_init(n, curr_v);
 		path_push_back(queue, tmp);
-//		path_print(queue, 'f');
 	}
 	if (!(ptr = ptr->next_p))
 		return (NULL);
@@ -106,12 +61,7 @@ t_path					*breadth_first_search(t_path *ptr, t_path **queue,
 t_path					*get_shortest_path(t_edge **edge)
 {
 	t_path				*queue;
-	t_path				*route;
 
 	queue = path_init(find_start(edge), NULL);
-	if (!(route = breadth_first_search(queue, &queue, edge, queue->curr_v)))
-		put_error("cannot reach finish", 0);
-	make_graph_directed(&queue, edge);
-	path_free(&queue);
-	return (route);
+	return (breadth_first_search(queue, &queue, edge, queue->curr_v));
 }
