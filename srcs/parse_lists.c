@@ -36,7 +36,7 @@ static void				first_swap(t_vertex **ver)
 	*ver = next;
 }
 
-static void				swap(t_vertex **ver)
+static void				swap_lst(t_vertex **ver)
 {
 	t_vertex			*p;
 	t_vertex			*last;
@@ -74,7 +74,7 @@ static void				put_to_end(t_vertex **ver)
 	if (v->mod == 2)
 		return (first_swap(ver));
 	else
-		swap(ver);
+		swap_lst(ver);
 }
 
 static void				put_to_begin(t_vertex **ver)

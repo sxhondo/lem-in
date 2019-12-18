@@ -31,7 +31,7 @@ static t_edge				*edge_init(char *e1, char *e2)
 	if (!(edge->v2_name = ft_strdup(e2)))
 		put_error("cannot alocate memory", 0);
 	edge->cost = 1;
-	edge->del = 0;
+	edge->sw = 0;
 	ft_strdel(&e1);
 	ft_strdel(&e2);
 	return (edge);

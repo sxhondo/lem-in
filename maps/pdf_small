@@ -9,10 +9,11 @@ E 1 1
 C 1 1
 F 1 1
 A-B
-D-B
+B-D
 A-C
-C-E
+E-C
 D-E
 E-F
 F-G
 E-G
+F-C

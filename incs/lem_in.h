@@ -25,6 +25,7 @@ typedef struct		s_vertex
 {
 	char 			*name;
 	unsigned 		mod;
+	int 			vis;
 	int 			x;
 	int 			y;
 	struct s_vertex *next;
@@ -37,14 +38,14 @@ typedef struct		s_edge
 	t_vertex		*v1;
 	t_vertex 		*v2;
 	int 			cost;
-	int 			del;
+	int 			sw;
 	struct s_edge 	*next;
 }					t_edge;
 
 typedef struct		s_path
 {
 	t_vertex		*curr_v;
-	t_vertex		*prev_v;
+	// t_vertex		*prev_v;
 	struct 	s_path	*next_p;
 	struct 	s_path	*prev_p;
 
@@ -123,7 +124,7 @@ void					print_all(t_structs *str);
 /*
 **	s_path.c
 */
-t_path 					*path_init(t_vertex *curr, t_vertex *prev);
+t_path 					*path_init(t_vertex *curr);
 void 					path_push_back(t_path **dst, t_path *elem);
 //void					path_add(t_path **dst, t_vertex *elem, t_vertex *prev);
 void					path_push(t_path **dst, t_path *elem);
@@ -138,17 +139,21 @@ void					path_push_init(t_path **dst, t_vertex *v1, t_vertex *v2);
 */
 void 					direct_to_finish(t_path **queue, t_edge **edge);
 void				    exclude_route(t_path **route, t_edge **edge);
-int						not_in_queue(t_path **que, char *name);
+void				    exclude_route_1(t_path **route, t_edge **edge);
+void				    exclude_route_2(t_path **route, t_edge **edge);
 t_path					*get_parent(t_path **queue, char *name);
+void 					swap_ver(t_vertex **v1, t_vertex **v2);
 
 /*
 **	solver.c
 */
+t_path 					*select_route(void **ver, t_edge **edge, int *par, int last);
 t_list					*solver(t_edge **edge, t_vertex **ver);
+int     		    	find_ver(void **ver, char *name, int size);
 /*
 **	bfs.c
 */
-t_path					*get_shortest_path(t_edge **edge);
+t_path					*bfs(t_edge **edge, void **ver, int len);
 
 /*
 **	mover.c

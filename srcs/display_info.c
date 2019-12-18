@@ -8,8 +8,10 @@ void		edge_print(t_edge **edge)
 	e = *edge;
 	while (e)
 	{
-		ft_printf("{blue}%s - %s{eoc} co: %d \n",
-				  e->v1->name, e->v2->name, e->cost);
+		e->cost > 0 ? ft_printf("{blue}%s -> %s{eoc} co: %d \n",
+				  e->v1->name, e->v2->name, e->cost) :
+				  ft_printf("{blue}%s <- %s{eoc} co: %d \n",
+		  				  e->v2->name, e->v1->name, e->cost);
 		e = e->next;
 	}
 	ft_printf("\n");
@@ -45,7 +47,7 @@ void 			path_print(t_path **path, char mode)
 {
 	t_path		*tmp;
 
- 	ft_printf("%s\n", mode == 'f' ? "front" : "back");
+ 	// ft_printf("%s\n", mode == 'f' ? "front" : "back");
 	tmp = *path;
 	if (mode == 'b')
 	{
@@ -126,6 +128,6 @@ void		put_error(char *err, int lc)
 	lc ? ft_printf("%d: {red}error: {eoc}", lc) :
 		ft_printf("{red}error: {eoc}");
 	ft_printf("%s\n", err);
-//	ft_printf("ERROR\n");
+	ft_fprintf(0, "ERROR\n");
 	exit (1);
 }

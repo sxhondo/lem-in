@@ -9,11 +9,13 @@ INC  = $(INC_DIR)lem_in.h
 LIB_DIR = libft/
 LIB_FT = $(LIB_DIR)libft.a
 
+# 		alg_solver.c\
+
 SRCS_DIR = srcs/
 SRCS_LIST=\
 		main.c\
 		alg_mover.c\
-		alg_solver.c\
+		alg_solver_bf.c\
 		alg_graph_tools.c\
 		alg_bfs.c\
 		display_info.c\

@@ -22,7 +22,10 @@ t_vertex 			*find_ver_by_index(t_vertex **ver, int i)
 
 	v = *ver;
 	while (v && i--)
+	{
+		ft_printf("%d\n", i);
 		v = v->next;
+	}
 	return (v);
 }
 
@@ -107,5 +110,6 @@ void 					vertex_add(t_structs *structs,
 	elem->mod = inf->mod;
 	elem->x = x;
 	elem->y = y;
+	elem->vis = 0;
 	vertex_push_back((t_vertex **)&structs->ver, elem);
 }

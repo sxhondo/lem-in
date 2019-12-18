@@ -80,7 +80,7 @@ void 					path_push_back(t_path **dst, t_path *elem)
 	elem->next_p = NULL;
 }
 
-t_path 					*path_init(t_vertex *curr, t_vertex *prev)
+t_path 					*path_init(t_vertex *curr)
 {
 	t_path 				*p;
 
@@ -90,6 +90,5 @@ t_path 					*path_init(t_vertex *curr, t_vertex *prev)
 		return (NULL);
 	}
 	p->curr_v = curr;
-	p->prev_v = prev;
 	return (p);
 }
