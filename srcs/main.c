@@ -20,8 +20,7 @@ void			free_list(t_list **tab)
 
 static void			free_structs(t_structs *structs)
 {
-	int 			i;
-	int 			**m;
+
 
 	vertex_free((t_vertex **)&structs->ver);
 	edge_free((t_edge **)&structs->edge);
@@ -47,12 +46,12 @@ static t_structs			*init_structs()
 
 int 				main(int ac, char **av)
 {
-	unsigned 		flags = 0;
+	unsigned 		flags;
 	t_structs		*structs;
 
 	flags = parse_arguments(ac, av);
 	structs = init_structs();
-	reader(structs, flags, av[3]);
+	reader(structs, flags, av[ac - 1]);
 	parse_lists((t_vertex **)&structs->ver, (t_edge **)&structs->edge);
 	structs->ways = solver((t_edge **)&structs->edge, (t_vertex **)&structs->ver);
 	structs->ants = spawn_ants(structs->ants_amount, (t_list **)&structs->ways);

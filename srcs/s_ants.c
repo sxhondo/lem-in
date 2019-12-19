@@ -65,8 +65,6 @@ t_list				*get_i_paths(t_list **paths, int value)
 {
 	t_list			*l;
 
-//	if (value == ft_lstlen(paths))
-//		return (NULL);
 	l = *paths;
 	while (l && value--)
 		l = l->next;
@@ -90,16 +88,13 @@ static void			dispatcher(int amount, t_list **paths, t_ants **ants)
 	while (amount--)
 	{
 		p_len = path_len((t_path **)&get_i_paths(paths, i)->content);
-//		ft_printf("rooms in path [%d]: %d\n", i, p_len);
 		a = ants_per_room(ants, i);
-//		ft_printf("ants in this room %d\n", a);
 		if (!(tmp = get_i_paths(paths, i + 1)))
 		{
 			i = -1;
 			tmp = get_i_paths(paths, i + 1);
 		}
 		p_next_len = path_len((t_path **)&tmp->content);
-//		ft_printf("Rooms in path [%d]: %d\n\n", i, p_next_len);
 		an->path = (p_len + a) <= p_next_len ? i : ++i;
 		an = an->next;
 	}

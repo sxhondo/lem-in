@@ -25,7 +25,6 @@ typedef struct		s_vertex
 {
 	char 			*name;
 	unsigned 		mod;
-	int 			vis;
 	int 			x;
 	int 			y;
 	struct s_vertex *next;
@@ -38,17 +37,15 @@ typedef struct		s_edge
 	t_vertex		*v1;
 	t_vertex 		*v2;
 	int 			cost;
-	int 			sw;
+	int 			bi;
 	struct s_edge 	*next;
 }					t_edge;
 
 typedef struct		s_path
 {
 	t_vertex		*curr_v;
-	// t_vertex		*prev_v;
 	struct 	s_path	*next_p;
 	struct 	s_path	*prev_p;
-
 }					t_path;
 
 typedef struct		s_info
@@ -69,8 +66,6 @@ typedef struct 		s_structs
 	t_vertex		**ver;
 	t_ants			*ants;
 	t_list			*ways;
-	int 			**mx;
-	int 			m_size;
 }					t_structs;
 
 /*
@@ -126,28 +121,32 @@ void					print_all(t_structs *str);
 */
 t_path 					*path_init(t_vertex *curr);
 void 					path_push_back(t_path **dst, t_path *elem);
-//void					path_add(t_path **dst, t_vertex *elem, t_vertex *prev);
+void					add_path_to_lst(t_list **lst, t_path *path);
 void					path_push(t_path **dst, t_path *elem);
 int 					path_len(t_path **dst);
 void					path_free(t_path **s);
+void					ways_free(t_list **lst);
 t_path					*get_i_path_node(t_path **path, int value);
 void					path_push_init(t_path **dst, t_vertex *v1, t_vertex *v2);
 
 
 /*
-**	graph_tools.c
+**	cross_path_remover.c
 */
-void 					direct_to_finish(t_path **queue, t_edge **edge);
-void				    exclude_route(t_path **route, t_edge **edge);
-void				    exclude_route_1(t_path **route, t_edge **edge);
-void				    exclude_route_2(t_path **route, t_edge **edge);
-t_path					*get_parent(t_path **queue, char *name);
-void 					swap_ver(t_vertex **v1, t_vertex **v2);
+void					cross_path_remover(t_list **raw, t_edge **edge);
+t_list 					*get_closing_paths(t_edge **edge, void **ver, int len);
 
 /*
-**	solver.c
+**	graph_tools.c
 */
-t_path 					*select_route(void **ver, t_edge **edge, int *par, int last);
+t_path					*trace_route(void **ver, int *par, int last);
+void				    exclude_route(t_path **route, t_edge **edge);
+t_path					*get_parent(t_path **queue, char *name);
+void					swap_ver(t_vertex **v1, t_vertex **v2);
+
+/*
+**	bell_ford.c
+*/
 t_list					*solver(t_edge **edge, t_vertex **ver);
 int     		    	find_ver(void **ver, char *name, int size);
 /*

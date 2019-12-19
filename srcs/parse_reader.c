@@ -135,7 +135,8 @@ static unsigned			get_command(const char *line, t_info *inf)
 
 		}
 		else
-			ft_printf("{yellow}C: %s{eoc}\n", line);
+			;
+//			ft_printf("{yellow}C: %s{eoc}\n", line);
 	}
 	return (inf->mod);
 }
@@ -260,7 +261,7 @@ void 					reader(t_structs *structs, unsigned flags, char *path)
 		ft_strdel(&inf->name);
 	}
 	check_no_room_given(inf->flag, inf->lc);
-	ft_printf("%s\n\n", vec->data);
+	ft_printf("%s\n", vec->data);
 	ft_vec_del(&vec);
 	free(inf);
 }

@@ -13,7 +13,6 @@ int 			skip_spaces(const char *str)
 	return (i);
 }
 
-
 int						cut_after_symbol(const char *src, char **dst, char sym)
 {
 	int 				i;

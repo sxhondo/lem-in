@@ -168,8 +168,8 @@ static void		link_edges_to_vertex(t_vertex **ver, t_edge **edge)
 
 void 			parse_lists(t_vertex **ver, t_edge **edge)
 {
-	t_edge		*e;
-
+	if (!*edge)
+		put_error("no links given", 0);
 	check_duplicate_vertex(ver);
 	check_non_existing_vertex(ver, edge);
 	link_edges_to_vertex(ver, edge);

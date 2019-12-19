@@ -1,6 +1,6 @@
 #include "lem_in.h"
 
-static int		         not_in_queue(t_path **que, char *name)
+static int				not_in_queue(t_path **que, char *name)
 {
 	t_path				*q;
 
@@ -21,19 +21,12 @@ static t_vertex			*find_adj(t_edge **edge, t_path **que, char *name)
 	e = *edge;
 	while (e)
 	{
-		// ft_printf("CURR: %s\n", name);
-		if (ft_strequ(name, e->v2->name)
+		if (ft_strequ(name, e->v2->name) && e->cost > 0
 			&& not_in_queue(que, e->v1->name))
-		{
-			// ft_printf("V1: %s V2: %s\n", e->v1->name, e->v2->name);
 			swap_ver(&e->v2, &e->v1);
-			e->sw = 1;
-		}
-		if (ft_strequ(name, e->v1->name)
+		if (ft_strequ(name, e->v1->name) && e->cost > 0
 			&& not_in_queue(que, e->v2->name))
-		{
 			return (e->v2);
-		}
 		e = e->next;
 	}
 	return (NULL);
@@ -42,7 +35,6 @@ static t_vertex			*find_adj(t_edge **edge, t_path **que, char *name)
 static int				breadth_first_search(t_path **queue,
 										t_edge **edge, t_vertex *curr_v)
 {
-	int 				*par;
 	t_vertex			*n;
 	t_path				*tmp;
 
@@ -54,31 +46,7 @@ static int				breadth_first_search(t_path **queue,
 	return (1);
 }
 
-t_path 				*select_route(void **ver, t_edge **edge, int *par, int last)
-{
-	t_path 			*route = NULL;
-	t_path			*n;
-	t_vertex		*v1;
-	t_vertex 		*v2;
-
-	ft_printf("\n");
-	while (last > 0)
-	{
-		v1 = (t_vertex *)ver[last];
-		v2 = (t_vertex *)ver[par[last]];
-		// ft_printf("%s, last: [%d]\n", v1->name, last);
-		// sleep (1);
-		n = path_init(v1);
-		path_push(&route, n);
-		last = par[last];
-	}
-	v1 = (t_vertex *)ver[0];
-	n = path_init(v1);
-	path_push(&route, n);
-	return (route);
-}
-
-static void 			trace_route(void **ver, t_path *q, int *par, int len)
+static void 			select_route(void **ver, t_path *q, int *par, int len)
 {
 	int 				p;
 	int 				c;
@@ -88,11 +56,13 @@ static void 			trace_route(void **ver, t_path *q, int *par, int len)
 	ptr = q->next_p;
 	while (ptr)
 	{
+//		ft_printf("%s", ptr->curr_v->name, len);
 		c = find_ver(ver, ptr->curr_v->name, len);
 		if (par[c] == -1)
 			par[c] = p;
 		ptr = ptr->next_p;
 	}
+//	ft_printf("BFS - SELECTING\n");
 }
 
 t_path					*bfs(t_edge **edge, void **ver, int len)
@@ -106,10 +76,11 @@ t_path					*bfs(t_edge **edge, void **ver, int len)
 	p_q = queue;
 	while ((breadth_first_search(&queue, edge, p_q->curr_v)))
 	{
-		// path_print(&queue, 'f');
-		trace_route(ver, p_q, par, len);
-		if (!(p_q = p_q->next_p))
+//		path_print(&queue, 'f');
+		select_route(ver, p_q, par, len);
+		if (!(p_q = p_q->next_p) || p_q->curr_v->mod == 2)
 			break ;
 	}
-	return (select_route(ver, NULL, par, len - 1));
+	path_free(&queue);
+	return (trace_route(ver, par, len - 1));
 }

@@ -8,28 +8,14 @@ void		edge_print(t_edge **edge)
 	e = *edge;
 	while (e)
 	{
-		e->cost > 0 ? ft_printf("{blue}%s -> %s{eoc} co: %d \n",
-				  e->v1->name, e->v2->name, e->cost) :
-				  ft_printf("{blue}%s <- %s{eoc} co: %d \n",
-		  				  e->v2->name, e->v1->name, e->cost);
+		e->cost > 0 ? ft_printf("{blue}%s -> %s{eoc} co: %d bi: %d\n",
+				  e->v1->name, e->v2->name, e->cost, e->bi) :
+				  ft_printf("{blue}%s <- %s{eoc} co: %d bi: %d\n",
+		  				  e->v2->name, e->v1->name, e->cost, e->bi);
 		e = e->next;
 	}
 	ft_printf("\n");
 
-}
-
-void		free_path(t_path **s)
-{
-	t_path	*p;
-	t_path	*next;
-
-	p = *s;
-	while (p)
-	{
-		next = p->next_p;
-		free(p);
-		p = next;
-	}
 }
 
 void				print_all(t_structs *str)
@@ -41,13 +27,10 @@ void				print_all(t_structs *str)
 	ants_print((t_ants **)&str->ants);
 }
 
-/* f == from front, b = from back */
-
 void 			path_print(t_path **path, char mode)
 {
 	t_path		*tmp;
 
- 	// ft_printf("%s\n", mode == 'f' ? "front" : "back");
 	tmp = *path;
 	if (mode == 'b')
 	{
@@ -125,9 +108,9 @@ void				vertex_print(t_vertex **ver)
 
 void		put_error(char *err, int lc)
 {
-	lc ? ft_printf("%d: {red}error: {eoc}", lc) :
-		ft_printf("{red}error: {eoc}");
-	ft_printf("%s\n", err);
-	ft_fprintf(0, "ERROR\n");
+//	lc ? ft_fprintf(2, "%d: {red}error: {eoc}", lc) :
+//		ft_fprintf(2, "{red}error: {eoc}");
+//	ft_fprintf(2, "%s\n", err);
+	ft_fprintf(2, "ERROR\n");
 	exit (1);
 }

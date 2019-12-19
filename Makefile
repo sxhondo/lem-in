@@ -15,7 +15,8 @@ SRCS_DIR = srcs/
 SRCS_LIST=\
 		main.c\
 		alg_mover.c\
-		alg_solver_bf.c\
+		alg_bell_ford.c\
+		alg_cross_path_remover.c\
 		alg_graph_tools.c\
 		alg_bfs.c\
 		display_info.c\

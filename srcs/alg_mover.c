@@ -40,6 +40,11 @@ static int          update(t_ants **ants, int id)
         if (a->pos->next_p && a->pos->next_p->curr_v->mod == 2)
         {
             a->pos = a->pos->next_p;
+            if (a->super_way)
+			{
+				a->id = id;
+				id++;
+			}
             ft_printf("L%d-%s ", a->id, a->pos->curr_v->name);
         }
         if (a->pos->next_p &&
