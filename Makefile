@@ -19,6 +19,8 @@ SRCS_LIST=\
 		alg_cross_path_remover.c\
 		alg_graph_tools.c\
 		alg_bfs.c\
+		converters.c\
+		add_shortest_paths.c\
 		display_info.c\
 		parse_tools.c\
 		parse_lists.c\

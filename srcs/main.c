@@ -21,11 +21,14 @@ void			free_list(t_list **tab)
 static void			free_structs(t_structs *structs)
 {
 
-
-	vertex_free((t_vertex **)&structs->ver);
-	edge_free((t_edge **)&structs->edge);
-	free_list((t_list **)&structs->ways);
-	free_ants(&structs->ants);
+	if (structs->ver)
+		vertex_free((t_vertex **)&structs->ver);
+	if (structs->edge)
+		edge_free((t_edge **)&structs->edge);
+	if (structs->ways)
+		free_list((t_list **)&structs->ways);
+	if (structs->ants)
+		free_ants(&structs->ants);
 	free(structs);
 }
 

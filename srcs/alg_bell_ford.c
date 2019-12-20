@@ -1,41 +1,18 @@
 #include "lem_in.h"
 
-void 				**convert_ver_to_ptrs(t_vertex **ver, int len)
+int     		     pt(int *p, int size)
 {
-	t_vertex 		*v;
-	void 			**ptr;
-	int 			i;
+	t_vertex        *v;
+	int             i;
 
 	i = 0;
-	ptr =  ft_new_ptr_array(len);
-	v = *ver;
-	while (v)
+	while (i < size)
 	{
-		ptr[i] = v;
+		ft_printf("%d ", p[i]);
 		i++;
-		v = v->next;
 	}
-	return (ptr);
-}
-
-int     		     find_ver(void **v, char *name, int size)
-{
-    t_vertex        *tmp;
-    int             i;
-
-    i = 0;
-    while (i < size)
-    {
-		tmp = (t_vertex *)v[i];
-		if (ft_strequ(tmp->name, name))
-		{
-//			ft_printf("[%s] ", tmp->name);
-			return (i);
-		}
-		i++;
-    }
 	ft_printf("\n");
-    return (-1);
+	return (-1);
 }
 
 static int			bellman_ford(t_edge **edge, void **ver, int *cst, int *par, int len)
@@ -50,8 +27,8 @@ static int			bellman_ford(t_edge **edge, void **ver, int *cst, int *par, int len
 	e = *edge;
 	while (e)
 	{
-        st = find_ver(ver, e->v1->name, len);
-		fn = find_ver(ver, e->v2->name, len);
+        st = get_index_of_ver(ver, e->v1->name, len);
+		fn = get_index_of_ver(ver, e->v2->name, len);
 		c = e->cost;
   		if (cst[st] != INT32_MAX && cst[st] + c < cst[fn])
 		{
@@ -69,21 +46,6 @@ static int			bellman_ford(t_edge **edge, void **ver, int *cst, int *par, int len
 		e = e->next;
 	}
 	return (fl);
-}
-
-int     		     pt(int *p, int size)
-{
-	t_vertex        *v;
-	int             i;
-
-	i = 0;
-	while (i < size)
-	{
-		ft_printf("%d ", p[i]);
-		i++;
-	}
-	ft_printf("\n");
-	return (-1);
 }
 
 static int 			check_no_end(t_edge **edge)
@@ -112,9 +74,9 @@ static t_path		*get_cheapest_path(t_edge **edge, void **ver, int len)
 
 	if (!check_no_end(edge))
 		return (NULL);
-	iter = len;
 	cst = ft_new_array(len, INT32_MAX);
 	par = ft_new_array(len, 0);
+	iter = len;
 	cst[0] = 0;
 	while (iter--)
 	{
@@ -146,28 +108,39 @@ static void				excluder(t_edge **edge, void **vp, int len, t_list **paths)
 	}
 }
 
+static void				print_i(t_edge **edge)
+{
+	t_edge				*e;
+
+	e = *edge;
+	while (e)
+	{
+		ft_printf("%d %d\n", e->v1_i, e->v2_i);
+		e = e->next;
+	}
+}
+
 t_list 					*solver(t_edge **edge, t_vertex **ver)
 {
 	void                **vp;
 	int 				len;
-	t_list				*paths;
+	t_list				*ways;
 	t_path				*route;
 
-	paths = NULL;
+	ways = NULL;
 	len = vertex_len(ver);
 	vp = convert_ver_to_ptrs(ver, len);
-	if (!(route = bfs(edge, vp, len)))
+	set_indexes_of_ver(edge, vp, len);
+	if (!(route = breadth_first_search(edge, vp, len)))
 		put_error("no possible solution\n", 0);
 	if (path_len(&route) == 2)
 	{
-		add_path_to_lst(&paths, route);
+		add_path_to_lst(&ways, route);
 		free(vp);
-		return (paths);
+		return (ways);
 	}
 	exclude_route(&route, edge);
-	add_path_to_lst(&paths, route);
-	excluder(edge, vp, len, &paths);
-//	ways_print(&paths);
-	cross_path_remover(&paths, edge);
-	return (get_closing_paths(edge, vp, len));
+	add_path_to_lst(&ways, route);
+	excluder(edge, vp, len, &ways);
+	return (add_shortest_paths(&ways, edge, vp, len));
 }

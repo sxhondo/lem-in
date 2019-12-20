@@ -9,28 +9,32 @@ void					swap_ver(t_vertex **v1, t_vertex **v2)
 	*v2 = tmp;
 }
 
-t_path				*trace_route(void **ver, int *par, int last)
+t_path				*trace_route(void **ver, int *trace, int last)
 {
 	t_path 			*route = NULL;
 	t_path			*n;
 	t_vertex		*v1;
 
-	if (par[last] == -1)
+	if (trace[last] == -1)
+	{
+		free(trace);
 		return (NULL);
+	}
+
 	while (last > 0)
 	{
+//		ft_printf("Tracing path\n");
 		v1 = (t_vertex *)ver[last];
 		n = path_init(v1);
 		path_push(&route, n);
-		last = par[last];
+		last = trace[last];
 	}
 	v1 = (t_vertex *)ver[0];
 	n = path_init(v1);
-	free(par);
+	free(trace);
 	path_push(&route, n);
 	return (route);
 }
-
 
 void				    exclude_route(t_path **route, t_edge **edge)
 {

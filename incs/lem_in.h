@@ -36,6 +36,8 @@ typedef struct		s_edge
 	char 			*v2_name;
 	t_vertex		*v1;
 	t_vertex 		*v2;
+	int 			v1_i;
+	int 			v2_i;
 	int 			cost;
 	int 			bi;
 	struct s_edge 	*next;
@@ -64,8 +66,8 @@ typedef struct 		s_structs
 	int 			ants_amount;
 	t_edge			**edge;
 	t_vertex		**ver;
-	t_ants			*ants;
 	t_list			*ways;
+	t_ants			*ants;
 }					t_structs;
 
 /*
@@ -133,8 +135,15 @@ void					path_push_init(t_path **dst, t_vertex *v1, t_vertex *v2);
 /*
 **	cross_path_remover.c
 */
-void					cross_path_remover(t_list **raw, t_edge **edge);
-t_list 					*get_closing_paths(t_edge **edge, void **ver, int len);
+//void					cross_path_remover(t_list **raw, t_edge **edge);
+//t_list 					*get_closing_paths(t_edge **edge, void **ver, int len);
+
+
+/*
+**	add_shortest_paths.c
+*/
+t_list 					*add_shortest_paths(t_list **ways, t_edge **edge, void **ver, int len);
+
 
 /*
 **	graph_tools.c
@@ -145,14 +154,21 @@ t_path					*get_parent(t_path **queue, char *name);
 void					swap_ver(t_vertex **v1, t_vertex **v2);
 
 /*
+**	converters.c
+*/
+void 					**convert_ver_to_ptrs(t_vertex **ver, int len);
+int     		   		 get_index_of_ver(void **v, char *name, int size);
+void 					set_indexes_of_ver(t_edge **edge, void **ver, int len);
+/*
 **	bell_ford.c
 */
 t_list					*solver(t_edge **edge, t_vertex **ver);
-int     		    	find_ver(void **ver, char *name, int size);
+
 /*
 **	bfs.c
 */
-t_path					*bfs(t_edge **edge, void **ver, int len);
+t_path					*breadth_first_search(t_edge **edge, void **ver, int len);
+//t_path					*bfs(t_edge **edge, void **ver, int len);
 
 /*
 **	mover.c
