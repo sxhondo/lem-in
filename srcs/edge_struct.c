@@ -1,22 +1,5 @@
 #include "lem_in.h"
 
-void				edge_free(t_edge **edge)
-{
-	t_edge			*p;
-	t_edge			*next;
-
-	p = *edge;
-	while (p)
-	{
-		next = p->next;
-		ft_strdel(&p->v1_name);
-		ft_strdel(&p->v2_name);
-		free(p);
-		p = next;
-	}
-	p = NULL;
-}
-
 static t_edge				*edge_init(char *e1, char *e2)
 {
 	t_edge					*edge;

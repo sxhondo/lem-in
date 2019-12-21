@@ -6,7 +6,7 @@ void		add_path_to_lst(t_list **lst, t_path *path)
 
 	if (!(node = ft_lstnew(path, sizeof(t_path))))
 		put_error("cannot allocate memory", 0);
-	free(path);
+//	free(path);
 	ft_lstpushback(lst, node);
 }
 
@@ -18,20 +18,6 @@ t_path					*get_i_path_node(t_path **path, int value)
 	while (p && value--)
 		p = p->next_p;
 	return (p);
-}
-
-void				path_free(t_path **s)
-{
-	t_path			*p;
-	t_path			*next;
-
-	p = *s;
-	while (p)
-	{
-		next = p->next_p;
-		free(p);
-		p = next;
-	}
 }
 
 int 					path_len(t_path **dst)

@@ -60,22 +60,6 @@ t_vertex     			 *find_ver_by_name(t_vertex **ver, char *name)
 	return (NULL);
 }
 
-void				vertex_free(t_vertex **ver)
-{
-	t_vertex		*p;
-	t_vertex		*next;
-
-	p = *ver;
-	while (p)
-	{
-		next = p->next;
-		ft_strdel(&p->name);
-		free(p);
-		p = next;
-	}
-	p = NULL;
-}
-
 static void					vertex_push_back(t_vertex **dst, t_vertex *elem)
 {
 	t_vertex				*tmp;

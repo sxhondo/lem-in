@@ -12,23 +12,12 @@ LIB_FT = $(LIB_DIR)libft.a
 # 		alg_solver.c\
 
 SRCS_DIR = srcs/
-SRCS_LIST=\
-		main.c\
-		alg_mover.c\
-		alg_bell_ford.c\
-		alg_cross_path_remover.c\
-		alg_graph_tools.c\
-		alg_bfs.c\
-		converters.c\
-		add_shortest_paths.c\
-		display_info.c\
-		parse_tools.c\
-		parse_lists.c\
-		parse_reader.c\
-		s_vertex.c\
-		s_ants.c\
-		s_edge.c\
-		s_path.c
+SRCS_LIST= alg_bellman_ford.c alg_bfs.c alg_mover.c alg_route_mgmt.c\
+			alg_solver.c alg_tools.c\
+			ants_dispatcher.c ants_struct.c\
+			edge_struct.c path_struct.c vertex_struct.c free_structs.c\
+			parse_lists.c parse_reader.c parse_tools.c\
+			display_info.c main.c
 
 OBJ_DIR = obj/
 OBJ_LIST = $(SRCS_LIST:%.c=%.o)

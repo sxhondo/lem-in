@@ -24,7 +24,6 @@ void				print_all(t_structs *str)
 	vertex_print((t_vertex **)&str->ver);
 	edge_print((t_edge **)&str->edge);
 	ways_print((t_list **)&str->ways);
-	ants_print((t_ants **)&str->ants);
 }
 
 void 			path_print(t_path **path, char mode)
@@ -108,9 +107,9 @@ void				vertex_print(t_vertex **ver)
 
 void		put_error(char *err, int lc)
 {
-//	lc ? ft_fprintf(2, "%d: {red}error: {eoc}", lc) :
-//		ft_fprintf(2, "{red}error: {eoc}");
-//	ft_fprintf(2, "%s\n", err);
-	ft_fprintf(2, "ERROR\n");
+	lc ? ft_fprintf(2, "%d: {red}error: {eoc}", lc) :
+		ft_fprintf(2, "{red}error: {eoc}");
+	ft_fprintf(2, "%s\n", err);
+//	ft_fprintf(2, "ERROR\n");
 	exit (1);
 }

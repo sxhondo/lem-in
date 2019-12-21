@@ -30,13 +30,14 @@ static void				put_path(t_path **route, t_edge **edge)
 	}
 }
 
-t_list 					*add_shortest_paths(t_list **ways, t_edge **edge, void **ver, int len)
+static t_list			*add_shortest_paths(t_list **ways, t_edge **edge,
+											 	 void **ver, int len)
 {
 	t_list				*w;
 	t_path 				*fn;
 
-	reset_map(edge);
 	w = *ways;
+	reset_map(edge);
 	while (w)
 	{
 		put_path((t_path **)&w->content, edge);
@@ -45,10 +46,28 @@ t_list 					*add_shortest_paths(t_list **ways, t_edge **edge, void **ver, int le
 	free_list(ways);
 	while ((fn = breadth_first_search(edge, ver, len)))
 	{
-//		path_print(&fn, 'r');
 		exclude_route(&fn, edge);
 		add_path_to_lst(ways, fn);
 	}
 	free(ver);
 	return (*ways);
+}
+
+t_list					*find_overlapping_routes(t_edge **edge,
+											t_list **pi, void **vp, int len)
+{
+	t_path				*route;
+
+	exclude_route((t_path **)&(*pi)->content, edge);
+	while ((route = get_cheapest_path(edge, vp, len)))
+	{
+		if (path_len(&route) == 2)
+		{
+			path_free(&route);
+			break ;
+		}
+		exclude_route(&route, edge);
+		add_path_to_lst(pi, route);
+	}
+	return (add_shortest_paths(pi, edge, vp, len));
 }

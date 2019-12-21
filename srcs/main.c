@@ -1,37 +1,5 @@
 #include "lem_in.h"
 
-void			free_list(t_list **tab)
-{
-	t_list		*lst;
-	t_list		*next;
-	t_path		*ptr;
-
-	lst = *tab;
-	while (lst)
-	{
-		next = lst->next;
-		ptr = lst->content;
-		path_free(&ptr);
-		free(lst);
-		lst = next;
-	}
-	*tab = NULL;
-}
-
-static void			free_structs(t_structs *structs)
-{
-
-	if (structs->ver)
-		vertex_free((t_vertex **)&structs->ver);
-	if (structs->edge)
-		edge_free((t_edge **)&structs->edge);
-	if (structs->ways)
-		free_list((t_list **)&structs->ways);
-	if (structs->ants)
-		free_ants(&structs->ants);
-	free(structs);
-}
-
 static t_structs			*init_structs()
 {
 	t_structs				*s;
@@ -47,6 +15,20 @@ static t_structs			*init_structs()
 	return (s);
 }
 
+static void			free_structs(t_structs *structs)
+{
+
+	if (structs->ver)
+		vertex_free((t_vertex **)&structs->ver);
+	if (structs->edge)
+		edge_free((t_edge **)&structs->edge);
+	if (structs->ways)
+		free_list((t_list **)&structs->ways);
+	if (structs->ants)
+		ants_free(&structs->ants);
+	free(structs);
+}
+
 int 				main(int ac, char **av)
 {
 	unsigned 		flags;
@@ -56,7 +38,8 @@ int 				main(int ac, char **av)
 	structs = init_structs();
 	reader(structs, flags, av[ac - 1]);
 	parse_lists((t_vertex **)&structs->ver, (t_edge **)&structs->edge);
-	structs->ways = solver((t_edge **)&structs->edge, (t_vertex **)&structs->ver);
+	structs->ways = solver(structs->ants_amount,
+			(t_edge **)&structs->edge, (t_vertex **)&structs->ver);
 	structs->ants = spawn_ants(structs->ants_amount, (t_list **)&structs->ways);
 	if (flags & DEBUG)
 		print_all(structs);

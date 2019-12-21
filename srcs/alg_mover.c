@@ -72,7 +72,7 @@ void 				mover(t_ants **ants, unsigned flags)
     while (!all_finished(ants))
     {
         id = update(ants, id);
-        if (flags & DEBUG)
-            ants_print(ants);
+//        if (flags & DEBUG)
+//            ants_print(ants);
     }
 }
