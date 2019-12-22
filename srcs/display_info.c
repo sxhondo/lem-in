@@ -8,10 +8,8 @@ void		edge_print(t_edge **edge)
 	e = *edge;
 	while (e)
 	{
-		e->cost > 0 ? ft_printf("{blue}%s -> %s{eoc} co: %d bi: %d\n",
-				  e->v1->name, e->v2->name, e->cost, e->bi) :
-				  ft_printf("{blue}%s <- %s{eoc} co: %d bi: %d\n",
-		  				  e->v2->name, e->v1->name, e->cost, e->bi);
+		ft_printf("{blue}%s -> %s{eoc} co: %d bi: %d\n",
+				  e->v1->name, e->v2->name, e->cost, e->b);
 		e = e->next;
 	}
 	ft_printf("\n");

@@ -32,14 +32,14 @@ typedef struct		s_vertex
 
 typedef struct		s_edge
 {
-	char 			*v1_name;
-	char 			*v2_name;
+	char 			*tmp_name1;
+	char 			*tmp_name2;
 	t_vertex		*v1;
 	t_vertex 		*v2;
 	int 			v1_i;
 	int 			v2_i;
 	int 			cost;
-	int 			bi;
+	int 			b;
 	struct s_edge 	*next;
 }					t_edge;
 
@@ -89,14 +89,16 @@ void					vertex_free(t_vertex **ver);
 **	edge_struct.c
 */
 t_edge					*find_edge(t_edge **edge, char *v1, char *v2);
-t_vertex				*find_start(t_edge **edge);
 void 					edge_add(t_structs *structs, t_info *inf);
-int 					edge_len(t_edge **edge);
+
+
+
 
 /*
-**	parse_lists.c
+**	vec_info_tools.c
 */
-void 					parse_lists(t_vertex **ver, t_edge **edge);
+t_vec					*vec_read(int fd);
+t_info					*init_info(char *path, unsigned flags);
 
 /*
 **	parse_tools.c
@@ -105,6 +107,27 @@ int						cut_after_symbol(const char *src, char **dst, char sym);
 int						lem_atoi(const char *str, int *num, int pos, int lc);
 int 					skip_spaces(const char *str);
 unsigned 				parse_arguments(int ac, char **arg);
+int						parse_room_name(const char *line, char **name, int lc);
+
+/*
+**	validator_tools.c
+*/
+int 					only_digits(const char *str);
+unsigned 				check_few_rooms(unsigned flag, unsigned mod, int lc);
+void					check_no_room_given(unsigned flag, int lc);
+int						check_ants_num(const char *line, int lc);
+int						mini_atoi(const char *str);
+
+/*
+**	parse_lists.c
+*/
+void 					parse_lists(t_vertex **ver, t_edge **edge);
+
+/*
+**	set_vertex_in_position.c
+*/
+void					put_to_begin(t_vertex **ver);
+void					put_to_end(t_vertex **ver);
 
 /*
 **	display_info.c
@@ -164,7 +187,7 @@ t_list					*find_overlapping_routes(t_edge **edge,
 /*
 **	tools.c
 */
-t_path					*trace_route(void **ver, int *par, int last);
+t_path					*trace_route(void **ver, int *trace, int last);
 void				    exclude_route(t_path **route, t_edge **edge);
 void					swap_ver(t_vertex **v1, t_vertex **v2);
 
@@ -191,5 +214,5 @@ void					ants_push_back(t_ants **dst, t_ants *ant);
 t_ants					*ant_init(int id, int pos);
 
 void					free_list(t_list **tab);
-
+void 				pri(int *cst, int len);
 #endif

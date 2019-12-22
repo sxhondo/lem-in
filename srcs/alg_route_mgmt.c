@@ -8,7 +8,7 @@ static void 			reset_map(t_edge **edge)
 	while (e)
 	{
 		e->cost = 0;
-		e->bi = 1;
+		e->b = 1;
 		e = e->next;
 	}
 }

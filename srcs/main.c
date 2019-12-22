@@ -37,6 +37,7 @@ int 				main(int ac, char **av)
 	flags = parse_arguments(ac, av);
 	structs = init_structs();
 	reader(structs, flags, av[ac - 1]);
+
 	parse_lists((t_vertex **)&structs->ver, (t_edge **)&structs->edge);
 	structs->ways = solver(structs->ants_amount,
 			(t_edge **)&structs->edge, (t_vertex **)&structs->ver);

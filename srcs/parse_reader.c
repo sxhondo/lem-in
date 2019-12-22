@@ -1,124 +1,23 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse_reader.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sxhondo <w13cho@gmail.com>                 +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/12/22 17:39:51 by sxhondo           #+#    #+#             */
+/*   Updated: 2019/12/22 17:39:52 by sxhondo          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "lem_in.h"
-
-t_info					*init_info(char *path, unsigned flags)
-{
-	t_info				*i;
-
-	if (!(i = ft_memalloc(sizeof(t_info))))
-	{
-		put_error("cannot allocate memory", 0);
-		return (NULL);
-	}
-	i->mod = 0;
-	i->flag = 0;
-	i->lc = 1;
-	i->fd = 0;
-	if (flags & OPEN)
-		i->fd = open(path, O_RDONLY);
-	else
-		i->fd = 0;
-	i->skip_comments = 0;
-	return (i);
-}
-
-/* check_ants_num */
-
-int					mini_atoi(const char *str)
-{
-	long			res;
-
-	res = 0;
-	while (*str && ft_isdigit(*str))
-	{
-		res = res * 10 + (*str++ - '0');
-		if (res > INT32_MAX)
-			return (-1);
-	}
-	return ((int)res);
-}
-
-static int					check_ants_num(const char *line, int lc)
-{
-	int						i;
-	int 					ants;
-
-	i = 0;
-	while (line[i])
-	{
-		if (!ft_isdigit(line[i]) && line[i] != ' ')
-			put_error("ants number not well formatted", lc);
-		i++;
-	}
-	ants = mini_atoi(line);
-	if (ants < 0)
-		put_error("ants number not well formatted", lc);
-	if (ants == 0)
-		put_error("ants number cannot be 0", lc);
-	return (ants);
-}
-
-/* *** */
-
-static t_vec			*vec_read(int fd)
-{
-	t_vec				*vec;
-	char 				buf[1];
-
-	if (fd < 0 || read(fd, NULL, 0) < 0)
-		put_error("cannot open file", 0);
-	if (!(vec = ft_vec_init(1, sizeof(char))))
-		put_error("cannot allocate memory", 0);
-	while (read(fd, buf, sizeof(buf)) > 0)
-	{
-		if (vec->total >= 4194304)
-		{
-			ft_vec_del(&vec);
-			put_error("file is too big", 0);
-		}
-		ft_vec_add(&vec, buf);
-	}
-	ft_vec_add(&vec, "\0");
-	if (!(ft_vec_resize(&vec)))
-	{
-		ft_vec_del(&vec);
-		put_error("cannot allocate memory", 0);
-	}
-	return (vec);
-}
-
-/* *** */
-
-static int				parse_room_name(const char *line, char **name, int lc)
-{
-	const char 			*start;
-	int 				i;
-
-	start = line;
-	line += skip_spaces(line);
-	if (*line == 'L')
-		put_error("room name cannot starts with 'L'", lc);
-	i = cut_after_symbol(line, name, ' ');
-	line += i;
-	line += skip_spaces(line);
-	return ((int)(line - start));
-}
-
-static void					check_no_room_given(unsigned flag, int lc)
-{
-	if (!flag)
-		put_error("start and end rooms are not given", lc);
-	if (!(flag & 1u) && (flag & 2u))
-		put_error("start room is not given", lc);
-	if (flag & 1u && !(flag & 2u))
-		put_error("end room is not given", lc);
-}
 
 static unsigned			get_command(const char *line, t_info *inf)
 {
 	if (*line++ == '#')
 	{
 		if (*line == '#')
-		{	//?
+		{
 			if (inf->mod)
 				put_error("cannot modify modifier", inf->lc);
 			line++;
@@ -128,15 +27,8 @@ static unsigned			get_command(const char *line, t_info *inf)
 			else if (ft_strequ(line, "end"))
 				return (END);
 			else
-			{
 				put_error("unkown modifier", inf->lc);
-// ??			ft_printf("{yellow}C: %s{eoc}\n", line);
-			}
-
 		}
-		else
-			;
-//			ft_printf("{yellow}C: %s{eoc}\n", line);
 	}
 	return (inf->mod);
 }
@@ -171,60 +63,22 @@ static void				proceed_rooms(t_structs *structs, t_info *inf,
 	free(xy);
 }
 
-unsigned 				check_few_rooms(unsigned flag, unsigned mod, int lc)
+static void				validator(t_structs *structs, t_info *inf,
+									 const char *line)
 {
-	if (flag & mod)
-	{
-		flag == 1 ? put_error("several start rooms", lc)
-			: put_error("several end rooms", lc);
-	}
-	return (mod);
-}
-
-static int 				only_digits(const char *str)
-{
-	int 				i;
-
-	i = 0;
-	while (str[i])
-	{
-		if (!ft_isdigit(str[i]))
-			return (0);
-		i++;
-	}
-	return (1);
-}
-
-/* this is leaving comments before ant number
+	line += skip_spaces(line);
 	if (*line == '#')
 	{
 		inf->mod = get_command(line, inf);
+		inf->skip_comments++;
 		return ;
 	}
-	else if (inf->lc - inf->skip_comments == 1)
-	{
-		if (*line == '#')
-			inf->skip_comments++;
-		else
-			structs->ants_amount = check_ants_num(line, inf->lc);
-		return ;
-	}
-*/
-
-static void				validator(t_structs *structs, t_info *inf,
-		const char *line)
-{
-	line += skip_spaces(line);
-	if (inf->lc == 1)
+	if (inf->lc - inf->skip_comments == 1)
 	{
 		if (!(only_digits(line)))
-			put_error("symbols before ant-number", inf->lc);
+			put_error("ant-number not well formatted",
+					inf->lc - inf->skip_comments);
 		structs->ants_amount = check_ants_num(line, inf->lc);
-		return ;
-	}
-	else if (*line == '#')
-	{
-		inf->mod = get_command(line, inf);
 		return ;
 	}
 	else if (!*line)

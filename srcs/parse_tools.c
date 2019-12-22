@@ -73,3 +73,18 @@ unsigned 			parse_arguments(int ac, char **arg)
 	}
 	return (flag);
 }
+
+int						parse_room_name(const char *line, char **name, int lc)
+{
+	const char 			*start;
+	int 				i;
+
+	start = line;
+	line += skip_spaces(line);
+	if (*line == 'L')
+		put_error("room name cannot starts with 'L'", lc);
+	i = cut_after_symbol(line, name, ' ');
+	line += i;
+	line += skip_spaces(line);
+	return ((int)(line - start));
+}

@@ -13,7 +13,7 @@ static int			get_index_of_ver(void **v, char *name, int size)
 			return (i);
 		i++;
 	}
-	ft_printf("\n");
+//	ft_printf("\n");
 	return (-1);
 }
 
@@ -60,17 +60,12 @@ t_list 					*solver(int ants, t_edge **edge, t_vertex **ver)
 	len = vertex_len(ver);
 	vp = convert_ver_to_ptrs(ver, len);
 	set_indexes_of_ver(edge, vp, len);
-//	while ((route = breadth_first_search(edge, vp, len)))
-//	{
-//		vertex_print(ver);
-//		path_print(&route, 'f');
-//		exclude_route(&route, edge);
-//		edge_print(edge);
-//	}
-//	exit (0);
+
 	if (!(route = breadth_first_search(edge, vp, len)))
 		put_error("no possible solution\n", 0);
+//	path_print(&route, 'f');
 	add_path_to_lst(&ways, route);
+//	vertex_print(ver);
 	if (ants + 1 <= path_len(&route) || path_len(&route) == 2)
 	{
 		free(vp);

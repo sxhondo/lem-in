@@ -21,23 +21,17 @@ static size_t			find_adj(t_edge **edge, t_list **queue, int curr)
 	e = *edge;
 	while (e)
 	{
-		if (curr == e->v2_i && e->cost > 0)
+//		ft_printf("[%d] - [%d]\n", e->v1_i, e->v2_i);
+		if (curr == e->v2_i && e->b && e->cost > 0)
 		{
-//			ft_printf("[%d %d]\n", e->v1_i, e->v2_i);
-			swap_ver(&e->v2, &e->v1);
-//			ft_printf("[%d %d]\n", e->v1_i, e->v2_i);
-			ft_swap_int(&e->v2_i, &e->v1_i);
-//			ft_printf("[%d %d]\n", e->v1_i, e->v2_i);
+			if (not_in_queue(queue, e->v1_i))
+					return (e->v1_i);
 		}
-//		if (curr == e->v1_i)
-//			if (e->cost > 0)
-//			{
-////				ft_printf("[%d %d]\n", e->v1_i, e->v2_i);
-//				if (not_in_queue(queue, e->v2_i))
-//					return (e->v2_i);
-//			}
-		if (curr == e->v1_i && e->cost > 0 && not_in_queue(queue, e->v2_i))
-			return (e->v2_i);
+		else if (curr == e->v1_i && e->cost > 0)
+		{
+			if (not_in_queue(queue, e->v2_i))
+				return (e->v2_i);
+		}
 		e = e->next;
 	}
 	return (-1);
@@ -100,10 +94,10 @@ t_path				*breadth_first_search(t_edge **edge, void **ver, int len)
 	tmp = ft_lstnew(&i, sizeof(int));
 	ft_lstpushback(&queue, tmp);
 	p_q = queue;
-//	edge_print(edge);
 	while ((add_neighbours(&queue, edge, *((int *)p_q->content))))
 	{
 //		print_que(&queue);
+//		ft_printf("\n");
 		keep_previous_ver(p_q, trace);
 		if (!(p_q = p_q->next))
 			break ;

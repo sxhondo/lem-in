@@ -14,7 +14,8 @@ static int			neg_cycle(t_edge **edge, const int *cst)
 	e = *edge;
 	while (e)
 	{
-		if (cst[e->v1_i] < INT32_MAX && cst[e->v1_i] + e->cost < cst[e->v2_i])
+		if (cst[e->v1_i] < INT32_MAX &&
+			cst[e->v1_i] + e->cost < cst[e->v2_i] && cst[e->v2_i] > 0)
 			return (1);
 		e = e->next;
 	}
@@ -39,7 +40,14 @@ static int 			check_no_end(t_edge **edge)
 	return (0);
 }
 
-static int			bellman_ford(t_edge **edge, int *cst, int *par)
+void 				pri(int *cst, int len)
+{
+	for (int i = 0; i < len; i++)
+		ft_printf("%d ", cst[i]);
+	ft_printf("\n");
+}
+
+static int			bellman_ford(t_edge **edge, int *cst, int *par, int len)
 {
 	int 			st;
 	int 			fn;
@@ -49,23 +57,28 @@ static int			bellman_ford(t_edge **edge, int *cst, int *par)
 
 	fl = 0;
 	e = *edge;
+//	pri(cst, len);
 	while (e)
 	{
 		st = e->v1_i;
 		fn = e->v2_i;
 		c = e->cost;
-		if (cst[st] < INT32_MAX && cst[st] + c < cst[fn])
+		if (cst[st] < INT32_MAX && cst[st] + c < cst[fn] && cst[fn] > 0)
 		{
 			cst[fn] = cst[st] + c;
 			par[fn] = st;
 			fl = 1;
 		}
-		ft_swap_int(&st, &fn);
-		if (e->bi == 1 && cst[st] < INT32_MAX && cst[st] + c < cst[fn])
+		if (e->b == 1)
 		{
-			cst[fn] = cst[st] + c;
-			par[fn] = st;
-			fl = 1;
+//			ft_printf("SWAP\n");
+			ft_swap_int(&st, &fn);
+			if (cst[st] < INT32_MAX && cst[st] + c < cst[fn] && cst[fn] > 0)
+			{
+				cst[fn] = cst[st] + c;
+				par[fn] = st;
+				fl = 1;
+			}
 		}
 		e = e->next;
 	}
@@ -87,12 +100,13 @@ t_path				*get_cheapest_path(t_edge **edge, void **ver, int len)
 		if (!check_no_end(edge))
 			return (free_tmp_arrays(cst, trace));
 //		ft_printf("B.F. Relaxation: %d/%d\n", iter, len);
-		if (!(bellman_ford(edge, cst, trace)))
+		if (!(bellman_ford(edge, cst, trace, len)))
 		{
 //			ft_printf("B.F. DONE: relaxation stops at %d/%d\n",
 //				iter, len);
 			break ;
 		}
+
 	}
 	if (neg_cycle(edge, cst))
 		return (free_tmp_arrays(cst, trace));
