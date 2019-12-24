@@ -24,6 +24,24 @@ void				print_all(t_structs *str)
 	ways_print((t_list **)&str->ways);
 }
 
+void					print_void_ver(void **ver, int len)
+{
+	int 	i = 0;
+	t_vertex	*v;
+
+	while (i < len)
+	{
+		v = ver[i];
+		ft_printf("[%d] %s ", i, v->name);
+		if (v->split == 1)
+		{
+			ft_printf("i: %d o:%d ", v->in, v->out);
+		}
+		ft_printf("\n");
+		i++;
+	}
+}
+
 void 			path_print(t_path **path, char mode)
 {
 	t_path		*tmp;

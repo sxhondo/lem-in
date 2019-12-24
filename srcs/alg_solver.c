@@ -26,7 +26,9 @@ static void			set_indexes_of_ver(t_edge **edge, void **ver, int len)
 	while (e)
 	{
 		e->v1_i = get_index_of_ver(ver, e->v1->name, len);
+		e->v1->i = e->v1_i;
 		e->v2_i = get_index_of_ver(ver, e->v2->name, len);
+		e->v2->i = e->v2_i;
 		e = e->next;
 	}
 }
@@ -49,6 +51,23 @@ static void			**convert_ver_to_ptrs(t_vertex **ver, int len)
 	return (ptr);
 }
 
+static void				divide_ver(t_path **route)
+{
+	t_path				*p;
+
+	p = *route;
+	while (p)
+	{
+		if (p->curr_v->mod == 0)
+		{
+			p->curr_v->split = 1;
+			p->curr_v->out = 0;
+			p->curr_v->in = 0;
+		}
+		p = p->next_p;
+	}
+}
+
 t_list 					*solver(int ants, t_edge **edge, t_vertex **ver)
 {
 	void                **vp;
@@ -61,16 +80,14 @@ t_list 					*solver(int ants, t_edge **edge, t_vertex **ver)
 	vp = convert_ver_to_ptrs(ver, len);
 	set_indexes_of_ver(edge, vp, len);
 
-	if (!(route = breadth_first_search(edge, vp, len)))
-		put_error("no possible solution\n", 0);
-//	path_print(&route, 'f');
-	add_path_to_lst(&ways, route);
-//	vertex_print(ver);
-	if (ants + 1 <= path_len(&route) || path_len(&route) == 2)
+	while ((route = breadth_first_search(edge, vp, len)))
 	{
-		free(vp);
-		return (ways);
+		divide_ver(&route);
+		exclude_route(&route, edge);
+//		path_print(&route, 'f');
+		add_path_to_lst(&ways, route);
+//		edge_print(edge);
 	}
-	else
-		return (find_overlapping_routes(edge, &ways, vp, len));
+	return (add_shortest_paths(&ways, edge, vp, len));
+
 }

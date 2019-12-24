@@ -37,18 +37,13 @@ t_path				*trace_route(void **ver, int *trace, int last)
 	while (last > 0)
 	{
 		v1 = (t_vertex *)ver[last];
-		if ((in_list(&route, v1)))
-		{
-//			ft_printf("INCORRECT\n");
-			return (NULL);
-		}
 		n = path_init(v1);
 		path_push(&route, n);
 		last = trace[last];
 	}
 	v1 = (t_vertex *)ver[0];
 	n = path_init(v1);
-	free(trace);
+//	free(trace);
 	path_push(&route, n);
 	return (route);
 }
@@ -70,7 +65,7 @@ void			    exclude_route(t_path **route, t_edge **edge)
 			ft_swap_int(&e->v1_i, &e->v2_i);
 		}
 		e->b = 0;
-		e->cost = -1;
+		e->cost = 0;
 		r = r->prev_p;
 	}
 }

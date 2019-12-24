@@ -1,6 +1,6 @@
 #hello guys
 #hello
-15
+13
 #hello guys
 #hello guys
 ##start
@@ -20,7 +20,6 @@ J 1 1
 K 1 1
 EL 1 1
 M 1 1
-Q 1 1
 ##end
 N 1 1
 B-A
@@ -39,4 +38,5 @@ H-A
 I-H
 I-J
 M-J
+M-N
 N-M

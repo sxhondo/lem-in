@@ -11,6 +11,10 @@
 # define COLORS		2u
 # define OPEN		4u
 
+# define IN			1u
+# define OUT		2u
+
+
 typedef struct		s_ants
 {
 	int 			id;
@@ -25,8 +29,12 @@ typedef struct		s_vertex
 {
 	char 			*name;
 	unsigned 		mod;
+	unsigned 		split;
+	int 			in;
+	int 			out;
 	int 			x;
 	int 			y;
+	int 			i;
 	struct s_vertex *next;
 }					t_vertex;
 
@@ -91,7 +99,7 @@ void					vertex_free(t_vertex **ver);
 t_edge					*find_edge(t_edge **edge, char *v1, char *v2);
 void 					edge_add(t_structs *structs, t_info *inf);
 
-
+void					print_void_ver(void **ver, int len);
 
 
 /*
@@ -159,10 +167,6 @@ void					edge_free(t_edge **edge);
 void					ants_free(t_ants **s);
 
 /*
-** alg
-*/
-
-/*
 **	solver.c
 */
 t_list 					*solver(int ants, t_edge **edge, t_vertex **ver);
@@ -212,6 +216,10 @@ t_list					*get_i_paths(t_list **paths, int value);
 int 					ants_per_room(t_ants **ants, int path);
 void					ants_push_back(t_ants **dst, t_ants *ant);
 t_ants					*ant_init(int id, int pos);
+
+
+t_list					*add_shortest_paths(t_list **ways, t_edge **edge,
+											  void **ver, int len);
 
 void					free_list(t_list **tab);
 void 				pri(int *cst, int len);

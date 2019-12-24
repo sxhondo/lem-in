@@ -75,4 +75,5 @@ void 				mover(t_ants **ants, unsigned flags)
 //        if (flags & DEBUG)
 //            ants_print(ants);
     }
+
 }

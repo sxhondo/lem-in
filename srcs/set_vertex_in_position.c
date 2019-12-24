@@ -10,18 +10,6 @@ static t_vertex			*iter_to_last(t_vertex **ver)
 	return (ptr);
 }
 
-static void				small_swap(t_vertex **ver)
-{
-	t_vertex			*v;
-	t_vertex			*next;
-
-	v = *ver;
-	next = v->next;
-	v->next = NULL;
-	next->next = v;
-	*ver = next;
-}
-
 static void				first_swap(t_vertex **ver)
 {
 	t_vertex			*v;
@@ -64,12 +52,19 @@ void					put_to_end(t_vertex **ver)
 {
 	t_vertex			*v;
 	t_vertex			*last;
+	t_vertex			*next;
 
 	last = iter_to_last(ver);
 	if (last->mod == 2)
 		return ;
 	if (vertex_len(ver) == 2)
-		return (small_swap(ver));
+	{
+		v = *ver;
+		next = v->next;
+		v->next = NULL;
+		next->next = v;
+		*ver = next;
+	}
 	v = *ver;
 	if (v->mod == 2)
 		return (first_swap(ver));

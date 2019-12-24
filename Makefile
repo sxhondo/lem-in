@@ -13,9 +13,10 @@ LIB_FT = $(LIB_DIR)libft.a
 
 SRCS_DIR = srcs/
 SRCS_LIST= alg_bellman_ford.c alg_bfs.c alg_mover.c alg_route_mgmt.c\
-			alg_solver.c alg_tools.c\
+			alg_solver.c alg_tools.c dsj.c\
 			ants_dispatcher.c ants_struct.c\
 			edge_struct.c path_struct.c vertex_struct.c free_structs.c\
+			set_vertex_in_position.c validator_tools.c vec_info_structs.c\
 			parse_lists.c parse_reader.c parse_tools.c\
 			display_info.c main.c
 

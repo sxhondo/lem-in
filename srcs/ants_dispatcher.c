@@ -90,7 +90,9 @@ t_ants 				*spawn_ants(int amount, t_list **ways)
 	if (is_super_way(ways))
 		set_super_flag(&ants);
 	else
+	{
 		dispatcher(amount, ways, &ants);
+	}
 	link_nodes(&ants, ways);
 	return (ants);
 }
