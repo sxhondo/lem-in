@@ -9,20 +9,6 @@ void				swap_ver(t_vertex **v1, t_vertex **v2)
 	*v2 = tmp;
 }
 
-static int 			in_list(t_path **route, t_vertex *curr)
-{
-	t_path			*r;
-
-	r = *route;
-	while (r)
-	{
-		if ((ft_strequ(r->curr_v->name, curr->name)))
-			return (1);
-		r = r->next_p;
-	}
-	return (0);
-}
-
 t_path				*trace_route(void **ver, int *trace, int last)
 {
 	t_path 			*route = NULL;
@@ -30,10 +16,7 @@ t_path				*trace_route(void **ver, int *trace, int last)
 	t_vertex		*v1;
 
 	if (trace[last] == -1)
-	{
-		free(trace);
 		return (NULL);
-	}
 	while (last > 0)
 	{
 		v1 = (t_vertex *)ver[last];
@@ -43,8 +26,8 @@ t_path				*trace_route(void **ver, int *trace, int last)
 	}
 	v1 = (t_vertex *)ver[0];
 	n = path_init(v1);
-//	free(trace);
 	path_push(&route, n);
+	free(trace);
 	return (route);
 }
 
@@ -65,7 +48,11 @@ void			    exclude_route(t_path **route, t_edge **edge)
 			ft_swap_int(&e->v1_i, &e->v2_i);
 		}
 		e->b = 0;
-		e->cost = 0;
+		if (e->v1->mod == 0)
+			e->v1->vis = 1;
+		if (e->v2->mod == 0)
+			e->v2->vis = 1;
+		e->cost = -1;
 		r = r->prev_p;
 	}
 }

@@ -1,5 +1,19 @@
 #include "lem_in.h"
 
+int 				pop_lst(t_list **queue)
+{
+	int 			tmp;
+	t_list			*q;
+	t_list			*next;
+
+	q = *queue;
+	tmp = *((int *)q->content);
+	next = q->next;
+	free(q);
+	*queue = next;
+	return (tmp);
+}
+
 t_info					*init_info(char *path, unsigned flags)
 {
 	t_info				*i;

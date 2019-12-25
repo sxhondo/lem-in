@@ -25,8 +25,6 @@ void				edge_free(t_edge **edge)
 	while (p)
 	{
 		next = p->next;
-//		ft_strdel(&p->t);
-//		ft_strdel(&p->v2_name);
 		free(p);
 		p = next;
 	}

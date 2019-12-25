@@ -21,12 +21,13 @@ static void				put_path(t_path **route, t_edge **edge)
 	r = *route;
 	while (r->next_p)
 	{
-//		path_print(route, 'f');
 		tmp = find_edge(edge, r->curr_v->name, r->next_p->curr_v->name);
 		if (tmp->cost)
-			tmp->cost = -1;
+			tmp->cost++;
 		else
 			tmp->cost = 1;
+		tmp->v1->vis = 0;
+		tmp->v2->vis = 0;
 		r = r->next_p;
 	}
 }
@@ -47,10 +48,10 @@ t_list					*add_shortest_paths(t_list **ways, t_edge **edge,
 	free_list(ways);
 	while ((fn = breadth_first_search(edge, ver, len)))
 	{
-//		path_print(&fn, 'f');
+		if (path_len(&fn) == 2)
+			break ;
 		exclude_route(&fn, edge);
 		add_path_to_lst(ways, fn);
-//		edge_print(edge);
 	}
 	free(ver);
 	return (*ways);

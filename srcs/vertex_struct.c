@@ -94,8 +94,6 @@ void 					vertex_add(t_structs *structs,
 	elem->mod = inf->mod;
 	elem->x = x;
 	elem->y = y;
-	elem->split = 0;
-	elem->in = 0;
-	elem->out = 0;
+	elem->vis = 0;
 	vertex_push_back((t_vertex **)&structs->ver, elem);
 }

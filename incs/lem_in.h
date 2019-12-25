@@ -29,9 +29,7 @@ typedef struct		s_vertex
 {
 	char 			*name;
 	unsigned 		mod;
-	unsigned 		split;
-	int 			in;
-	int 			out;
+	int 			vis;
 	int 			x;
 	int 			y;
 	int 			i;
@@ -69,6 +67,17 @@ typedef struct		s_info
 	int 			skip_comments;
 }					t_info;
 
+typedef struct		s_bf
+{
+	int 			*d;
+	int 			*id;
+	int 			*trace;
+	int 			cost;
+	int 			iter;
+	int 			len;
+	t_list			*queue;
+}					t_bf;
+
 typedef struct 		s_structs
 {
 	int 			ants_amount;
@@ -99,14 +108,13 @@ void					vertex_free(t_vertex **ver);
 t_edge					*find_edge(t_edge **edge, char *v1, char *v2);
 void 					edge_add(t_structs *structs, t_info *inf);
 
-void					print_void_ver(void **ver, int len);
-
 
 /*
 **	vec_info_tools.c
 */
 t_vec					*vec_read(int fd);
 t_info					*init_info(char *path, unsigned flags);
+int 					pop_lst(t_list **queue);
 
 /*
 **	parse_tools.c
@@ -141,19 +149,20 @@ void					put_to_end(t_vertex **ver);
 **	display_info.c
 */
 void					put_error(char *err, int lc);
-void					edge_print(t_edge **edge);
+void					edge_print(t_edge *e);
 void					vertex_print(t_vertex **ver);
 void					ants_print(t_ants **ants);
+void 					print_arr(int *cst, int len);
+void					print_void_ver(void **ver, int len);
 void 					path_print(t_path **path, char mode);
 void 					ways_print(t_list **ways);
 void					print_all(t_structs *str);
-
+void 					print_queue(t_list *lst, void **ver);
 /*
 **	path_struct.c
 */
 t_path 					*path_init(t_vertex *curr);
 void 					path_push_back(t_path **dst, t_path *elem);
-void					add_path_to_lst(t_list **lst, t_path *path);
 void					path_push(t_path **dst, t_path *elem);
 int 					path_len(t_path **dst);
 t_path					*get_i_path_node(t_path **path, int value);
@@ -165,6 +174,12 @@ void					path_push_init(t_path **dst, t_vertex *v1, t_vertex *v2);
 void					path_free(t_path **s);
 void					edge_free(t_edge **edge);
 void					ants_free(t_ants **s);
+
+/*
+**	structs_tools.c
+*/
+void					add_path_to_lst(t_list **lst, t_path *path);
+void 					free_queue(t_list **que);
 
 /*
 **	solver.c

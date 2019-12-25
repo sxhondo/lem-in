@@ -1,15 +1,5 @@
 #include "lem_in.h"
 
-void		add_path_to_lst(t_list **lst, t_path *path)
-{
-	t_list	*node;
-
-	if (!(node = ft_lstnew(path, sizeof(t_path))))
-		put_error("cannot allocate memory", 0);
-//	free(path);
-	ft_lstpushback(lst, node);
-}
-
 t_path					*get_i_path_node(t_path **path, int value)
 {
 	t_path				*p;

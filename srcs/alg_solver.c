@@ -13,7 +13,6 @@ static int			get_index_of_ver(void **v, char *name, int size)
 			return (i);
 		i++;
 	}
-//	ft_printf("\n");
 	return (-1);
 }
 
@@ -51,23 +50,6 @@ static void			**convert_ver_to_ptrs(t_vertex **ver, int len)
 	return (ptr);
 }
 
-static void				divide_ver(t_path **route)
-{
-	t_path				*p;
-
-	p = *route;
-	while (p)
-	{
-		if (p->curr_v->mod == 0)
-		{
-			p->curr_v->split = 1;
-			p->curr_v->out = 0;
-			p->curr_v->in = 0;
-		}
-		p = p->next_p;
-	}
-}
-
 t_list 					*solver(int ants, t_edge **edge, t_vertex **ver)
 {
 	void                **vp;
@@ -79,15 +61,16 @@ t_list 					*solver(int ants, t_edge **edge, t_vertex **ver)
 	len = vertex_len(ver);
 	vp = convert_ver_to_ptrs(ver, len);
 	set_indexes_of_ver(edge, vp, len);
-
-	while ((route = breadth_first_search(edge, vp, len)))
+	while ((route = get_cheapest_path(edge, vp, len)))
 	{
-		divide_ver(&route);
+		if (path_len(&route) == 2)
+		{
+			add_path_to_lst(&ways, route);
+			free(vp);
+			return (ways);
+		}
 		exclude_route(&route, edge);
-//		path_print(&route, 'f');
 		add_path_to_lst(&ways, route);
-//		edge_print(edge);
 	}
 	return (add_shortest_paths(&ways, edge, vp, len));
-
 }
