@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ants_dispatcher.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sxhondo <w13cho@gmail.com>                 +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/12/26 13:01:12 by sxhondo           #+#    #+#             */
+/*   Updated: 2019/12/26 13:01:13 by sxhondo          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "lem_in.h"
 
-static int 		is_super_way(t_list **paths)
+static int		is_super_way(t_list **paths)
 {
 	t_list		*l;
 	t_path		*p;
@@ -43,16 +55,14 @@ static void		link_nodes(t_ants **ants, t_list **paths)
 	}
 }
 
-static void			dispatcher(int amount, t_list **paths, t_ants **ants)
+static void		dispatcher(int amount, t_list **paths, t_ants **ants, int i)
 {
-	int 			p_len;
-	int 			p_next_len;
-	int 			a;
-	int 			i;
-	t_list			*tmp;
-	t_ants			*an;
+	int			p_len;
+	int			p_next_len;
+	int			a;
+	t_list		*tmp;
+	t_ants		*an;
 
-	i = 0;
 	an = *ants;
 	an->path = 0;
 	an = an->next;
@@ -72,27 +82,26 @@ static void			dispatcher(int amount, t_list **paths, t_ants **ants)
 	}
 }
 
-t_ants 				*spawn_ants(int amount, t_list **ways)
+t_ants			*spawn_ants(int amount, t_list **ways)
 {
-	int 			i;
-	register int 	tmp;
-	t_ants			*node;
-	t_ants			*ants = NULL;
+	int			i;
+	int			tmp;
+	t_ants		*node;
+	t_ants		*ants;
 
+	ants = NULL;
 	i = 1;
 	tmp = amount;
 	while (tmp--)
 	{
-		node = ant_init(0, 0);
+		node = ant_init(0);
 		ants_push_back(&ants, node);
 		i++;
 	}
 	if (is_super_way(ways))
 		set_super_flag(&ants);
 	else
-	{
-		dispatcher(amount, ways, &ants);
-	}
+		dispatcher(amount, ways, &ants, 0);
 	link_nodes(&ants, ways);
 	return (ants);
 }

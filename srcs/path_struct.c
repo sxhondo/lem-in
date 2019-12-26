@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   path_struct.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sxhondo <w13cho@gmail.com>                 +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/12/26 12:59:54 by sxhondo           #+#    #+#             */
+/*   Updated: 2019/12/26 12:59:55 by sxhondo          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "lem_in.h"
 
 t_path					*get_i_path_node(t_path **path, int value)
@@ -10,10 +22,10 @@ t_path					*get_i_path_node(t_path **path, int value)
 	return (p);
 }
 
-int 					path_len(t_path **dst)
+int						path_len(t_path **dst)
 {
 	t_path				*p;
-	int 				i;
+	int					i;
 
 	i = 0;
 	p = *dst;
@@ -37,9 +49,9 @@ void					path_push(t_path **dst, t_path *elem)
 	}
 }
 
-void 					path_push_back(t_path **dst, t_path *elem)
+void					path_push_back(t_path **dst, t_path *elem)
 {
-	t_path 				*tmp;
+	t_path				*tmp;
 
 	tmp = *dst;
 	if (!*dst)
@@ -55,9 +67,9 @@ void 					path_push_back(t_path **dst, t_path *elem)
 	elem->next_p = NULL;
 }
 
-t_path 					*path_init(t_vertex *curr)
+t_path					*path_init(t_vertex *curr)
 {
-	t_path 				*p;
+	t_path				*p;
 
 	if (!(p = ft_memalloc(sizeof(t_path))))
 	{

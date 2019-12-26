@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   free_structs.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sxhondo <w13cho@gmail.com>                 +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/12/26 13:13:29 by sxhondo           #+#    #+#             */
+/*   Updated: 2019/12/26 13:13:30 by sxhondo          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "lem_in.h"
 
 void				ants_free(t_ants **s)
@@ -14,7 +26,6 @@ void				ants_free(t_ants **s)
 	}
 	a = NULL;
 }
-
 
 void				edge_free(t_edge **edge)
 {
@@ -46,11 +57,11 @@ void				path_free(t_path **s)
 	p = NULL;
 }
 
-void			free_list(t_list **tab)
+void				free_list(t_list **tab)
 {
-	t_list		*lst;
-	t_list		*next;
-	t_path		*ptr;
+	t_list			*lst;
+	t_list			*next;
+	t_path			*ptr;
 
 	lst = *tab;
 	while (lst)

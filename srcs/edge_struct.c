@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   edge_struct.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sxhondo <w13cho@gmail.com>                 +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/12/26 13:05:12 by sxhondo           #+#    #+#             */
+/*   Updated: 2019/12/26 13:05:13 by sxhondo          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "lem_in.h"
 
 static void					edge_push_back(t_edge **dst, t_edge *elem)
@@ -36,13 +48,13 @@ static t_edge				*edge_init(char *e1, char *e2)
 	return (edge);
 }
 
-void 						edge_add(t_structs *structs, t_info *inf)
+void						edge_add(t_structs *structs, t_info *inf)
 {
-	int 					i;
-	char 					*v1;
-	char 					*v2;
-	char 					*name;
-	t_edge 					*elem;
+	int						i;
+	char					*v1;
+	char					*v2;
+	char					*name;
+	t_edge					*elem;
 
 	name = inf->name;
 	if (inf->mod)

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   set_vertex_in_position.c                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sxhondo <w13cho@gmail.com>                 +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/12/26 13:00:52 by sxhondo           #+#    #+#             */
+/*   Updated: 2019/12/26 13:00:52 by sxhondo          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "lem_in.h"
 
 static t_vertex			*iter_to_last(t_vertex **ver)
@@ -57,16 +69,15 @@ void					put_to_end(t_vertex **ver)
 	last = iter_to_last(ver);
 	if (last->mod == 2)
 		return ;
+	v = *ver;
 	if (vertex_len(ver) == 2)
 	{
-		v = *ver;
 		next = v->next;
 		v->next = NULL;
 		next->next = v;
 		*ver = next;
 	}
-	v = *ver;
-	if (v->mod == 2)
+	else if (v->mod == 2)
 		return (first_swap(ver));
 	else
 		swap_lst(ver);

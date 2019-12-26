@@ -1,10 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   vertex_struct.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sxhondo <w13cho@gmail.com>                 +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/12/26 12:46:30 by sxhondo           #+#    #+#             */
+/*   Updated: 2019/12/26 12:46:33 by sxhondo          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "lem_in.h"
 
-int 					vertex_len(t_vertex **ver)
+int					vertex_len(t_vertex **ver)
 {
-	int 				i;
-	t_vertex			*v;
+	int				i;
+	t_vertex		*v;
 
 	i = 0;
 	v = *ver;
@@ -16,40 +27,10 @@ int 					vertex_len(t_vertex **ver)
 	return (i);
 }
 
-t_vertex 			*find_ver_by_index(t_vertex **ver, int i)
+t_vertex			*find_ver_by_name(t_vertex **ver, char *name)
 {
-	t_vertex 		*v;
+	t_vertex		*v;
 
-	v = *ver;
-	while (v && i--)
-	{
-		ft_printf("%d\n", i);
-		v = v->next;
-	}
-	return (v);
-}
-
-int							get_i_by_name(t_vertex **ver, char *name)
-{
-	t_vertex				*v;
-	int 					i;
-
-	i = 0;
-	v = *ver;
-	while (v)
-	{
-		if (ft_strequ(v->name, name))
-			return (i);
-		v = v->next;
-		i++;
-	}
-	return (-1);
-}
-
-
-t_vertex     			 *find_ver_by_name(t_vertex **ver, char *name)
-{
-	t_vertex   			 *v;
 	v = *ver;
 	while (v)
 	{
@@ -60,9 +41,9 @@ t_vertex     			 *find_ver_by_name(t_vertex **ver, char *name)
 	return (NULL);
 }
 
-static void					vertex_push_back(t_vertex **dst, t_vertex *elem)
+static void			vertex_push_back(t_vertex **dst, t_vertex *elem)
 {
-	t_vertex				*tmp;
+	t_vertex		*tmp;
 
 	tmp = *dst;
 	if (!*dst)
@@ -76,10 +57,9 @@ static void					vertex_push_back(t_vertex **dst, t_vertex *elem)
 	}
 }
 
-void 					vertex_add(t_structs *structs,
-												t_info *inf, int x, int y)
+void				vertex_add(t_structs *structs, t_info *inf, int x, int y)
 {
-	t_vertex			*elem;
+	t_vertex		*elem;
 
 	if (!(elem = ft_memalloc(sizeof(t_vertex))))
 	{

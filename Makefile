@@ -1,6 +1,6 @@
 NAME = lem-in
 CC = gcc
-#CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror
 
 
 INC_DIR = incs/
@@ -9,8 +9,6 @@ INC  = $(INC_DIR)lem_in.h
 LIB_DIR = libft/
 LIB_FT = $(LIB_DIR)libft.a
 
-# 		alg_solver.c\
-
 SRCS_DIR = srcs/
 SRCS_LIST= alg_bellman_ford.c alg_bfs.c alg_mover.c alg_route_mgmt.c\
 			alg_solver.c alg_tools.c structs_tools.c\
@@ -18,7 +16,7 @@ SRCS_LIST= alg_bellman_ford.c alg_bfs.c alg_mover.c alg_route_mgmt.c\
 			edge_struct.c path_struct.c vertex_struct.c free_structs.c\
 			set_vertex_in_position.c validator_tools.c vec_info_structs.c\
 			parse_lists.c parse_reader.c parse_tools.c\
-			display_info.c main.c
+			print_funcs1.c print_funcs2.c main.c
 
 OBJ_DIR = obj/
 OBJ_LIST = $(SRCS_LIST:%.c=%.o)

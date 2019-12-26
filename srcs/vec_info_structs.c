@@ -1,22 +1,35 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   vec_info_structs.c                                 :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sxhondo <w13cho@gmail.com>                 +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/12/26 12:40:14 by sxhondo           #+#    #+#             */
+/*   Updated: 2019/12/26 12:40:14 by sxhondo          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "lem_in.h"
 
-int 				pop_lst(t_list **queue)
+int					pop_lst(t_list **queue)
 {
-	int 			tmp;
+	int				tmp;
 	t_list			*q;
 	t_list			*next;
 
 	q = *queue;
 	tmp = *((int *)q->content);
 	next = q->next;
+	ft_memdel(&q->content);
 	free(q);
 	*queue = next;
 	return (tmp);
 }
 
-t_info					*init_info(char *path, unsigned flags)
+t_info				*init_info(char *path, unsigned flags)
 {
-	t_info				*i;
+	t_info			*i;
 
 	if (!(i = ft_memalloc(sizeof(t_info))))
 	{
@@ -35,10 +48,10 @@ t_info					*init_info(char *path, unsigned flags)
 	return (i);
 }
 
-t_vec					*vec_read(int fd)
+t_vec				*vec_read(int fd)
 {
-	t_vec				*vec;
-	char 				buf[1];
+	t_vec			*vec;
+	char			buf[1];
 
 	if (fd < 0 || read(fd, NULL, 0) < 0)
 		put_error("cannot open file", 0);

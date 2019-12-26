@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   validator_tools.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sxhondo <w13cho@gmail.com>                 +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/12/26 12:39:00 by sxhondo           #+#    #+#             */
+/*   Updated: 2019/12/26 12:39:01 by sxhondo          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "lem_in.h"
 
 int					mini_atoi(const char *str)
@@ -14,9 +26,9 @@ int					mini_atoi(const char *str)
 	return ((int)res);
 }
 
-int 					only_digits(const char *str)
+int					only_digits(const char *str)
 {
-	int 				i;
+	int				i;
 
 	i = 0;
 	while (str[i])
@@ -28,10 +40,10 @@ int 					only_digits(const char *str)
 	return (1);
 }
 
-int							check_ants_num(const char *line, int lc)
+int					check_ants_num(const char *line, int lc)
 {
-	int						i;
-	int 					ants;
+	int				i;
+	int				ants;
 
 	i = 0;
 	while (line[i])
@@ -48,7 +60,7 @@ int							check_ants_num(const char *line, int lc)
 	return (ants);
 }
 
-void					check_no_room_given(unsigned flag, int lc)
+void				check_no_room_given(unsigned flag, int lc)
 {
 	if (!flag)
 		put_error("start and end rooms are not given", lc);
@@ -58,7 +70,7 @@ void					check_no_room_given(unsigned flag, int lc)
 		put_error("end room is not given", lc);
 }
 
-unsigned 				check_few_rooms(unsigned flag, unsigned mod, int lc)
+unsigned			check_few_rooms(unsigned flag, unsigned mod, int lc)
 {
 	if (flag & mod)
 	{

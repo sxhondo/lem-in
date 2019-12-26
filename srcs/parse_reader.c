@@ -34,10 +34,10 @@ static unsigned			get_command(const char *line, t_info *inf)
 }
 
 static void				proceed_rooms(t_structs *structs, t_info *inf,
-										 const char *line)
+															const char *line)
 {
-	int 				i;
-	int 				*xy;
+	int					i;
+	int					*xy;
 
 	i = 0;
 	inf->name = NULL;
@@ -64,7 +64,7 @@ static void				proceed_rooms(t_structs *structs, t_info *inf,
 }
 
 static void				validator(t_structs *structs, t_info *inf,
-									 const char *line)
+		const char *line)
 {
 	line += skip_spaces(line);
 	if (*line == '#')
@@ -92,13 +92,13 @@ static void				validator(t_structs *structs, t_info *inf,
 	}
 }
 
-void 					reader(t_structs *structs, unsigned flags, char *path)
+void					reader(t_structs *structs, unsigned flags, char *path)
 {
 	t_info				*inf;
 	t_vec				*vec;
-	char 				*file;
-	char 				*line;
-	int 				i;
+	char				*file;
+	char				*line;
+	int					i;
 
 	inf = init_info(path, flags);
 	vec = vec_read(inf->fd);

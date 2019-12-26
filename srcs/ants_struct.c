@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ants_struct.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sxhondo <w13cho@gmail.com>                 +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/12/26 13:04:11 by sxhondo           #+#    #+#             */
+/*   Updated: 2019/12/26 13:04:12 by sxhondo          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "lem_in.h"
 
 void			ants_push_back(t_ants **dst, t_ants *ant)
@@ -16,7 +28,7 @@ void			ants_push_back(t_ants **dst, t_ants *ant)
 	}
 }
 
-t_ants			*ant_init(int id, int pos)
+t_ants			*ant_init(int id)
 {
 	t_ants		*tmp;
 
@@ -30,10 +42,10 @@ t_ants			*ant_init(int id, int pos)
 	return (tmp);
 }
 
-int 				ants_per_room(t_ants **ants, int path)
+int				ants_per_room(t_ants **ants, int path)
 {
-	t_ants			*a;
-	int 			r;
+	t_ants		*a;
+	int			r;
 
 	r = 0;
 	a = *ants;
@@ -46,13 +58,12 @@ int 				ants_per_room(t_ants **ants, int path)
 	return (r);
 }
 
-t_list				*get_i_paths(t_list **paths, int value)
+t_list			*get_i_paths(t_list **paths, int value)
 {
-	t_list			*l;
+	t_list		*l;
 
 	l = *paths;
 	while (l && value--)
 		l = l->next;
 	return (l);
 }
-

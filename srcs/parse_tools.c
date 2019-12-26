@@ -1,8 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse_tools.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sxhondo <w13cho@gmail.com>                 +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/12/26 13:14:34 by sxhondo           #+#    #+#             */
+/*   Updated: 2019/12/26 13:14:35 by sxhondo          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "lem_in.h"
 
-int 			skip_spaces(const char *str)
+int						skip_spaces(const char *str)
 {
-	int 		i;
+	int					i;
 
 	i = 0;
 	while (*str && (*str == ' ' || *str == '\t'))
@@ -15,7 +27,7 @@ int 			skip_spaces(const char *str)
 
 int						cut_after_symbol(const char *src, char **dst, char sym)
 {
-	int 				i;
+	int					i;
 
 	i = 0;
 	while (src[i] && src[i] != sym)
@@ -28,11 +40,11 @@ int						cut_after_symbol(const char *src, char **dst, char sym)
 	return (i);
 }
 
-int					lem_atoi(const char *str, int *num, int pos, int lc)
+int						lem_atoi(const char *str, int *num, int pos, int lc)
 {
-	int				sign;
-	long			res;
-	int				i;
+	int					sign;
+	long				res;
+	int					i;
 
 	i = 0;
 	res = 0;
@@ -54,10 +66,10 @@ int					lem_atoi(const char *str, int *num, int pos, int lc)
 	return (i);
 }
 
-unsigned 			parse_arguments(int ac, char **arg)
+unsigned				parse_arguments(int ac, char **arg)
 {
-	unsigned 		flag;
-	int 			i;
+	unsigned			flag;
+	int					i;
 
 	flag = 0;
 	i = 1;
@@ -76,8 +88,8 @@ unsigned 			parse_arguments(int ac, char **arg)
 
 int						parse_room_name(const char *line, char **name, int lc)
 {
-	const char 			*start;
-	int 				i;
+	const char			*start;
+	int					i;
 
 	start = line;
 	line += skip_spaces(line);

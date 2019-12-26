@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   alg_route_mgmt.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sxhondo <w13cho@gmail.com>                 +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/12/26 13:11:45 by sxhondo           #+#    #+#             */
+/*   Updated: 2019/12/26 13:11:46 by sxhondo          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "lem_in.h"
 
-static void 			reset_map(t_edge **edge)
+static void				reset_map(t_edge **edge)
 {
 	t_edge				*e;
 
@@ -32,11 +44,9 @@ static void				put_path(t_path **route, t_edge **edge)
 	}
 }
 
-t_list					*add_shortest_paths(t_list **ways, t_edge **edge,
-											 	 void **ver, int len)
+void					put_paths_on_map(t_edge **edge, t_list **ways)
 {
 	t_list				*w;
-	t_path 				*fn;
 
 	w = *ways;
 	reset_map(edge);
@@ -46,10 +56,20 @@ t_list					*add_shortest_paths(t_list **ways, t_edge **edge,
 		w = w->next;
 	}
 	free_list(ways);
+}
+
+t_list					*add_shortest_paths(t_list **ways, t_edge **edge,
+															void **ver, int len)
+{
+	t_path				*fn;
+
 	while ((fn = breadth_first_search(edge, ver, len)))
 	{
 		if (path_len(&fn) == 2)
+		{
+			path_free(&fn);
 			break ;
+		}
 		exclude_route(&fn, edge);
 		add_path_to_lst(ways, fn);
 	}

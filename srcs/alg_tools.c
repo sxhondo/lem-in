@@ -1,8 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   alg_tools.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sxhondo <w13cho@gmail.com>                 +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/12/26 12:45:02 by sxhondo           #+#    #+#             */
+/*   Updated: 2019/12/26 12:45:02 by sxhondo          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "lem_in.h"
 
 void				swap_ver(t_vertex **v1, t_vertex **v2)
 {
-	t_vertex 		*tmp;
+	t_vertex		*tmp;
 
 	tmp = *v1;
 	*v1 = *v2;
@@ -11,12 +23,16 @@ void				swap_ver(t_vertex **v1, t_vertex **v2)
 
 t_path				*trace_route(void **ver, int *trace, int last)
 {
-	t_path 			*route = NULL;
+	t_path			*route;
 	t_path			*n;
 	t_vertex		*v1;
 
+	route = NULL;
 	if (trace[last] == -1)
+	{
+		free(trace);
 		return (NULL);
+	}
 	while (last > 0)
 	{
 		v1 = (t_vertex *)ver[last];
@@ -31,10 +47,10 @@ t_path				*trace_route(void **ver, int *trace, int last)
 	return (route);
 }
 
-void			    exclude_route(t_path **route, t_edge **edge)
+void				exclude_route(t_path **route, t_edge **edge)
 {
-	t_path 			*r;
-	t_edge 			*e;
+	t_path			*r;
+	t_edge			*e;
 
 	r = *route;
 	while (r->next_p)

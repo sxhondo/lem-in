@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   alg_bellman_ford.c                                 :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sxhondo <w13cho@gmail.com>                 +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/12/26 12:27:09 by sxhondo           #+#    #+#             */
+/*   Updated: 2019/12/26 12:27:10 by sxhondo          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "lem_in.h"
 
-static void 		free_bf(t_bf *bf)
+static void			free_bf(t_bf *bf)
 {
 	free(bf->id);
 	free(bf->d);
@@ -8,11 +20,11 @@ static void 		free_bf(t_bf *bf)
 	free(bf);
 }
 
-static t_bf			*init(int len)
+static t_bf			*bf_init(int len)
 {
-	int 			*trace;
-	int 			*id;
-	int 			*d;
+	int				*trace;
+	int				*id;
+	int				*d;
 	t_bf			*a;
 
 	if (!(trace = ft_new_array(len, -1)))
@@ -36,10 +48,10 @@ static t_bf			*init(int len)
 	return (a);
 }
 
-static int 			relax_edge(t_bf	*a, t_list **que, int v, int to)
+static int			relax_edge(t_bf *a, t_list **que, int v, int to)
 {
-	int 			flag;
-	t_list 			*node;
+	int				flag;
+	t_list			*node;
 
 	flag = 0;
 	if (a->d[to] > a->d[v] + a->cost)
@@ -67,7 +79,7 @@ static int 			relax_edge(t_bf	*a, t_list **que, int v, int to)
 static void			explore_neighbours(t_edge **edge, t_list **queue,
 															t_bf *a, int v)
 {
-	int 			to;
+	int				to;
 	t_edge			*e;
 
 	e = *edge;
@@ -84,25 +96,21 @@ static void			explore_neighbours(t_edge **edge, t_list **queue,
 			a->cost = e->cost;
 			relax_edge(a, queue, v, e->v2_i);
 		}
-		print_arr(a->trace, a->len);
-		print_arr(a->d, a->len);
-		print_arr(a->id, a->len);
 		e = e->next;
 	}
-
 }
 
 t_path				*get_cheapest_path(t_edge **edge, void **ver, int len)
 {
-	int 			v;
-	t_path 			*fin;
-	t_list 			*queue;
-	t_list 			*node;
+	int				v;
+	t_path			*fin;
+	t_list			*queue;
+	t_list			*node;
 	t_bf			*a;
 
 	v = 0;
 	queue = NULL;
-	a = init(len);
+	a = bf_init(len);
 	if (!(node = ft_lstnew(&v, sizeof(int))))
 		put_error("cannot allocate memory", 0);
 	ft_lstpushback(&queue, node);
@@ -114,5 +122,6 @@ t_path				*get_cheapest_path(t_edge **edge, void **ver, int len)
 	}
 	fin = trace_route(ver, a->trace, len - 1);
 	free_bf(a);
+	ft_lstfree(&queue);
 	return (fin);
 }

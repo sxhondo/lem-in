@@ -1,8 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sxhondo <w13cho@gmail.com>                 +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/12/26 12:31:17 by sxhondo           #+#    #+#             */
+/*   Updated: 2019/12/26 12:31:18 by sxhondo          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "lem_in.h"
 
-static t_structs			*init_structs()
+static t_structs	*init_structs(void)
 {
-	t_structs				*s;
+	t_structs		*s;
 
 	if (!(s = ft_memalloc(sizeof(t_structs))))
 	{
@@ -17,21 +29,22 @@ static t_structs			*init_structs()
 
 static void			free_structs(t_structs *structs)
 {
-
 	if (structs->ver)
 		vertex_free((t_vertex **)&structs->ver);
 	if (structs->edge)
 		edge_free((t_edge **)&structs->edge);
 	if (structs->ways)
+	{
 		free_list((t_list **)&structs->ways);
+	}
 	if (structs->ants)
 		ants_free(&structs->ants);
 	free(structs);
 }
 
-int 				main(int ac, char **av)
+int					main(int ac, char **av)
 {
-	unsigned 		flags;
+	unsigned		flags;
 	t_structs		*structs;
 
 	flags = parse_arguments(ac, av);
@@ -43,7 +56,7 @@ int 				main(int ac, char **av)
 	structs->ants = spawn_ants(structs->ants_amount, (t_list **)&structs->ways);
 	if (flags & DEBUG)
 		print_all(structs);
-	mover((t_ants **)&structs->ants, flags);
+	mover((t_ants **)&structs->ants);
 	free_structs(structs);
 	return (0);
 }

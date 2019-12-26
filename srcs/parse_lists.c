@@ -1,10 +1,22 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse_lists.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sxhondo <w13cho@gmail.com>                 +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/12/26 12:33:15 by sxhondo           #+#    #+#             */
+/*   Updated: 2019/12/26 12:33:16 by sxhondo          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "lem_in.h"
 
-static void				check_duplicate_vertex(t_vertex **ver)
+static void		check_duplicate_vertex(t_vertex **ver)
 {
-	t_vertex			*i;
-	t_vertex			*j;
-	int 				err;
+	t_vertex	*i;
+	t_vertex	*j;
+	int			err;
 
 	i = *ver;
 	while (i)
@@ -23,12 +35,12 @@ static void				check_duplicate_vertex(t_vertex **ver)
 	}
 }
 
-static void				check_non_existing_vertex(t_vertex **ver, t_edge **edge)
+static void		check_non_existing_vertex(t_vertex **ver, t_edge **edge)
 {
-	t_vertex			*v;
-	t_edge				*e;
-	int 				i;
-	int 		j;
+	t_vertex	*v;
+	t_edge		*e;
+	int			i;
+	int			j;
 
 	e = *edge;
 	while (e)
@@ -65,7 +77,7 @@ static void		link_edges_to_vertex(t_vertex **ver, t_edge **edge)
 	}
 }
 
-void 			parse_lists(t_vertex **ver, t_edge **edge)
+void			parse_lists(t_vertex **ver, t_edge **edge)
 {
 	if (!*edge)
 		put_error("no links given", 0);
