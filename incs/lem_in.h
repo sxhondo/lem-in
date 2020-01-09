@@ -152,10 +152,11 @@ void					swap_ver(t_vertex **v1, t_vertex **v2);
 void					mover(t_ants **ants);
 t_ants					*spawn_ants(int amount, t_list **paths);
 t_list					*get_i_paths(t_list **paths, int value);
-int						ants_per_room(t_ants **ants, int path);
+int						ants_per_path(t_ants **ants, int path);
 void					ants_push_back(t_ants **dst, t_ants *ant);
 t_ants					*ant_init(int id);
 t_list					*add_shortest_paths(t_list **ways, t_edge **e,
 													void **ver, int len);
+void 					print_ants_per_paths(t_ants **ants, int paths);
 void					free_list(t_list **tab);
 #endif

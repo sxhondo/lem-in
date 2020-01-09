@@ -42,7 +42,28 @@ t_ants			*ant_init(int id)
 	return (tmp);
 }
 
-int				ants_per_room(t_ants **ants, int path)
+void 			print_ants_per_paths(t_ants **ants, int paths)
+{
+	t_ants 		*a;
+	int 		i = 0;
+	int 		counter = 0;
+
+	while (i <= paths)
+	{
+		a = *ants;
+		while (a)
+		{
+			if (a->path == i)
+				counter++;
+			a = a->next;
+		}
+		ft_printf("%d on path [%d]\n", counter, i);
+		i++;
+		counter = 0;
+	}
+}
+
+int				ants_per_path(t_ants **ants, int path)
 {
 	t_ants		*a;
 	int			r;

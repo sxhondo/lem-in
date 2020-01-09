@@ -12,6 +12,35 @@
 
 #include "lem_in.h"
 
+/*
+static void		dispatcher(int amount, t_list **paths, t_ants **ants, int i)
+{
+	int			p_len;
+	int			p_next_len;
+	int			a;
+	t_list		*tmp;
+	t_ants		*an;
+
+	an = *ants;
+	an->path = 0;
+	an = an->next;
+	amount -= 1;
+	while (amount--)
+	{
+		p_len = path_len((t_path **)&get_i_paths(paths, i)->content);
+		a = ants_per_room(ants, i);
+		if (!(tmp = get_i_paths(paths, i + 1)))
+		{
+			i = -1;
+			tmp = get_i_paths(paths, i + 1);
+		}
+		p_next_len = path_len((t_path **)&tmp->content);
+		an->path = (p_len + a) <= p_next_len ? i : ++i;
+		an = an->next;
+	}
+}
+*/
+
 static int		is_super_way(t_list **paths)
 {
 	t_list		*l;
@@ -55,30 +84,62 @@ static void		link_nodes(t_ants **ants, t_list **paths)
 	}
 }
 
-static void		dispatcher(int amount, t_list **paths, t_ants **ants, int i)
+static int 		find_min_value(int *cost, int len)
 {
-	int			p_len;
-	int			p_next_len;
-	int			a;
-	t_list		*tmp;
-	t_ants		*an;
+	int 		i;
+	int 		j;
 
-	an = *ants;
-	an->path = 0;
-	an = an->next;
-	amount -= 1;
-	while (amount--)
+	i = 0;
+	while (i < len)
 	{
-		p_len = path_len((t_path **)&get_i_paths(paths, i)->content);
-		a = ants_per_room(ants, i);
-		if (!(tmp = get_i_paths(paths, i + 1)))
-		{
-			i = -1;
-			tmp = get_i_paths(paths, i + 1);
-		}
-		p_next_len = path_len((t_path **)&tmp->content);
-		an->path = (p_len + a) <= p_next_len ? i : ++i;
-		an = an->next;
+		j = -1;
+		while (++j < len && cost[i] <= cost[j])
+			;
+		if (j == len)
+			return (i);
+		i++;
+	}
+	// print_arr(cost, len);
+	return (-1);
+}
+
+//Найти путь у которого p_len + ants минимально
+
+static int 		get_min_path(t_ants **ants, t_list **ways)
+{
+	t_list 		*w;
+	t_path 		*p;
+	int 		*cost;
+	int 		i;
+
+ 	i = 0;
+	w = *ways;
+	if (!(cost = ft_new_array(ft_lstlen(ways), -1)))
+		put_error("cannot allocate memory", 0);
+	while (w)
+	{
+		p = w->content;
+		cost[i] = path_len(&p) + ants_per_path(ants, i);
+		w = w->next;
+		i++;
+	}
+	return (find_min_value(cost, ft_lstlen(ways)));
+}
+
+static void 	dispatcher(int amount, t_list **ways, t_ants **ants)
+{
+	t_ants 		*a;
+	int 		min;
+
+	a = *ants;
+	a->path = 0;
+	a = a->next;
+
+	while (--amount)
+	{
+		min = get_min_path(ants, ways);
+		a->path = min;
+		a = a->next;
 	}
 }
 
@@ -101,7 +162,7 @@ t_ants			*spawn_ants(int amount, t_list **ways)
 	if (is_super_way(ways))
 		set_super_flag(&ants);
 	else
-		dispatcher(amount, ways, &ants, 0);
+		dispatcher(amount, ways, &ants);
 	link_nodes(&ants, ways);
 	return (ants);
 }

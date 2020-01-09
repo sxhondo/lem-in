@@ -49,7 +49,6 @@ void			path_print(t_path **path, char mode)
 			tmp = tmp->next_p;
 		}
 	}
-	ft_printf("\n");
 }
 
 void			ants_print(t_ants **ants)
