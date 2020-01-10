@@ -84,7 +84,7 @@ static void		link_nodes(t_ants **ants, t_list **paths)
 	}
 }
 
-static int 		find_min_value(int *cost, int len)
+static int 		find_min_value(const int *cost, int len)
 {
 	int 		i;
 	int 		j;
@@ -99,11 +99,8 @@ static int 		find_min_value(int *cost, int len)
 			return (i);
 		i++;
 	}
-	// print_arr(cost, len);
 	return (-1);
 }
-
-//Найти путь у которого p_len + ants минимально
 
 static int 		get_min_path(t_ants **ants, t_list **ways)
 {
@@ -116,12 +113,15 @@ static int 		get_min_path(t_ants **ants, t_list **ways)
 	w = *ways;
 	if (!(cost = ft_new_array(ft_lstlen(ways), -1)))
 		put_error("cannot allocate memory", 0);
-	while (w)
+	else
 	{
-		p = w->content;
-		cost[i] = path_len(&p) + ants_per_path(ants, i);
-		w = w->next;
-		i++;
+		while (w)
+		{
+			p = w->content;
+			cost[i] = (path_len(&p) - 1) + ants_per_path(ants, i);
+			w = w->next;
+			i++;
+		}
 	}
 	return (find_min_value(cost, ft_lstlen(ways)));
 }

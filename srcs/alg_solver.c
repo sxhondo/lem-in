@@ -43,6 +43,8 @@ static t_list		*find_overlapping_routes(t_edge **edge, void **vp,
 	ways = NULL;
 	while ((route = get_cheapest_path(edge, vp, len)))
 	{
+//		path_print(&route, 'f');
+//		ft_printf("\n");
 		exclude_route(&route, edge);
 		add_path_to_lst(&ways, route);
 		if (ants == 1)

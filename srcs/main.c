@@ -54,9 +54,9 @@ int					main(int ac, char **av)
 	structs->ways = solver(structs->ants_amount,
 			(t_edge **)&structs->edge, (t_vertex **)&structs->ver);
 	structs->ants = spawn_ants(structs->ants_amount, (t_list **)&structs->ways);
+	mover((t_ants **)&structs->ants);
 	if (flags & DEBUG)
 		print_all(structs);
-	mover((t_ants **)&structs->ants);
 	free_structs(structs);
 	return (0);
 }

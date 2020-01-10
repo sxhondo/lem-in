@@ -54,21 +54,15 @@ void				exclude_route(t_path **route, t_edge **edge)
 
 	r = *route;
 	while (r->next_p)
-		r = r->next_p;
-	while (r->prev_p)
 	{
-		e = find_edge(edge, r->curr_v->name, r->prev_p->curr_v->name);
-		if (ft_strequ(r->curr_v->name, e->v2->name))
+		e = find_edge(edge, r->curr_v->name, r->next_p->curr_v->name);
+		if (e->b == 1 && ft_strequ(r->curr_v->name, e->v1->name))
 		{
 			swap_ver(&e->v1, &e->v2);
 			ft_swap_int(&e->v1_i, &e->v2_i);
 		}
 		e->b = 0;
-		if (e->v1->mod == 0)
-			e->v1->vis = 1;
-		if (e->v2->mod == 0)
-			e->v2->vis = 1;
 		e->cost = -1;
-		r = r->prev_p;
+		r = r->next_p;
 	}
 }

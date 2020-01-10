@@ -27,25 +27,23 @@ static int			not_in_queue(t_list **queue, int curr)
 }
 
 static size_t		find_adj(t_edge **edge, t_list **queue,
-													int curr, const int *cst)
+							  int curr, const int *cst)
 {
 	t_edge			*e;
 
 	e = *edge;
 	while (e)
 	{
-		if (curr == e->v1_i)
+		if (curr == e->v1_i && not_in_queue(queue, e->v2_i) && e->cost != 0)
 		{
-			if (not_in_queue(queue, e->v2_i) &&
-				cst[e->v2_i] + e->cost < cst[e->v1_i] && e->cost <= 1)
-				if (e->v1->vis == 0)
-					return (e->v2_i);
+			if (e->v2->vis == 0)
+				return (e->v2_i);
 		}
-		if (curr == e->v2_i)
-			if (not_in_queue(queue, e->v1_i) &&
-			cst[e->v1_i] + e->cost < cst[e->v2_i] && e->cost <= 1)
-				if (e->v1->vis == 0)
-					return (e->v1_i);
+		if (curr == e->v2_i && not_in_queue(queue, e->v1_i) && e->cost != 0)
+		{
+			if (e->v1->vis == 0)
+			return (e->v1_i);
+		}
 		e = e->next;
 	}
 	return (-1);

@@ -54,18 +54,18 @@ static int			update(t_ants **ants, int id)
 			a->pos = a->pos->next_p;
 			if (a->super_way && ++id)
 				a->id = id;
-			// ft_printf("L%d-%s ", a->id, a->pos->curr_v->name);
+			ft_printf("L%d-%s ", a->id, a->pos->curr_v->name);
 		}
 		if (a->pos->next_p && no_one_next(ants, a->pos->next_p->curr_v->name))
 		{
 			if (a->id == 0 && ++id)
 				a->id = id;
 			a->pos = a->pos->next_p;
-			// ft_printf("L%d-%s ", a->id, a->pos->curr_v->name);
+			ft_printf("L%d-%s ", a->id, a->pos->curr_v->name);
 		}
 		a = a->next;
 	}
-	// ft_printf("\n");
+	ft_printf("\n");
 	return (id);
 }
 
