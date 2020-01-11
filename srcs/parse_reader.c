@@ -116,8 +116,10 @@ void					reader(t_structs *structs, unsigned flags, char *path)
 	}
 	check_no_room_given(inf->flag, inf->lc);
 	if (!(flags & NO_FILE))
+	{
 		write(1, vec->data, vec->total - 1);
-	write(1, "\n", 1);
+		write(1, "\n", 1);
+	}
 	ft_vec_del(&vec);
 	free(inf);
 }

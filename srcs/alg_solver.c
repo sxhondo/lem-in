@@ -73,8 +73,6 @@ static t_list		*get_cross_set(t_edge **edge, void **vp, int len, int ants)
 		cross_paths(route, &ways);
 		add_path_to_lst(&ways, route);
 	}
-//	return (ways);
-//	ways_print(&ways);
 	reset_map(edge, 0);
 	put_paths_on_map(edge, &ways);
 	while ((route = breadth_first_search(edge, vp, len)))
@@ -120,7 +118,8 @@ t_list				*solver(int ants, t_edge **edge, t_vertex **ver)
 		return (mini_solution(route, &set_1, vp));
 	path_free(&route);
 	set_1 = get_cross_set(edge, vp, len, ants);
-//	return (set_1);
+	// return (set_1);
+
 	set_2 = get_brute_set(edge, vp, len);
 	free(vp);
 	if (ft_lstlen(&set_1) > ft_lstlen(&set_2))
