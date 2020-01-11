@@ -65,17 +65,15 @@ static t_list		*get_cross_set(t_edge **edge, void **vp, int len, int ants)
 {
 	t_path			*route;
 	t_list			*ways;
-//	int 			a = 22;
 
 	ways = NULL;
 	while ((route = get_cheapest_path(edge, vp, len)))
 	{
 		exclude_route(&route, edge);
-//		path_print(&route, 'f');
-//		ft_printf("\n");
-//		ft_printf("cf: %d\n", get_cf(&ways, route, ants));
+		cross_paths(route, &ways);
 		add_path_to_lst(&ways, route);
 	}
+//	return (ways);
 //	ways_print(&ways);
 	reset_map(edge, 0);
 	put_paths_on_map(edge, &ways);
