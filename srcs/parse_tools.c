@@ -81,6 +81,10 @@ unsigned				parse_arguments(int ac, char **arg)
 			flag |= DEBUG;
 		if (ft_strequ(arg[i], "-o"))
 			flag |= OPEN;
+		if (ft_strequ(arg[i], "-nofile"))
+			flag |= NO_FILE;
+		if (ft_strequ(arg[i], "-noout"))
+			flag |= NO_OUT;
 		i++;
 	}
 	return (flag);

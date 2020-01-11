@@ -44,18 +44,18 @@ static void			free_structs(t_structs *structs)
 
 int					main(int ac, char **av)
 {
-	unsigned		flags;
+	unsigned		flag;
 	t_structs		*structs;
 
-	flags = parse_arguments(ac, av);
+	flag = parse_arguments(ac, av);
 	structs = init_structs();
-	reader(structs, flags, av[ac - 1]);
+	reader(structs, flag, av[ac - 1]);
 	parse_lists((t_vertex **)&structs->ver, (t_edge **)&structs->edge);
 	structs->ways = solver(structs->ants_amount,
 			(t_edge **)&structs->edge, (t_vertex **)&structs->ver);
 	structs->ants = spawn_ants(structs->ants_amount, (t_list **)&structs->ways);
-	mover((t_ants **)&structs->ants);
-	if (flags & DEBUG)
+	mover((t_ants **)&structs->ants, flag);
+	if (flag & DEBUG)
 		print_all(structs);
 	free_structs(structs);
 	return (0);

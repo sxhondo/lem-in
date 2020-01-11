@@ -34,18 +34,41 @@ static int			no_one_next(t_ants **ants, char *next)
 	while (a)
 	{
 		if (ft_strequ(a->pos->curr_v->name, next))
-		{
 			return (0);
-		}
 		a = a->next;
 	}
 	return (1);
 }
 
-static int			update(t_ants **ants, int id)
+static void 		push_turns(t_vec **turns, char *id, char *name)
 {
-	t_ants *a;
+	char 			l;
+	char 			d;
+	char 			sp;
+	int 			i;
 
+	l = 'L';
+	d = '-';
+	sp = ' ';
+	ft_vec_add(turns, &l);
+	i = -1;
+	while (id[++i])
+		ft_vec_add(turns, &id[i]);
+	free(id);
+	ft_vec_add(turns, &d);
+	i = -1;
+	while (name[++i])
+		ft_vec_add(turns, &name[i]);
+//	free(name);
+	ft_vec_add(turns, &sp);
+}
+
+static int			update(t_ants **ants, int id, t_vec *turns)
+{
+	t_ants 			*a;
+	char 			n;
+
+	n = '\n';
 	a = *ants;
 	while (a)
 	{
@@ -54,26 +77,40 @@ static int			update(t_ants **ants, int id)
 			a->pos = a->pos->next_p;
 			if (a->super_way && ++id)
 				a->id = id;
-			ft_printf("L%d-%s ", a->id, a->pos->curr_v->name);
+			push_turns(&turns, ft_itoa(a->id), a->pos->curr_v->name);
+//			ft_printf("L%d-%s ", a->id, a->pos->curr_v->name);
 		}
 		if (a->pos->next_p && no_one_next(ants, a->pos->next_p->curr_v->name))
 		{
 			if (a->id == 0 && ++id)
 				a->id = id;
 			a->pos = a->pos->next_p;
-			ft_printf("L%d-%s ", a->id, a->pos->curr_v->name);
+			push_turns(&turns, ft_itoa(a->id), a->pos->curr_v->name);
+//			ft_printf("L%d-%s ", a->id, a->pos->curr_v->name);
 		}
 		a = a->next;
 	}
-	ft_printf("\n");
+	ft_vec_add(&turns, &n);
+//	ft_printf("\n");
 	return (id);
 }
 
-void				mover(t_ants **ants)
+void				mover(t_ants **ants, unsigned flag)
 {
 	int				id;
+	t_vec			*turns;
 
 	id = 0;
+	if (!(turns = ft_vec_init(1, sizeof(char))))
+		put_error("cannot allocate memory", 0);
 	while (!all_finished(ants))
-		id = update(ants, id);
+		id = update(ants, id, turns);
+	if (!(ft_vec_resize(&turns)))
+	{
+		ft_vec_del(&turns);
+		put_error("cannot allocate memory", 0);
+	}
+	if (!(flag & NO_OUT))
+		write(1, turns->data, turns->total);
+	ft_vec_del(&turns);
 }

@@ -12,35 +12,6 @@
 
 #include "lem_in.h"
 
-/*
-static void		dispatcher(int amount, t_list **paths, t_ants **ants, int i)
-{
-	int			p_len;
-	int			p_next_len;
-	int			a;
-	t_list		*tmp;
-	t_ants		*an;
-
-	an = *ants;
-	an->path = 0;
-	an = an->next;
-	amount -= 1;
-	while (amount--)
-	{
-		p_len = path_len((t_path **)&get_i_paths(paths, i)->content);
-		a = ants_per_room(ants, i);
-		if (!(tmp = get_i_paths(paths, i + 1)))
-		{
-			i = -1;
-			tmp = get_i_paths(paths, i + 1);
-		}
-		p_next_len = path_len((t_path **)&tmp->content);
-		an->path = (p_len + a) <= p_next_len ? i : ++i;
-		an = an->next;
-	}
-}
-*/
-
 static int		is_super_way(t_list **paths)
 {
 	t_list		*l;
@@ -84,7 +55,7 @@ static void		link_nodes(t_ants **ants, t_list **paths)
 	}
 }
 
-static int 		find_min_value(const int *cost, int len)
+static int 		find_min_value(int *cost, int len)
 {
 	int 		i;
 	int 		j;
@@ -96,9 +67,13 @@ static int 		find_min_value(const int *cost, int len)
 		while (++j < len && cost[i] <= cost[j])
 			;
 		if (j == len)
+		{
+			free(cost);
 			return (i);
+		}
 		i++;
 	}
+	free(cost);
 	return (-1);
 }
 

@@ -116,7 +116,6 @@ t_path				*get_cheapest_path(t_edge **edge, void **ver, int len)
 	ft_lstpushback(&queue, node);
 	while (queue)
 	{
-//		print_queue(queue, ver);
 		v = pop_lst(&queue);
 		a->id[v] = 1;
 		explore_neighbours(edge, &queue, a, v);

@@ -22,6 +22,8 @@
 # define DEBUG			1u
 # define COLORS			2u
 # define OPEN			4u
+# define NO_FILE		8u
+# define NO_OUT			16u
 
 typedef struct			s_ants
 {
@@ -149,7 +151,7 @@ void					put_paths_on_map(t_edge **edge, t_list **ways);
 t_path					*trace_route(void **ver, int *trace, int last);
 void					exclude_route(t_path **route, t_edge **edge);
 void					swap_ver(t_vertex **v1, t_vertex **v2);
-void					mover(t_ants **ants);
+void					mover(t_ants **ants, unsigned flag);
 t_ants					*spawn_ants(int amount, t_list **paths);
 t_list					*get_i_paths(t_list **paths, int value);
 int						ants_per_path(t_ants **ants, int path);
@@ -159,4 +161,7 @@ t_list					*add_shortest_paths(t_list **ways, t_edge **e,
 													void **ver, int len);
 void 					print_ants_per_paths(t_ants **ants, int paths);
 void					free_list(t_list **tab);
+void					reset_map(t_edge **edge, int m);
+void					delete_route(t_path **route, t_edge **edge);
+int 					cross_paths(t_path *fn, t_list **ways);
 #endif
