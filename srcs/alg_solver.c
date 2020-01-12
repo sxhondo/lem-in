@@ -20,20 +20,29 @@ static t_list		*mini_solution(t_path *route, t_list **ways, void **vp)
 	return (*ways);
 }
 
-static void			set_indexes_of_ver(t_edge **edge, void **ver, int len)
-{
-	t_edge			*e;
+//static t_list		*get_cross_set(t_edge **edge, void **vp, int len, int ants)
+//{
+//	t_path			*route;
+//	t_list			*ways;
+//
+//	ways = NULL;
+//	while ((route = get_cheapest_path(edge, vp, len)))
+//	{
+//		exclude_route(&route, edge);
+//		cross_paths(route, &ways);
+//		add_path_to_lst(&ways, route);
+//	}
+//	reset_map(edge, 0);
+//	put_paths_on_map(edge, &ways);
+//	while ((route = breadth_first_search(edge, vp, len)))
+//	{
+//		delete_route(&route, edge);
+//		if (!(cross_paths(route, &ways)))
+//			add_path_to_lst(&ways, route);
+//	}
+//	return (ways);
+//}
 
-	e = *edge;
-	while (e)
-	{
-		e->v1_i = get_index_of_ver(ver, e->v1->name, len);
-		e->v1->i = e->v1_i;
-		e->v2_i = get_index_of_ver(ver, e->v2->name, len);
-		e->v2->i = e->v2_i;
-		e = e->next;
-	}
-}
 
 static int 			get_cf(t_list **ways, t_path *route, int ants)
 {
@@ -61,29 +70,6 @@ static int 			get_cf(t_list **ways, t_path *route, int ants)
 
 }
 
-static t_list		*get_cross_set(t_edge **edge, void **vp, int len, int ants)
-{
-	t_path			*route;
-	t_list			*ways;
-
-	ways = NULL;
-	while ((route = get_cheapest_path(edge, vp, len)))
-	{
-		exclude_route(&route, edge);
-		cross_paths(route, &ways);
-		add_path_to_lst(&ways, route);
-	}
-	reset_map(edge, 0);
-	put_paths_on_map(edge, &ways);
-	while ((route = breadth_first_search(edge, vp, len)))
-	{
-		delete_route(&route, edge);
-		if (!(cross_paths(route, &ways)))
-			add_path_to_lst(&ways, route);
-	}
-	return (ways);
-}
-
 static t_list		*get_brute_set(t_edge **edge, void **vp, int len)
 {
 	t_path			*route;
@@ -100,36 +86,115 @@ static t_list		*get_brute_set(t_edge **edge, void **vp, int len)
 	return (ways);
 }
 
+static t_path		*augment_route(t_path **route, t_edge **edge, void **vp, int len)
+{
+	t_edge			*e;
+	t_path			*augm;
+	t_path			*r;
+	int 			t;
+	int 			n;
+
+	t = path_len(route);
+//	ft_printf("try path: \n");
+//	path_print(route, 'f');
+//	ft_printf("\n");
+	r = *route;
+	while (r)
+	{
+		e = find_edge(edge, r->curr_v->name, r->next_p->curr_v->name);
+		e->del = 1;
+		if (!(augm = spf(edge, vp, len)))
+		{
+			e->del = 0;
+			return (NULL);
+		}
+		else
+		{
+			n = path_len(&augm);
+			if (n > t)
+			{
+				e->del = 0;
+				path_free(route);
+				return (augm);
+			}
+			else
+				e->del = 0;
+		}
+		r = r->next_p;
+	}
+	return (NULL);
+}
+
+static t_list 		*get_spf_set(t_edge **edge, void **vp, int len)
+{
+	t_list			*cset;
+	t_list			*bset;
+	t_list 			*tmp;
+	t_path			*route;
+
+
+	bset = NULL;
+	while ((route = breadth_first_search(edge, vp, len)))
+	{
+		delete_route(&route, edge);
+		if (!(cross_paths(route, &bset)))
+			add_path_to_lst(&bset, route);
+		else
+			path_free(&route);
+	}
+//	ways_print(&bset);
+	reset_map(edge, 1);
+	tmp = NULL;
+	cset = NULL;
+	while ((route = spf(edge, vp, len)))
+	{
+		exclude_route(&route, edge);
+		add_path_to_lst(&tmp, route);
+	}
+	reset_map(edge, 0);
+//	ways_print(&bset);
+	put_paths_on_map(edge, &tmp);
+	while ((route = breadth_first_search(edge, vp, len)))
+	{
+//		path_print(&route, 'f');
+//		ft_printf("\n");
+		delete_route(&route, edge);
+		if (!(cross_paths(route, &cset)))
+			add_path_to_lst(&cset, route);
+		else
+			path_free(&route);
+	}
+	free(vp);
+	if (ft_lstlen(&cset) > ft_lstlen(&bset))
+	{
+		ft_lstfree(&bset);
+		return (cset);
+	}
+	else
+	{
+		ft_lstfree(&cset);
+		return (bset);
+	}
+}
+
 t_list				*solver(int ants, t_edge **edge, t_vertex **ver)
 {
 	void			**vp;
 	int				len;
-	t_list			*set_1;
-	t_list			*set_2;
+	t_list 			*set;
 	t_path			*route;
 
-	set_1 = NULL;
+	set = NULL;
 	len = vertex_len(ver);
 	vp = convert_ver_to_ptrs(ver, len);
 	set_indexes_of_ver(edge, vp, len);
 	if (!(route = get_cheapest_path(edge, vp, len)))
 		put_error("no possible solution", 0);
 	if (path_len(&route) == 2)
-		return (mini_solution(route, &set_1, vp));
+	{
+		free (vp);
+		return (set);
+	}
 	path_free(&route);
-	set_1 = get_cross_set(edge, vp, len, ants);
-	// return (set_1);
-
-	set_2 = get_brute_set(edge, vp, len);
-	free(vp);
-	if (ft_lstlen(&set_1) > ft_lstlen(&set_2))
-	{
-		free_list(&set_2);
-		return (set_1);
-	}
-	else
-	{
-		free_list(&set_1);
-		return (set_2);
-	}
+	return (get_spf_set(edge, vp, len));
 }

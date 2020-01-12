@@ -12,7 +12,7 @@
 
 #include "lem_in.h"
 
-static int			not_in_queue(t_list **queue, int curr)
+int					not_in_queue(t_list **queue, int curr)
 {
 	t_list			*q;
 

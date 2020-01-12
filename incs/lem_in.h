@@ -56,6 +56,7 @@ typedef struct			s_edge
 	int					v2_i;
 	int					cost;
 	int					b;
+	int 				del;
 	struct s_edge		*next;
 }						t_edge;
 
@@ -164,4 +165,8 @@ void					free_list(t_list **tab);
 void					reset_map(t_edge **edge, int m);
 void					delete_route(t_path **route, t_edge **edge);
 int 					cross_paths(t_path *fn, t_list **ways);
+int						not_in_queue(t_list **queue, int curr);
+void					set_indexes_of_ver(t_edge **edge, void **ver, int len);
+t_path 					*spf(t_edge **edge, void **vp, int len);
+
 #endif

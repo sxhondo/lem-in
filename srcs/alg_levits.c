@@ -48,36 +48,6 @@ static t_bf			*bf_init(int len)
 	return (a);
 }
 
-/*
-static int			relax_edge(t_bf *a, t_list **que, int v, int to)
-{
-	int				flag;
-	t_list			*node;
-
-	flag = 0;
-	if (a->d[to] > a->d[v] + a->cost)
-	{
-		a->d[to] = a->d[v] + a->cost;
-		if (a->id[to] == 0)
-		{
-			if (!(node = ft_lstnew(&to, sizeof(int))))
-				put_error("cannot allocate memory", 0);
-			ft_lstpushback(que, node);
-		}
-		else if (a->id[to] == 1)
-		{
-			if (!(node = ft_lstnew(&to, sizeof(int))))
-				put_error("cannot allocate memory", 0);
-			ft_lstadd(que, node);
-		}
-		a->trace[to] = v;
-		a->id[to] = 1;
-		flag = 1;
-	}
-	return (flag);
-}
-*/
-
 static int			relax_edge(t_bf *a, t_list **que, int v, int to)
 {
 	int				flag;
@@ -147,7 +117,6 @@ t_path				*get_cheapest_path(t_edge **edge, void **ver, int len)
 	while (queue)
 	{
 		v = pop_lst(&queue);
-		// a->id[v] = 1;
 		a->id[v] = 0;
 		explore_neighbours(edge, &queue, a, v);
 	}
