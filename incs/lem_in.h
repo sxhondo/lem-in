@@ -148,7 +148,7 @@ void					**convert_ver_to_ptrs(t_vertex **ver, int len);
 t_list					*solver(int ants, t_edge **edge, t_vertex **ver);
 t_path					*get_cheapest_path(t_edge **edge, void **ver, int len);
 t_path					*breadth_first_search(t_edge **edge, void **ver, int l);
-void					put_paths_on_map(t_edge **edge, t_list **ways);
+void					put_paths_on_map(t_edge **edge, t_list **ways, int cnt);
 t_path					*trace_route(void **ver, int *trace, int last);
 void					exclude_route(t_path **route, t_edge **edge);
 void					swap_ver(t_vertex **v1, t_vertex **v2);
@@ -168,5 +168,7 @@ int 					cross_paths(t_path *fn, t_list **ways);
 int						not_in_queue(t_list **queue, int curr);
 void					set_indexes_of_ver(t_edge **edge, void **ver, int len);
 t_path 					*spf(t_edge **edge, void **vp, int len);
+t_path					*spf_algorithm(t_edge **edge, void **vp, int len);
+int 					find_min_value(int *cost, int len);
 
 #endif

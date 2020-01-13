@@ -55,7 +55,7 @@ static void		link_nodes(t_ants **ants, t_list **paths)
 	}
 }
 
-static int 		find_min_value(int *cost, int len)
+int 			find_min_value(int *cost, int len)
 {
 	int 		i;
 	int 		j;

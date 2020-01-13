@@ -52,16 +52,19 @@ int 					cross_paths(t_path *fn, t_list **ways)
 	return (0);
 }
 
-void					put_paths_on_map(t_edge **edge, t_list **ways)
+void					put_paths_on_map(t_edge **edge, t_list **ways, int cnt)
 {
 	t_list				*w;
 	t_path 				*r;
 	t_edge 				*tmp;
 
 	w = *ways;
-	while (w)
+	while (w && cnt--)
 	{
 		r = w->content;
+//		ft_printf("{red}[ ");
+//		path_print(&r, 'f');
+//		ft_printf(" ] {eoc}\n");
 		while (r->next_p)
 		{
 			tmp = find_edge(edge, r->curr_v->name, r->next_p->curr_v->name);
@@ -72,7 +75,6 @@ void					put_paths_on_map(t_edge **edge, t_list **ways)
 		}
 		w = w->next;
 	}
-	free_list(ways);
 }
 
 void				delete_route(t_path **route, t_edge **edge)

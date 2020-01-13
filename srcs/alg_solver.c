@@ -10,128 +10,64 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
 #include "lem_in.h"
 
-static t_list		*mini_solution(t_path *route, t_list **ways, void **vp)
+static int 			get_cf(t_list *set, int amount)
 {
-	add_path_to_lst(ways, route);
-	free(vp);
-	return (*ways);
+	int 			tmp;
+	t_path 			*r;
+	int 			len;
+
+	len = ft_lstlen(&set);
+	tmp = 0;
+	while (set)
+	{
+		r = set->content;
+		tmp += path_len(&r);
+		set = set->next;
+	}
+	tmp += amount;
+	tmp = tmp / len;
+	return (tmp);
 }
 
-//static t_list		*get_cross_set(t_edge **edge, void **vp, int len, int ants)
-//{
-//	t_path			*route;
-//	t_list			*ways;
-//
-//	ways = NULL;
-//	while ((route = get_cheapest_path(edge, vp, len)))
-//	{
-//		exclude_route(&route, edge);
-//		cross_paths(route, &ways);
-//		add_path_to_lst(&ways, route);
-//	}
-//	reset_map(edge, 0);
-//	put_paths_on_map(edge, &ways);
-//	while ((route = breadth_first_search(edge, vp, len)))
-//	{
-//		delete_route(&route, edge);
-//		if (!(cross_paths(route, &ways)))
-//			add_path_to_lst(&ways, route);
-//	}
-//	return (ways);
-//}
-
-
-static int 			get_cf(t_list **ways, t_path *route, int ants)
+static int 			choose_set(t_list *new, t_list *prev, int amount)
 {
-	int 			steps;
-	int 			paths;
-	int 			tmp;
-	t_list			*l;
+	int 			n;
+	int 			o;
 
-	paths = ft_lstlen(ways) ? ft_lstlen(ways) : 1;
-	steps = 0;
-	l = *ways;
-	if (l)
+	n = get_cf(new, amount);
+	o = get_cf(prev, amount);
+	if (n <= o)
 	{
-		while (l)
-		{
-			steps += path_len((t_path **)&l->content) - 1;
-			l = l->next;
-		}
-		steps += path_len(&route) - 1;
+		free_list(&prev);
+		return (0);
 	}
 	else
-		steps = path_len(&route) - 1;
-	tmp = steps + ants;
-	return (tmp % paths ? (tmp / paths) : (tmp / paths) - 1);
-
-}
-
-static t_list		*get_brute_set(t_edge **edge, void **vp, int len)
-{
-	t_path			*route;
-	t_list			*ways;
-
-	ways = NULL;
-	reset_map(edge, 1);
-	while ((route = breadth_first_search(edge, vp, len)))
 	{
-		delete_route(&route, edge);
-		if (!(cross_paths(route, &ways)))
-			add_path_to_lst(&ways, route);
+		free_list(&new);
+		return (1);
 	}
-	return (ways);
 }
 
-static t_path		*augment_route(t_path **route, t_edge **edge, void **vp, int len)
+static t_list		*get_excluding_set(t_edge **edge, void **vp, int len)
 {
-	t_edge			*e;
-	t_path			*augm;
 	t_path			*r;
-	int 			t;
-	int 			n;
+	t_list 			*set;
 
-	t = path_len(route);
-//	ft_printf("try path: \n");
-//	path_print(route, 'f');
-//	ft_printf("\n");
-	r = *route;
-	while (r)
+	set = NULL;
+	while ((r = spf_algorithm(edge, vp, len)))
 	{
-		e = find_edge(edge, r->curr_v->name, r->next_p->curr_v->name);
-		e->del = 1;
-		if (!(augm = spf(edge, vp, len)))
-		{
-			e->del = 0;
-			return (NULL);
-		}
-		else
-		{
-			n = path_len(&augm);
-			if (n > t)
-			{
-				e->del = 0;
-				path_free(route);
-				return (augm);
-			}
-			else
-				e->del = 0;
-		}
-		r = r->next_p;
+		exclude_route(&r, edge);
+		add_path_to_lst(&set, r);
 	}
-	return (NULL);
+	return (set);
 }
 
-static t_list 		*get_spf_set(t_edge **edge, void **vp, int len)
+static t_list		*get_bfs_set(t_edge **edge, void **vp, int len)
 {
-	t_list			*cset;
-	t_list			*bset;
-	t_list 			*tmp;
 	t_path			*route;
-
+	t_list 			*bset;
 
 	bset = NULL;
 	while ((route = breadth_first_search(edge, vp, len)))
@@ -142,39 +78,48 @@ static t_list 		*get_spf_set(t_edge **edge, void **vp, int len)
 		else
 			path_free(&route);
 	}
-//	ways_print(&bset);
 	reset_map(edge, 1);
-	tmp = NULL;
-	cset = NULL;
-	while ((route = spf(edge, vp, len)))
-	{
-		exclude_route(&route, edge);
-		add_path_to_lst(&tmp, route);
-	}
+	return (bset);
+}
+
+static t_list 		*pick_best_set(t_edge **edge, void **vp, t_list **set, int len, int amount)
+{
+	t_path			*r;
+	t_list			*new;
+	t_list			*prev;
+	int 			sl;
+	int 			i;
+
+	new = NULL;
+	prev = NULL;
 	reset_map(edge, 0);
-//	ways_print(&bset);
-	put_paths_on_map(edge, &tmp);
-	while ((route = breadth_first_search(edge, vp, len)))
+	sl = ft_lstlen(set);
+	i = -1;
+	while (++i < sl)
 	{
-//		path_print(&route, 'f');
-//		ft_printf("\n");
-		delete_route(&route, edge);
-		if (!(cross_paths(route, &cset)))
-			add_path_to_lst(&cset, route);
-		else
-			path_free(&route);
+		put_paths_on_map(edge, set, i + 1);
+		while ((r = breadth_first_search(edge, vp, len)))
+		{
+			delete_route(&r, edge);
+			add_path_to_lst(&new, r);
+		}
+		if (prev != NULL)
+			if ((choose_set(new, prev, amount)))
+			{
+				new = prev;
+				break ;
+			}
+		prev = new;
+		new = NULL;
+//		ways_print(&prev);
+//		ft_printf("{green}%d{eoc}\n", get_cf(prev, amount));
+		reset_map(edge, 0);
 	}
-	free(vp);
-	if (ft_lstlen(&cset) > ft_lstlen(&bset))
-	{
-		ft_lstfree(&bset);
-		return (cset);
-	}
-	else
-	{
-		ft_lstfree(&cset);
-		return (bset);
-	}
+	free_list(set);
+//	ft_printf("%d %d\n", i, sl);
+//	ft_printf("{yellow}%d{eoc}", get_cf(prev, amount));
+//	exit (0);
+	return (prev);
 }
 
 t_list				*solver(int ants, t_edge **edge, t_vertex **ver)
@@ -193,8 +138,10 @@ t_list				*solver(int ants, t_edge **edge, t_vertex **ver)
 	if (path_len(&route) == 2)
 	{
 		free (vp);
+		add_path_to_lst(&set, route);
 		return (set);
 	}
 	path_free(&route);
-	return (get_spf_set(edge, vp, len));
+	set = get_excluding_set(edge, vp, len);
+	return (pick_best_set(edge, vp, &set, len, ants));
 }
