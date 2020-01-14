@@ -41,6 +41,17 @@ t_vertex			*find_ver_by_name(t_vertex **ver, char *name)
 	return (NULL);
 }
 
+void 				vertex_insert(t_vertex **ver, t_vertex *elem)
+{
+	t_vertex		*v;
+	t_vertex		*next;
+
+	v = *ver;
+	next = v->next;
+	v->next = elem;
+	elem->next = next;
+}
+
 static void			vertex_push_back(t_vertex **dst, t_vertex *elem)
 {
 	t_vertex		*tmp;
@@ -72,8 +83,9 @@ void				vertex_add(t_structs *structs, t_info *inf, int x, int y)
 		return ;
 	}
 	elem->mod = inf->mod;
-	elem->x = x;
-	elem->y = y;
+	elem->div = 0;
 	elem->vis = 0;
 	vertex_push_back((t_vertex **)&structs->ver, elem);
 }
+
+

@@ -59,7 +59,7 @@ static int 			rlx(t_list **que, int *d, int v, int to, int ecost,
 //}
 
 static int 				relax_edge(t_list **que,
-		int *inq, int *cnt, int *d, int *trace, int v, int to, int cost, int len)
+		int *inq, int *cnt, int *d, int *trace, int v, int to, int cost, int len, void **vp)
 {
 	t_list 				*node;
 
@@ -82,7 +82,7 @@ static int 				relax_edge(t_list **que,
 }
 
 int 					explore_neighbours(t_edge *e, t_list **que,
-		int v, int *d, int *trace, int *cnt, int *inq, int len)
+		int v, int *d, int *trace, int *cnt, int *inq, int len, void **vp)
 {
 	int 				to;
 	int 				cost;
@@ -93,14 +93,14 @@ int 					explore_neighbours(t_edge *e, t_list **que,
 		{
 			to = (e->v1_i == v) ? e->v2_i : e->v1_i;
 			cost = e->cost;
-			if (!(relax_edge(que, inq, cnt, d, trace, v, to, cost, len)))
+			if (!(relax_edge(que, inq, cnt, d, trace, v, to, cost, len, vp)))
 				return (0);
 		}
 		else if (e->b == 0 && e->v1_i == v)
 		{
 			to = e->v2_i;
 			cost = e->cost;
-			if (!(relax_edge(que, inq, cnt, d, trace, v, to, cost, len)))
+			if (!(relax_edge(que, inq, cnt, d, trace, v, to, cost, len, vp)))
 				return (0);
 		}
 		e = e->next;
@@ -131,7 +131,7 @@ t_path 					*spf_algorithm(t_edge **edge, void **vp, int len)
 	{
 		v = pop_lst(&que);
 		inq[v] = 0;
-		if (!(explore_neighbours(*edge, &que, v, d, trace, cnt, inq, len)))
+		if (!(explore_neighbours(*edge, &que, v, d, trace, cnt, inq, len, vp)))
 		{
 			ft_printf("neg cycle\n");
 			break ;

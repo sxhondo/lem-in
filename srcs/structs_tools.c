@@ -12,6 +12,26 @@
 
 #include "lem_in.h"
 
+void				vertex_new(t_vertex **ver, char *name, unsigned div)
+{
+	t_vertex		*elem;
+	char 			*str;
+	unsigned 		d;
+
+	d = 0;
+	if (!(elem = ft_memalloc(sizeof(t_vertex))))
+	{
+		put_error("cannot allocate memory", 0);
+		return ;
+	}
+	str = ft_strdup(name);
+	elem->name = str;
+	elem->div |= div;
+	elem->mod = 0;
+	elem->vis = 0;
+	vertex_insert(ver, elem);
+}
+
 int					get_index_of_ver(void **v, char *name, int size)
 {
 	t_vertex		*tmp;
@@ -21,7 +41,7 @@ int					get_index_of_ver(void **v, char *name, int size)
 	while (i < size)
 	{
 		tmp = (t_vertex *)v[i];
-		if (ft_strequ(tmp->name, name))
+		if (ft_strequ(tmp->name, name) && (tmp->div == 0 || tmp->div == 1))
 			return (i);
 		i++;
 	}

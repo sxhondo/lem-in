@@ -27,7 +27,6 @@ void				set_indexes_of_ver(t_edge **edge, void **ver, int len)
 	}
 }
 
-
 void				swap_ver(t_vertex **v1, t_vertex **v2)
 {
 	t_vertex		*tmp;
@@ -61,24 +60,4 @@ t_path				*trace_route(void **ver, int *trace, int last)
 	path_push(&route, n);
 	free(trace);
 	return (route);
-}
-
-void				exclude_route(t_path **route, t_edge **edge)
-{
-	t_path			*r;
-	t_edge			*e;
-
-	r = *route;
-	while (r->next_p)
-	{
-		e = find_edge(edge, r->curr_v->name, r->next_p->curr_v->name);
-		if (e->b == 1 && ft_strequ(r->curr_v->name, e->v1->name))
-		{
-			swap_ver(&e->v1, &e->v2);
-			ft_swap_int(&e->v1_i, &e->v2_i);
-		}
-		e->b = 0;
-		e->cost = -1;
-		r = r->next_p;
-	}
 }

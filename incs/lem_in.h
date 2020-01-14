@@ -18,6 +18,15 @@
 
 # define START			1u
 # define END			2u
+# define UNMOD			0u
+
+# define DIV			1u
+# define IN				2u
+# define OUT			4u
+
+
+# define UN_DIR			0u
+# define BI_DIR			1u
 
 # define DEBUG			1u
 # define COLORS			2u
@@ -40,8 +49,7 @@ typedef struct			s_vertex
 	char				*name;
 	unsigned			mod;
 	int					vis;
-	int					x;
-	int					y;
+	unsigned			div;
 	int					i;
 	struct s_vertex		*next;
 }						t_vertex;
@@ -55,8 +63,7 @@ typedef struct			s_edge
 	int					v1_i;
 	int					v2_i;
 	int					cost;
-	int					b;
-	int 				del;
+	unsigned			b;
 	struct s_edge		*next;
 }						t_edge;
 
@@ -105,6 +112,8 @@ int						get_i_by_name(t_vertex **ver, char *name);
 t_vertex				*find_ver_by_name(t_vertex **ver, char *name);
 t_vertex				*find_ver_by_index(t_vertex **ver, int i);
 void					vertex_free(t_vertex **ver);
+void 					vertex_insert(t_vertex **ver, t_vertex *elem);
+void					flip_route(t_path **route, t_edge **edge);
 t_edge					*find_edge(t_edge **edge, char *v1, char *v2);
 void					edge_add(t_structs *structs, t_info *inf);
 t_vec					*vec_read(int fd);
@@ -142,6 +151,7 @@ void					path_push_init(t_path **d, t_vertex *v1, t_vertex *v2);
 void					path_free(t_path **s);
 void					edge_free(t_edge **edge);
 void					ants_free(t_ants **s);
+void					vertex_new(t_vertex **ver, char *name, unsigned div);
 int						get_index_of_ver(void **v, char *name, int size);
 void					add_path_to_lst(t_list **lst, t_path *path);
 void					**convert_ver_to_ptrs(t_vertex **ver, int len);
@@ -150,7 +160,6 @@ t_path					*get_cheapest_path(t_edge **edge, void **ver, int len);
 t_path					*breadth_first_search(t_edge **edge, void **ver, int l);
 void					put_paths_on_map(t_edge **edge, t_list **ways, int cnt);
 t_path					*trace_route(void **ver, int *trace, int last);
-void					exclude_route(t_path **route, t_edge **edge);
 void					swap_ver(t_vertex **v1, t_vertex **v2);
 void					mover(t_ants **ants, unsigned flag);
 t_ants					*spawn_ants(int amount, t_list **paths);
