@@ -84,6 +84,7 @@ void			parse_lists(t_vertex **ver, t_edge **edge)
 	check_duplicate_vertex(ver);
 	check_non_existing_vertex(ver, edge);
 	link_edges_to_vertex(ver, edge);
-	put_to_end(ver);
-	put_to_begin(ver);
+	update_indexes(*ver);
+//	put_to_end(ver);
+//	put_to_begin(ver);
 }

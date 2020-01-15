@@ -29,10 +29,10 @@ static t_structs	*init_structs(void)
 
 static void			free_structs(t_structs *structs)
 {
-	if (structs->ver)
-		vertex_free((t_vertex **)&structs->ver);
-	if (structs->edge)
-		edge_free((t_edge **)&structs->edge);
+//	if (structs->ver)
+//		vertex_free((t_vertex **)&structs->ver);
+//	if (structs->edge)
+//		edge_free((t_edge **)&structs->edge);
 	if (structs->ways)
 	{
 		free_list((t_list **)&structs->ways);

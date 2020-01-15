@@ -1,49 +1,15 @@
 #include "lem_in.h"
 
-static int 			duplicate_nodes(t_vertex **ver, void **vp, int len)
+t_vertex			*find_marked(t_vertex *m, char *name, unsigned div)
 {
-	int 			i;
-	t_vertex		*tmp;
-	void 			**new;
-
-	i = 0;
-	while (i < len)
+	while (m)
 	{
-		tmp = vp[i];
-		if (tmp->div & DIV)
-		{
-			vertex_new(ver, tmp->name, OUT);
-			vertex_new(ver, tmp->name, IN);
-		}
-		i++;
+		if (ft_strequ(m->name, name) && m->div == div)
+			return (m);
+		m = m->next;
 	}
-	return (vertex_len(ver));
+	return (NULL);
 }
-
-void 				**divide_nodes(t_edge **edge, t_vertex **ver, void **vp, int len)
-{
-	int 			i;
-	t_vertex		*old;
-
-	i = 0;
-	len = duplicate_nodes(ver, vp, len);
-	free(vp);
-	vp = convert_ver_to_ptrs(ver, len);
-	set_indexes_of_ver(edge, vp, len);
-	vertex_print(ver);
-	while (i < len)
-	{
-		old = vp[i];
-		if (old->div == DIV)
-		{
-			;
-		}
-		i++;
-	}
-	edge_print(*edge);
-	exit (0);
-}
-
 
 void				flip_route(t_path **route, t_edge **edge)
 {
@@ -54,17 +20,145 @@ void				flip_route(t_path **route, t_edge **edge)
 	while (r->next_p)
 	{
 		e = find_edge(edge, r->curr_v->name, r->next_p->curr_v->name);
-		if (e->b == 1 && ft_strequ(r->curr_v->name, e->v1->name))
-		{
-			swap_ver(&e->v1, &e->v2);
-			ft_swap_int(&e->v1_i, &e->v2_i);
-		}
-		e->b = 0;
+		e->v1->div = 1;
+		e->del = 1;
+		e = find_edge(edge, r->next_p->curr_v->name, r->curr_v->name);
 		e->cost = -1;
-		if (e->v1->mod == UNMOD)
-			e->v1->div = DIV;
-		if (e->v2->mod == UNMOD)
-			e->v2->div = DIV;
+		e->v1->div = 1;
 		r = r->next_p;
 	}
+}
+
+t_vertex			*update_ver(t_vertex **ver)
+{
+	t_vertex		*v;
+
+	v = *ver;
+	while (v)
+	{
+		if (v->div & DIV && v->mod == 0)
+		{
+			vertex_dupl(ver, v->name, IN);
+			vertex_dupl(ver, v->name, OUT);
+		}
+		v = v->next;
+	}
+	return (*ver);
+}
+
+//void 				update_3(t_edge *e, t_vertex *m)
+//{
+//	t_vertex		*tmp;
+//
+//	while (e)
+//	{
+//		if (e->del == 0)
+//		{
+//			if (e->v1->div & DIV && e->v2->div & DIV)
+//			{
+//				if ((tmp = find_marked(m, e->v1->name, IN)))
+//					e->v1 = tmp;
+//				if ((tmp = find_marked(m, e->v2->name, OUT)))
+//					e->v2 = tmp;
+//			}
+//		}
+//		e = e->next;
+//	}
+//}
+
+//void 				update_2(t_edge *e, t_vertex *m)
+//{
+//	t_vertex		*tmp;
+//
+//	while (e)
+//	{
+//		if (e->del == 0)
+//		{
+//			if (e->v1->mod != 0 && e->v2->div & DIV)
+//			{
+//				if ((tmp = find_marked(m, e->v2->name, OUT)))
+//					e->v2 = tmp;
+//			}
+//			if (e->v2->mod != 0 && e->v1->div & DIV)
+//			{
+//				if ((tmp = find_marked(m, e->v1->name, IN)))
+//					e->v1 = tmp;
+//			}
+//		}
+//		e = e->next;
+//	}
+//}
+
+//void				update_1(t_edge **edge, t_vertex *marked)
+//{
+//	t_edge			*e;
+//	t_vertex		*tmp;
+//
+//	e = *edge;
+//	while (e)
+//	{
+//		if (e->del == 0)
+//		{
+//			if (e->v1->div == 0 && e->v2->div & DIV)
+//			{
+//				if ((tmp = find_marked(marked, e->v2->name, IN)))
+//					e->v2 = tmp;
+//			}
+//			if (e->v2->div == 0 && e->v1->div & DIV)
+//			{
+//				if ((tmp = find_marked(marked, e->v1->name, OUT)))
+//					e->v1 = tmp;
+//			}
+//		}
+//		e = e->next;
+//	}
+//}
+
+void				update_1(t_edge **edge, t_vertex *marked)
+{
+	t_edge			*e;
+	t_vertex		*tmp;
+
+	e = *edge;
+	while (e)
+	{
+		if (e->del == 0)
+		{
+			if (e->v1->div == 0 && e->v2->div & DIV)
+			{
+				if ((tmp = find_marked(marked, e->v2->name, IN)))
+					e->v2 = tmp;
+			}
+			if (e->v2->div == 0 && e->v1->div & DIV)
+			{
+				if ((tmp = find_marked(marked, e->v1->name, OUT)))
+					e->v1 = tmp;
+			}
+			if (e->v1->mod != 0 && e->v2->div & DIV)
+			{
+				if ((tmp = find_marked(marked, e->v2->name, OUT)))
+					e->v2 = tmp;
+			}
+			if (e->v2->mod != 0 && e->v1->div & DIV)
+			{
+				if ((tmp = find_marked(marked, e->v1->name, IN)))
+					e->v1 = tmp;
+			}
+			if (e->v1->div & DIV && e->v2->div & DIV)
+			{
+				if ((tmp = find_marked(marked, e->v1->name, IN)))
+					e->v1 = tmp;
+				if ((tmp = find_marked(marked, e->v2->name, OUT)))
+					e->v2 = tmp;
+			}
+		}
+		e = e->next;
+	}
+}
+
+void 				update_graph(t_edge **edge, t_vertex **ver)
+{
+	update_ver(ver);
+	update_1(edge, *ver);
+	update_indexes(*ver);
 }

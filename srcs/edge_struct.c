@@ -12,7 +12,7 @@
 
 #include "lem_in.h"
 
-static void					edge_push_back(t_edge **dst, t_edge *elem)
+void						edge_push_back(t_edge **dst, t_edge *elem)
 {
 	t_edge					*tmp;
 
@@ -28,7 +28,7 @@ static void					edge_push_back(t_edge **dst, t_edge *elem)
 	}
 }
 
-static t_edge				*edge_init(char *e1, char *e2)
+t_edge						*edge_init(char *e1, char *e2)
 {
 	t_edge					*edge;
 
@@ -43,8 +43,6 @@ static t_edge				*edge_init(char *e1, char *e2)
 		put_error("cannot alocate memory", 0);
 	edge->cost = 1;
 	edge->b = 1;
-	ft_strdel(&e1);
-	ft_strdel(&e2);
 	return (edge);
 }
 
@@ -68,17 +66,35 @@ void						edge_add(t_structs *structs, t_info *inf)
 		put_error("cannot alocate memory", 0);
 	elem = edge_init(v1, v2);
 	edge_push_back((t_edge **)&structs->edge, elem);
+	elem = edge_init(elem->tmp_name2, elem->tmp_name1);
+	edge_push_back((t_edge **)&structs->edge, elem);
+	ft_strdel(&v1);
+	ft_strdel(&v2);
 }
 
-t_edge						*find_edge(t_edge **edge, char *v1, char *v2)
+//t_edge						*find_edge(t_edge **edge, char *v1, char *v2)
+//{
+//	t_edge					*e;
+//
+//	e = *edge;
+//	while (e)
+//	{
+//		if ((ft_strequ(e->v1->name, v1) && ft_strequ(e->v2->name, v2)) ||
+//			(ft_strequ(e->v1->name, v2) && ft_strequ(e->v2->name, v1)))
+//			return (e);
+//		e = e->next;
+//	}
+//	return (NULL);
+//}
+
+t_edge						*find_edge(t_edge **edge, char *f, char *to)
 {
 	t_edge					*e;
 
 	e = *edge;
 	while (e)
 	{
-		if ((ft_strequ(e->v1->name, v1) && ft_strequ(e->v2->name, v2)) ||
-			(ft_strequ(e->v1->name, v2) && ft_strequ(e->v2->name, v1)))
+		if ((ft_strequ(e->v1->name, f) && ft_strequ(e->v2->name, to)))
 			return (e);
 		e = e->next;
 	}

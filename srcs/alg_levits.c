@@ -76,8 +76,32 @@ static int			relax_edge(t_bf *a, t_list **que, int v, int to)
 	return (flag);
 }
 
+//static void			explore_neighbours(t_edge **edge, t_list **queue,
+//															t_bf *a, int v)
+//{
+//	int				to;
+//	t_edge			*e;
+//
+//	e = *edge;
+//	while (e)
+//	{
+//		if (e->b == 1 && (e->v1_i == v || e->v2_i == v))
+//		{
+//			to = (e->v1_i == v) ? e->v2_i : e->v1_i;
+//			a->cost = e->cost;
+//			relax_edge(a, queue, v, to);
+//		}
+//		else if (e->b == 0 && e->v1_i == v)
+//		{
+//			a->cost = e->cost;
+//			relax_edge(a, queue, v, e->v2_i);
+//		}
+//		e = e->next;
+//	}
+//}
+
 static void			explore_neighbours(t_edge **edge, t_list **queue,
-															t_bf *a, int v)
+										  t_bf *a, int v)
 {
 	int				to;
 	t_edge			*e;

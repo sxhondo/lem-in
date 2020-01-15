@@ -82,23 +82,16 @@ static int 				relax_edge(t_list **que,
 }
 
 int 					explore_neighbours(t_edge *e, t_list **que,
-		int v, int *d, int *trace, int *cnt, int *inq, int len, void **vp)
+										  int v, int *d, int *trace, int *cnt, int *inq, int len, void **vp)
 {
 	int 				to;
 	int 				cost;
 
 	while (e)
 	{
-		if (e->b == 1 && (e->v1_i == v || e->v2_i == v))
+		if (e->v1->i == v && e->del == 0)
 		{
-			to = (e->v1_i == v) ? e->v2_i : e->v1_i;
-			cost = e->cost;
-			if (!(relax_edge(que, inq, cnt, d, trace, v, to, cost, len, vp)))
-				return (0);
-		}
-		else if (e->b == 0 && e->v1_i == v)
-		{
-			to = e->v2_i;
+			to = e->v2->i;
 			cost = e->cost;
 			if (!(relax_edge(que, inq, cnt, d, trace, v, to, cost, len, vp)))
 				return (0);
