@@ -12,65 +12,6 @@
 
 #include "lem_in.h"
 
-static int 			get_cf(t_list *set, int amount)
-{
-	int 			tmp;
-	t_path 			*r;
-	int 			len;
-
-	len = ft_lstlen(&set);
-	tmp = 0;
-	while (set)
-	{
-		r = set->content;
-		tmp += path_len(&r);
-		set = set->next;
-	}
-	tmp += amount;
-	tmp = tmp / len;
-	return (tmp);
-}
-////
-//static t_list 		*pick_best_set(t_edge **edge, void **vp, t_list **set, int len, int amount)
-//{
-//	t_path			*r;
-//	t_list			*new;
-//	t_list			*prev;
-//	int 			sl;
-//	int 			i;
-//
-//	new = NULL;
-//	prev = NULL;
-//	reset_map(edge, 0);
-//	sl = ft_lstlen(set);
-//	i = -1;
-//	while (++i < sl)
-//	{
-//		put_paths_on_map(edge, set, i + 1);
-//		while ((r = breadth_first_search(edge, vp, len)))
-//		{
-//			delete_route(&r, edge);
-//			add_path_to_lst(&new, r);
-//		}
-//		if (prev != NULL)
-//			if ((choose_set(new, prev, amount)))
-//			{
-//				new = prev;
-//				break ;
-//			}
-//		prev = new;
-//		new = NULL;
-////		ways_print(&prev);
-////		ft_printf("{green}%d{eoc}\n", get_cf(prev, amount));
-//		reset_map(edge, 0);
-//	}
-//	free_list(set);
-////	ft_printf("%d %d\n", i, sl);
-////	ft_printf("{yellow}%d{eoc}", get_cf(prev, amount));
-////	exit (0);
-//	return (prev);
-//}
-
 
 static t_edge		*save_original_graph_edges(t_edge *orig, t_vertex **v)
 {
@@ -87,7 +28,7 @@ static t_edge		*save_original_graph_edges(t_edge *orig, t_vertex **v)
 		}
 		tmp->v1 = find_ver_by_name(v, orig->v1->name);
 		tmp->v2 = find_ver_by_name(v, orig->v2->name);
-		tmp->del = 1;
+		tmp->del = 0;
 		tmp->cost = 0;
 		edge_push_back(&save, tmp);
 		orig = orig->next;
@@ -108,25 +49,6 @@ static t_vertex		*save_original_graph_ver(t_vertex *ver)
 	return (save);
 }
 
-//static t_list		*get_excluding_set(t_edge **edge, t_vertex **ver, void **vp)
-//{
-//	int 			len;
-//	t_path			*r;
-//	t_list 			*set;
-//
-//	set = NULL;
-//	len = vertex_len(ver);
-//	while ((r = spf_algorithm(edge, vp, len)))
-//	{
-//		flip_route(&r, edge);
-//		vp = update_graph(edge, ver, vp);
-//		len = vertex_len(ver);
-//		add_path_to_lst(&set, r);
-//	}
-//	edge_free(edge);
-//	return (set);
-//}
-
 static int 			find_sf(t_vertex *ver, int sf)
 {
 
@@ -139,88 +61,118 @@ static int 			find_sf(t_vertex *ver, int sf)
 	return (-1);
 }
 
-//static t_list		*get_excluding_set(t_edge **edge, t_vertex **ver, void **vp)
-//{
-//	int 			st[2];
-//	int 			len;
-//	t_path			*r;
-//	t_list 			*set;
-//
-//	set = NULL;
-//	len = vertex_len(ver);
-//	vertex_print(ver);
-////
-////	exit (0);
-////	while ((r = breadth_first_search(edge, ver, len)))
-////	{
-////		path_print(&r, 'f');
-////		ft_printf("\n");
-////		flip_route(&r, edge);
-////		update_graph(edge, ver, vp);
-////		vertex_print(ver);
-////		len = vertex_len(ver);
-////		add_path_to_lst(&set, r);
-////	}
-////	edge_free(edge);
-////	return (set);
-//}
-
-
-static t_list		*get_excluding_set(t_edge **edge, t_vertex **ver)
+static int 			total_actions(t_list *set)
 {
-	int 			st[2];
-	int 			len;
 	t_path			*r;
-	t_list 			*set;
+	int 			tmp;
+
+	tmp = 0;
+	while (set)
+	{
+		r = set->content;
+		tmp += path_len(&r) - 1;
+		set = set->next;
+	}
+	return (tmp);
+
+}
+
+static int 			get_cf(t_list *set, int amount)
+{
+	int 			tmp;
+	int 			len;
+
+	len = ft_lstlen(&set);
+	tmp = total_actions(set);
+	tmp += amount;
+	if (tmp % len)
+		tmp--;
+	tmp = tmp / len;
+//	ft_printf("CF: %d\n", tmp);
+	return (tmp);
+}
+
+static t_list 		*collect_set(t_edge *ce, t_vertex *cv, int max_paths)
+{
+	t_list			*br_set = NULL;
+	t_path			*route;
 	int 			s, f;
 
-	set = NULL;
-	s = find_sf(*ver, START);
-	f = find_sf(*ver, END);
-	while ((r = breadth_first_search(edge, ver, s, f)))
+	s = find_sf(cv, START);
+	f = find_sf(cv, END);
+	while ((route = breadth_first_search(&ce, &cv, s, f)) && max_paths--)
 	{
-//		path_print(&r, 'f');
-//		ft_printf("\n");
-		flip_route(&r, edge);
-		update_graph(edge, ver);
-		add_path_to_lst(&set, r);
+		delete_route(&route, &ce);
+		add_path_to_lst(&br_set, route);
 	}
-	return (set);
+	reset_map(&ce);
+	return (br_set);
+}
+
+int 				recalc(t_list *ways)
+{
+	int 			a;
+	int 			len;
+	t_path			*p;
+
+	a = 0;
+	len = ft_lstlen(&ways);
+	while (ways)
+	{
+		p = ways->content;
+		a += path_len(&p) - 2;
+		ways = ways->next;
+	}
+	return (a);
 }
 
 t_list				*solver(int ants, t_edge **edge, t_vertex **ver)
 {
-	t_list 			*set;
+	t_list 			*ex_set = NULL;
 	t_path			*route;
 	t_edge			*copy_e;
 	t_vertex		*copy_v;
 	int 			s, f;
 
-	set = NULL;
+
 	s = find_sf(*ver, START);
 	f = find_sf(*ver, END);
-
 	if (!(route = breadth_first_search(edge, ver, s, f)))
 		put_error("no possible solution", 0);
-	if (path_len(&route) == 2)
-	{
-		add_path_to_lst(&set, route);
-		return (set);
-	}
-	path_free(&route);
+
+	ex_set = update_graph(edge, ver, route, ex_set);
+
 	copy_v = save_original_graph_ver(*ver);
 	copy_e = save_original_graph_edges(*edge, &copy_v);
 
-	set = get_excluding_set(edge, ver);
-//	ways_print(&set);
-	put_paths_on_map(&copy_e, &set);
-	free_list(&set);
+	int 	a = 0;
+	int 	max_paths;
+	t_list	*tset = NULL;
+	t_list	*oset = NULL;
+
 	s = find_sf(*ver, START);
 	f = find_sf(*ver, END);
-	while ((route = breadth_first_search(&copy_e, &copy_v, s, f)))
+	while ((route = breadth_first_search(edge, ver, s, f)))
 	{
-		delete_route(&route, &copy_e);
-		add_path_to_lst(&set, route);
+		update_graph(edge, ver, route, ex_set);
+		put_paths_on_map(&copy_e, &ex_set);
+		max_paths = ft_lstlen(&ex_set);
+		tset = collect_set(copy_e, copy_v, max_paths);
+		if (oset != NULL)
+		{
+			int ts = get_cf(tset, ants);
+			int os = get_cf(oset, ants);
+			if (ts > os)
+			{
+				return (oset);
+			}
+//			ft_printf("tes: %d tos: %d\n", total_actions(tset), total_actions(oset));
+//			ft_printf("ts: %d os: %d\n---\n", ts, os);
+
+		}
+		oset = tset;
 	}
-	return (set);
+	edge_free(&copy_e);
+	vertex_free(ver);
+	return (tset);
 }

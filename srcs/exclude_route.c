@@ -156,9 +156,15 @@ void				update_1(t_edge **edge, t_vertex *marked)
 	}
 }
 
-void 				update_graph(t_edge **edge, t_vertex **ver)
+t_list 				*update_graph(t_edge **edge, t_vertex **ver,
+							t_path *route, t_list *ex_set)
 {
+	flip_route(&route, edge);
+
 	update_ver(ver);
 	update_1(edge, *ver);
 	update_indexes(*ver);
+
+	add_path_to_lst(&ex_set, route);
+	return (ex_set);
 }

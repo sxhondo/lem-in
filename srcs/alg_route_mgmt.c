@@ -12,21 +12,6 @@
 
 #include "lem_in.h"
 
-void					reset_map(t_edge **edge, int c)
-{
-	t_edge				*e;
-
-	e = *edge;
-	while (e)
-	{
-		e->cost = c;
-		e->b = 1;
-		e->v1->vis = 0;
-		e->v2->vis = 0;
-		e = e->next;
-	}
-}
-
 int 					cross_paths(t_path *fn, t_list **ways)
 {
 	t_list 				*l;
@@ -52,40 +37,63 @@ int 					cross_paths(t_path *fn, t_list **ways)
 	return (0);
 }
 
+void					reset_map(t_edge **edge)
+{
+	t_edge				*e;
+
+	e = *edge;
+	while (e)
+	{
+		e->del = 0;
+		e->cost = 0;
+		e = e->next;
+	}
+}
+
+void					wipe_map(t_edge **edge)
+{
+	t_edge				*e;
+
+	e = *edge;
+	while (e)
+	{
+		e->del = 1;
+		e = e->next;
+	}
+}
+
+
 void					put_paths_on_map(t_edge **edge, t_list **ways)
 {
-	t_list				*w;
+	t_list 				*w;
 	t_path 				*r;
-	t_edge 				*tmp;
+	t_edge 				*tmp1;
+	t_edge 				*tmp2;
 
 	w = *ways;
+	wipe_map(edge);
 	while (w)
 	{
-//		edge_print(*edge);
 		r = w->content;
 //		ft_printf("{red}[ ");
 //		path_print(&r, 'f');
 //		ft_printf(" ] {eoc}\n");
 		while (r->next_p)
 		{
-			tmp = find_edge(edge, r->curr_v->name, r->next_p->curr_v->name);
-			t_edge *q = find_edge(edge, r->next_p->curr_v->name, r->curr_v->name);
-			if (q->cost >= 1)
+			tmp1 = find_edge(edge, r->curr_v->name, r->next_p->curr_v->name);
+			tmp1->cost += 1;
+			tmp1->del = 0;
+			tmp2 = find_edge(edge, r->next_p->curr_v->name, r->curr_v->name);
+			tmp2->del = 0;
+			if (tmp2->cost >= 1)
 			{
-				q->del = 1;
-				tmp->del = 1;
+				tmp1->del = 1;
+				tmp2->del = 1;
 			}
-			else
-			{
-				q->del = 0;
-				tmp->del = 0;
-			}
-			tmp->cost++;
 			r = r->next_p;
 		}
 		w = w->next;
 	}
-//	edge_print(*edge);
 }
 
 void				delete_route(t_path **route, t_edge **edge)
@@ -97,8 +105,7 @@ void				delete_route(t_path **route, t_edge **edge)
 	while (r->next_p)
 	{
 		e = find_edge(edge, r->curr_v->name, r->next_p->curr_v->name);
-		if (e->v1->mod == 0)
-			e->v1->vis = 1;
+		e->del = 1;
 		r = r->next_p;
 	}
 }

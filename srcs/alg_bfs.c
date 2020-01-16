@@ -12,42 +12,6 @@
 
 #include "lem_in.h"
 
-int					not_in_queue(t_list **queue, int curr)
-{
-	t_list			*q;
-
-	q = *queue;
-	while (q)
-	{
-		if (*((int *)q->content) == curr)
-			return (0);
-		q = q->next;
-	}
-	return (1);
-}
-
-//static size_t		find_adj(t_edge **edge, t_list **queue, int curr)
-//{
-//	t_edge			*e;
-//
-//	e = *edge;
-//	while (e)
-//	{
-//		if (curr == e->v1_i && not_in_queue(queue, e->v2_i))
-//		{
-//			if (e->v2->vis == 0 && e->cost != 0)
-//				return (e->v2_i);
-//		}
-//		if (curr == e->v2_i && not_in_queue(queue, e->v1_i))
-//		{
-//			if (e->v1->vis == 0 && e->cost != 0)
-//				return (e->v1_i);
-//		}
-//		e = e->next;
-//	}
-//	return (-1);
-//}
-
 static size_t		find_adj(t_edge **edge, t_list **queue, int curr)
 {
 	t_edge			*e;
@@ -57,7 +21,7 @@ static size_t		find_adj(t_edge **edge, t_list **queue, int curr)
 	{
 		if (curr == e->v1->i && not_in_queue(queue, e->v2->i))
 		{
-			if (e->v2->vis == 0 && e->del == 0)
+			if (e->del == 0)
 				return (e->v2->i);
 		}
 		e = e->next;
@@ -79,73 +43,53 @@ static int			add_neighbours(t_list **queue, t_edge **edge, int curr)
 	return (1);
 }
 
-static void			keep_previous_ver(t_list *pq, int *trace)
+int 				explore_neighbours(t_edge *e, t_list **que,
+										int *inq, int *trace, int v)
 {
-	int				p;
-	int				c;
-	t_list			*ptr;
+	int 			to;
+	t_list			*n;
 
-	p = *(int *)pq->content;
-	ptr = pq->next;
-	while (ptr)
+	while (e)
 	{
-		c = *(int *)ptr->content;
-		if (trace[c] == -1)
-			trace[c] = p;
-		ptr = ptr->next;
+		if (e->v1->i == v && e->del == 0)
+		{
+			to = e->v2->i;
+			if (inq[to] == 0)
+			{
+				if (!(n = ft_lstnew(&to, sizeof(int))))
+					put_error("cannot allocate memory", 0);
+				ft_lstpushback(que, n);
+				inq[to] = 1;
+				trace[to] = v;
+			}
+		}
+		e = e->next;
 	}
 }
-
-//t_path				*breadth_first_search(t_edge **edge, void **ver, int len)
-//{
-//	t_list			*queue;
-//	t_list			*tmp;
-//	t_list			*p_q;
-//	int				*trace;
-//	int				*cst;
-//
-//	queue = NULL;
-//	cst = ft_new_array(len, INT32_MAX);
-//	cst[0] = 0;
-//	trace = ft_new_array(len, -1);
-//	tmp = ft_lstnew(&cst[0], sizeof(int));
-//	ft_lstpushback(&queue, tmp);
-//	p_q = queue;
-//	while ((add_neighbours(&queue, edge, *((int *)p_q->content))))
-//	{
-//		keep_previous_ver(p_q, trace);
-//		if (!(p_q = p_q->next))
-//			break ;
-//	}
-//	free(cst);
-//	ft_lstfree(&queue);
-//	return (trace_route(ver, trace, len - 1));
-//}
 
 t_path				*breadth_first_search(t_edge **edge, t_vertex **ver, int s, int f)
 {
 	t_list			*queue;
-	t_list			*tmp;
-	t_list			*p_q;
+	t_list			*n;
 	int				*trace;
-	int				*cst;
+	int				*inq;
 	int 			len;
+	int 			v;
 
 	len = vertex_len(ver);
 	queue = NULL;
-	cst = ft_new_array(len, INT32_MAX);
-	cst[s] = 0;
+
+	inq = ft_new_array(len, 0);
 	trace = ft_new_array(len, -1);
-	tmp = ft_lstnew(&cst[0], sizeof(int));
-	ft_lstpushback(&queue, tmp);
-	p_q = queue;
-	while ((add_neighbours(&queue, edge, *((int *)p_q->content))))
+	if (!(n = ft_lstnew(&s, sizeof(int))))
+		put_error("cannot allocate memory", 0);
+	ft_lstpushback(&queue, n);
+	while (queue)
 	{
-		keep_previous_ver(p_q, trace);
-		if (!(p_q = p_q->next))
-			break ;
+		v = pop_lst(&queue);
+		explore_neighbours(*edge, &queue, inq, trace, v);
 	}
-	free(cst);
+	free(inq);
 	ft_lstfree(&queue);
 	return (trace_route(ver, trace, f));
 }

@@ -112,5 +112,18 @@ void				mover(t_ants **ants, unsigned flag)
 	}
 	if (!(flag & NO_OUT))
 		write(1, turns->data, turns->total);
+	if (flag & NL)
+	{
+		char *str = turns->data;
+		int i = 0;
+		int c = 0;
+		while (str[i])
+		{
+			if (str[i] == '\n')
+				c++;
+			i++;
+		}
+		ft_printf("\nNL: %d\n", c);
+	}
 	ft_vec_del(&turns);
 }

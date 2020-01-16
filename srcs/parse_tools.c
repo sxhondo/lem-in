@@ -77,14 +77,16 @@ unsigned				parse_arguments(int ac, char **arg)
 	{
 		if (ft_strequ(arg[i], "-c"))
 			flag |= COLORS;
-		else if (ft_strequ(arg[i], "-d"))
+		if (ft_strequ(arg[i], "-d"))
 			flag |= DEBUG;
-		else if (ft_strequ(arg[i], "-o"))
+		if (ft_strequ(arg[i], "-o"))
 			flag |= OPEN;
-		else if (ft_strequ(arg[i], "-nofile"))
+		if (ft_strequ(arg[i], "-nofile"))
 			flag |= NO_FILE;
-		else if (ft_strequ(arg[i], "-noout"))
+		if (ft_strequ(arg[i], "-noout"))
 			flag |= NO_OUT;
+		if (ft_strequ(arg[i], "-nl"))
+			flag |= NL;
 //		else
 //		{
 //			ft_printf("usage: ./lem-in [options] < [map]\n");

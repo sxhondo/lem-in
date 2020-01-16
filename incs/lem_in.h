@@ -33,6 +33,7 @@
 # define OPEN			4u
 # define NO_FILE		8u
 # define NO_OUT			16u
+# define NL				32u
 
 typedef struct			s_ants
 {
@@ -163,7 +164,7 @@ void					add_path_to_lst(t_list **lst, t_path *path);
 void					**convert_ver_to_ptrs(t_vertex **ver, t_edge **edge, int len);
 t_list					*solver(int ants, t_edge **edge, t_vertex **ver);
 t_path					*get_cheapest_path(t_edge **edge, void **ver, int len);
-void 					update_graph(t_edge **edge, t_vertex **ver);
+t_list 					*update_graph(t_edge **edge, t_vertex **ver, t_path *route, t_list *ex_set);
 //t_path					*breadth_first_search(t_edge **edge, void **ver, int l);
 //t_path					*breadth_first_search(t_edge **edge, t_vertex **ver, int l);
 t_path					*breadth_first_search(t_edge **edge, t_vertex **ver, int s, int f);
@@ -176,11 +177,12 @@ t_list					*get_i_paths(t_list **paths, int value);
 int						ants_per_path(t_ants **ants, int path);
 void					ants_push_back(t_ants **dst, t_ants *ant);
 t_ants					*ant_init(int id);
+t_list					*duplicate_set(t_list *s);
 t_list					*add_shortest_paths(t_list **ways, t_edge **e,
 													void **ver, int len);
 void 					print_ants_per_paths(t_ants **ants, int paths);
 void					free_list(t_list **tab);
-void					reset_map(t_edge **edge, int m);
+void					reset_map(t_edge **edge);
 void					delete_route(t_path **route, t_edge **edge);
 int 					cross_paths(t_path *fn, t_list **ways);
 int						not_in_queue(t_list **queue, int curr);
