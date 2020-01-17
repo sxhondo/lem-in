@@ -12,25 +12,25 @@
 
 #include "lem_in.h"
 
-void				vertex_new(t_vertex **ver, char *name, unsigned div)
-{
-	t_vertex		*elem;
-	char 			*str;
-	unsigned 		d;
-
-	d = 0;
-	if (!(elem = ft_memalloc(sizeof(t_vertex))))
-	{
-		put_error("cannot allocate memory", 0);
-		return ;
-	}
-	str = ft_strdup(name);
-	elem->name = str;
-	elem->div |= div;
-	elem->mod = 0;
-	elem->vis = 0;
-	vertex_insert(ver, elem);
-}
+//void				vertex_new(t_vertex **ver, char *name, unsigned div)
+//{
+//	t_vertex		*elem;
+//	char 			*str;
+//	unsigned 		d;
+//
+//	d = 0;
+//	if (!(elem = ft_memalloc(sizeof(t_vertex))))
+//	{
+//		put_error("cannot allocate memory", 0);
+//		return ;
+//	}
+//	str = ft_strdup(name);
+//	elem->name = str;
+//	elem->div |= div;
+//	elem->mod = 0;
+////	elem->vis = 0;
+//	vertex_insert(ver, elem);
+//}
 
 t_list				*duplicate_set(t_list *s)
 {
@@ -66,7 +66,7 @@ int					get_index_of_ver(void **vp, t_vertex *v, int size)
 	while (i < size)
 	{
 		tmp = (t_vertex *)vp[i];
-		if (ft_strequ(tmp->name, v->name) && v->div == tmp->div)
+		if (ft_strequ(tmp->name, v->name) && v->mod == tmp->mod)
 			return (i);
 		i++;
 	}

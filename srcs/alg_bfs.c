@@ -12,46 +12,17 @@
 
 #include "lem_in.h"
 
-static size_t		find_adj(t_edge **edge, t_list **queue, int curr)
-{
-	t_edge			*e;
 
-	e = *edge;
-	while (e)
-	{
-		if (curr == e->v1->i && not_in_queue(queue, e->v2->i))
-		{
-			if (e->del == 0)
-				return (e->v2->i);
-		}
-		e = e->next;
-	}
-	return (-1);
-}
-
-static int			add_neighbours(t_list **queue, t_edge **edge, int curr)
-{
-	int				new;
-	t_list			*tmp;
-
-	while ((new = find_adj(edge, queue, curr)) >= 0)
-	{
-		if (!(tmp = ft_lstnew(&new, sizeof(int))))
-			put_error("Cannot allocate memory", 0);
-		ft_lstpushback(queue, tmp);
-	}
-	return (1);
-}
 
 int 				explore_neighbours(t_edge *e, t_list **que,
-										int *inq, int *trace, int v)
+										int *inq, int *trace, int v, int m)
 {
 	int 			to;
 	t_list			*n;
 
 	while (e)
 	{
-		if (e->v1->i == v && e->del == 0)
+		if (m == 0 && e->v1->i == v && e->on == 1)
 		{
 			to = e->v2->i;
 			if (inq[to] == 0)
@@ -67,7 +38,7 @@ int 				explore_neighbours(t_edge *e, t_list **que,
 	}
 }
 
-t_path				*breadth_first_search(t_edge **edge, t_vertex **ver, int s, int f)
+t_path				*breadth_first_search(t_edge **edge, t_vertex **ver, int s, int f, int m)
 {
 	t_list			*queue;
 	t_list			*n;
@@ -76,9 +47,8 @@ t_path				*breadth_first_search(t_edge **edge, t_vertex **ver, int s, int f)
 	int 			len;
 	int 			v;
 
-	len = vertex_len(ver);
 	queue = NULL;
-
+	len = vertex_len(ver);
 	inq = ft_new_array(len, 0);
 	trace = ft_new_array(len, -1);
 	if (!(n = ft_lstnew(&s, sizeof(int))))
@@ -87,9 +57,12 @@ t_path				*breadth_first_search(t_edge **edge, t_vertex **ver, int s, int f)
 	while (queue)
 	{
 		v = pop_lst(&queue);
-		explore_neighbours(*edge, &queue, inq, trace, v);
+//		t_vertex *tmp = find_ver_by_index(*ver, v);
+//		ft_printf("%s %s on: %d\n", tmp->name, tmp->div & IN ? "(in)" :
+//		tmp->div & OUT ? "(out)" : "", tmp->on);
+		explore_neighbours(*edge, &queue, inq, trace, v, m);
 	}
 	free(inq);
-	ft_lstfree(&queue);
+//	ft_lstfree(&queue);
 	return (trace_route(ver, trace, f));
 }

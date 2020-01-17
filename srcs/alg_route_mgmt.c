@@ -37,75 +37,81 @@ int 					cross_paths(t_path *fn, t_list **ways)
 	return (0);
 }
 
-void					reset_map(t_edge **edge)
-{
-	t_edge				*e;
-
-	e = *edge;
-	while (e)
-	{
-		e->del = 0;
-		e->cost = 0;
-		e = e->next;
-	}
-}
-
-void					wipe_map(t_edge **edge)
-{
-	t_edge				*e;
-
-	e = *edge;
-	while (e)
-	{
-		e->del = 1;
-		e = e->next;
-	}
-}
 
 
-void					put_paths_on_map(t_edge **edge, t_list **ways)
-{
-	t_list 				*w;
-	t_path 				*r;
-	t_edge 				*tmp1;
-	t_edge 				*tmp2;
 
-	w = *ways;
-	wipe_map(edge);
-	while (w)
-	{
-		r = w->content;
-//		ft_printf("{red}[ ");
-//		path_print(&r, 'f');
-//		ft_printf(" ] {eoc}\n");
-		while (r->next_p)
-		{
-			tmp1 = find_edge(edge, r->curr_v->name, r->next_p->curr_v->name);
-			tmp1->cost += 1;
-			tmp1->del = 0;
-			tmp2 = find_edge(edge, r->next_p->curr_v->name, r->curr_v->name);
-			tmp2->del = 0;
-			if (tmp2->cost >= 1)
-			{
-				tmp1->del = 1;
-				tmp2->del = 1;
-			}
-			r = r->next_p;
-		}
-		w = w->next;
-	}
-}
 
-void				delete_route(t_path **route, t_edge **edge)
-{
-	t_path			*r;
-	t_edge			*e;
 
-	r = *route;
-	while (r->next_p)
-	{
-		e = find_edge(edge, r->curr_v->name, r->next_p->curr_v->name);
-		e->del = 1;
-		r = r->next_p;
-	}
-}
+//void					put_paths_on_map(t_edge **edge, t_list **ways)
+//{
+//	t_list 				*w;
+//	t_path 				*r;
+//	t_edge 				*tmp1;
+//	t_edge 				*tmp2;
+//
+//	w = *ways;
+//	wipe_map(edge);
+//	while (w)
+//	{
+//		r = w->content;
+////		ft_printf("{red}[ ");
+////		path_print(&r, 'f');
+////		ft_printf(" ] {eoc}\n");
+//		while (r->next_p)
+//		{
+//			tmp1 = find_edge(edge, r->curr_v->name, r->next_p->curr_v->name);
+//			tmp1->cost += 1;
+//			tmp1->del = 0;
+//			tmp2 = find_edge(edge, r->next_p->curr_v->name, r->curr_v->name);
+//			tmp2->del = 0;
+//			if (tmp2->cost >= 1)
+//			{
+//				tmp1->del = 1;
+//				tmp2->del = 1;
+//			}
+//			r = r->next_p;
+//		}
+//		w = w->next;
+//	}
+//}
+
+//void					put_path_on_map(t_edge **edge, t_path *r)
+//{
+//	t_list 				*w;
+//	t_edge 				*tmp1;
+//	t_edge 				*tmp2;
+//
+//	wipe_map(edge);
+//	ft_printf("{red}[ ");
+//	path_print(&r, 'f');
+//	ft_printf(" ] {eoc}\n");
+//	while (r->next_p)
+//	{
+//		tmp1 = find_edge(edge, r->curr_v->name, r->next_p->curr_v->name);
+//		tmp1->cost += 1;
+//		tmp1->del = 0;
+//		tmp2 = find_edge(edge, r->next_p->curr_v->name, r->curr_v->name);
+//		tmp2->del = 0;
+//		if (tmp2->cost >= 1)
+//		{
+//			tmp1->del = 1;
+//			tmp2->del = 1;
+//		}
+//		r = r->next_p;
+//	}
+//}
+
+
+//void				delete_route(t_path **route, t_edge **edge)
+//{
+//	t_path			*r;
+//	t_edge			*e;
+//
+//	r = *route;
+//	while (r->next_p)
+//	{
+//		e = find_edge(edge, r->curr_v->name, r->next_p->curr_v->name);
+//		e->del = 1;
+//		r = r->next_p;
+//	}
+//}

@@ -17,17 +17,17 @@ void			edge_print(t_edge *e)
 	ft_printf("{blue}------edges----------{eoc}\n");
 	while (e)
 	{
-		ft_printf("{blue}%s[%d] ", e->v1->name, e->v1->i);
-		if (e->v1->div & IN)
+		ft_printf("{blue}%s[%d]", e->v1->name, e->v1->i);
+		if (e->v1->mod & IN)
 			ft_printf("(%s)", "in");
-		if (e->v1->div & OUT)
+		if (e->v1->mod & OUT)
 			ft_printf("(%s)", "out");
 		ft_printf("-> %s[%d]", e->v2->name, e->v2->i);
-		if (e->v2->div & IN)
+		if (e->v2->mod & IN)
 			ft_printf("(%s)", "in");
-		if (e->v2->div & OUT)
+		if (e->v2->mod & OUT)
 			ft_printf("(%s)", "out");
-		ft_printf("{eoc} del: %d co %d\n", e->del, e->cost);
+		ft_printf("{eoc} del: %d on: %d\n", e->del, e->on);
 		e = e->next;
 	}
 	ft_printf("\n");
@@ -93,12 +93,12 @@ void			vertex_print(t_vertex **ver)
 			ft_printf("{blue}%s {eoc}", p->name);
 		else if (p->mod == 2)
 			ft_printf("{red}%s {eoc}", p->name);
-		else if (p->div)
+		else if (p->mod)
 		{
 			ft_printf("{magenta}%s ", p->name);
-			if (p->div & IN)
+			if (p->mod & IN)
 				ft_printf("(in)");
-			else if (p->div & OUT)
+			else if (p->mod & OUT)
 				ft_printf("(out)");
 			ft_printf("{eoc}");
 		}

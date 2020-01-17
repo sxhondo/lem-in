@@ -78,7 +78,6 @@ static int			update(t_ants **ants, int id, t_vec *turns)
 			if (a->super_way && ++id)
 				a->id = id;
 			push_turns(&turns, ft_itoa(a->id), a->pos->curr_v->name);
-//			ft_printf("L%d-%s ", a->id, a->pos->curr_v->name);
 		}
 		if (a->pos->next_p && no_one_next(ants, a->pos->next_p->curr_v->name))
 		{
@@ -86,12 +85,10 @@ static int			update(t_ants **ants, int id, t_vec *turns)
 				a->id = id;
 			a->pos = a->pos->next_p;
 			push_turns(&turns, ft_itoa(a->id), a->pos->curr_v->name);
-//			ft_printf("L%d-%s ", a->id, a->pos->curr_v->name);
 		}
 		a = a->next;
 	}
 	ft_vec_add(&turns, &n);
-//	ft_printf("\n");
 	return (id);
 }
 

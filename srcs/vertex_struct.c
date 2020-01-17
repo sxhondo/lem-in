@@ -88,8 +88,6 @@ void				vertex_add(t_structs *structs, t_info *inf, int x, int y)
 		return ;
 	}
 	elem->mod = inf->mod;
-	elem->div = 0;
-	elem->vis = 0;
 	vertex_push_back((t_vertex **)&structs->ver, elem);
 }
 
@@ -107,28 +105,27 @@ t_vertex			*vertex_dupl(t_vertex **ver, char *name, unsigned div)
 		put_error("cannot allocate memory", 0);
 		return (NULL);
 	}
-	elem->div = div;
-	elem->vis = 0;
+	elem->mod = div;
 	vertex_push_back(ver, elem);
 }
 
-t_vertex			*vertex_duplic(t_vertex **ver, t_vertex *v)
-{
-	t_vertex		*elem;
-
-	if (!(elem = ft_memalloc(sizeof(t_vertex))))
-	{
-		put_error("cannot allocate memory", 0);
-		return (NULL);
-	}
-	if (!(elem->name = ft_strdup(v->name)))
-	{
-		put_error("cannot allocate memory", 0);
-		return (NULL);
-	}
-	elem->div = v->div;
-	elem->vis = 0;
-	elem->mod = v->mod;
-	elem->i = v->i;
-	vertex_push_back(ver, elem);
-}
+//t_vertex			*vertex_duplic(t_vertex **ver, t_vertex *v)
+//{
+//	t_vertex		*elem;
+//
+//	if (!(elem = ft_memalloc(sizeof(t_vertex))))
+//	{
+//		put_error("cannot allocate memory", 0);
+//		return (NULL);
+//	}
+//	if (!(elem->name = ft_strdup(v->name)))
+//	{
+//		put_error("cannot allocate memory", 0);
+//		return (NULL);
+//	}
+//	elem->div = v->div;
+//	elem->v = 0;
+//	elem->mod = v->mod;
+//	elem->i = v->i;
+//	vertex_push_back(ver, elem);
+//}
