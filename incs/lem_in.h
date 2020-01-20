@@ -22,10 +22,6 @@
 # define IN				8u
 # define OUT			16u
 
-
-# define UN_DIR			0u
-# define BI_DIR			1u
-
 # define DEBUG			1u
 # define COLORS			2u
 # define OPEN			4u
@@ -49,6 +45,7 @@ typedef struct			s_vertex
 	unsigned			mod;
 	struct s_vertex		*next;
 	int					i;
+	int 				mark;
 }						t_vertex;
 
 typedef struct			s_edge
@@ -59,6 +56,7 @@ typedef struct			s_edge
 	t_vertex			*v2;
 	int 				on;
 	unsigned			del;
+	int 				cost;
 	struct s_edge		*next;
 }						t_edge;
 
@@ -80,16 +78,16 @@ typedef struct			s_info
 	int					skip_comments;
 }						t_info;
 
-typedef struct			s_bf
-{
-	int					*d;
-	int					*id;
-	int					*trace;
-	int					cost;
-	int					iter;
-	int					len;
-	t_list				*queue;
-}						t_bf;
+//typedef struct			s_bf
+//{
+//	int					*d;
+//	int					*id;
+//	int					*trace;
+//	int					cost;
+//	int					iter;
+//	int					len;
+//	t_list				*queue;
+//}						t_bf;
 
 typedef struct			s_structs
 {
@@ -162,12 +160,14 @@ void					**convert_ver_to_ptrs(t_vertex **ver, t_edge **edge, int len);
 t_list					*solver(int ants, t_edge **edge, t_vertex **ver);
 t_path					*get_cheapest_path(t_edge **edge, void **ver, int len);
 t_list 					*update_graph(t_edge **edge, t_vertex **ver, t_path *route);
+//t_path 					*spf(t_edge **edge, void **vp, int len);
 //t_path					*breadth_first_search(t_edge **edge, void **ver, int l);
 //t_path					*breadth_first_search(t_edge **edge, t_vertex **ver, int l);
-t_path					*breadth_first_search(t_edge **edge, t_vertex **ver, int s, int f, int m);
+t_path					*breadth_first_search(t_edge **edge, t_vertex **ver, int s, int f);
+t_path					*spf_algorithm(t_edge **edge, t_vertex **ver, int s, int f);
 //void					put_paths_on_map(t_edge **edge, t_list **ways);
 void					put_path_on_map(t_edge **edge, t_path *route);
-t_path					*trace_route(t_vertex **ver, int *trace, int last);
+t_path					*trace_route(t_vertex **ver, int *trace);
 void					swap_ver(t_vertex **v1, t_vertex **v2);
 void					mover(t_ants **ants, unsigned flag);
 t_ants					*spawn_ants(int amount, t_list **paths);
@@ -180,15 +180,12 @@ t_list					*add_shortest_paths(t_list **ways, t_edge **e,
 													void **ver, int len);
 void 					print_ants_per_paths(t_ants **ants, int paths);
 void					free_list(t_list **tab);
-void					reset_map(t_edge **edge);
 //void					delete_route(t_path **route, t_edge **edge);
 int 					cross_paths(t_path *fn, t_list **ways);
 int						not_in_queue(t_list **queue, int curr);
 void					set_indexes_of_ver(t_edge **edge, void **ver, int len);
-t_path 					*spf(t_edge **edge, void **vp, int len);
-t_path					*spf_algorithm(t_edge **edge, void **vp, int len);
 int 					find_min_value(int *cost, int len);
-t_vertex				*vertex_dupl(t_vertex **ver, char *name, unsigned div);
-
+void					vertex_dupl(t_vertex **ver, char *name, unsigned div);
+int 					find_sf(t_vertex *ver, int sf);
 
 #endif

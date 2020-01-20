@@ -49,6 +49,7 @@ void				flip_divide(t_path **route, t_edge **edge, t_vertex **ver)
 		e = find_edge(edge, r->curr_v->name, r->next_p->curr_v->name);
 		e->on = 0;
 		rv = find_edge(edge, r->next_p->curr_v->name, r->curr_v->name);
+		rv->cost = -1;
 		if (rv->on == 0)
 		{
 			e->del = 1;

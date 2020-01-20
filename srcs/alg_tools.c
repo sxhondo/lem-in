@@ -12,6 +12,32 @@
 
 #include "lem_in.h"
 
+int 			find_sf(t_vertex *ver, int sf)
+{
+
+	while (ver)
+	{
+		if (ver->mod == sf)
+			return (ver->i);
+		ver = ver->next;
+	}
+	return (-1);
+}
+
+t_vertex					*find_ver_by_name(t_vertex **ver, char *name)
+{
+	t_vertex				*v;
+
+	v = *ver;
+	while (v)
+	{
+		if (ft_strequ(v->name, name))
+			return (v);
+		v = v->next;
+	}
+	return (NULL);
+}
+
 t_vertex				*find_ver_by_index(t_vertex *ver, int i)
 {
 	while (ver)
@@ -23,26 +49,29 @@ t_vertex				*find_ver_by_index(t_vertex *ver, int i)
 	return (NULL);
 }
 
-t_path				*trace_route(t_vertex **ver, int *trace, int last)
+t_path				*trace_route(t_vertex **ver, int *trace)
 {
 	t_path			*route;
 	t_path			*n;
 	t_vertex		*v1;
+	int 			s, f;
 
+	s = find_sf(*ver, START);
+	f = find_sf(*ver, END);
 	route = NULL;
-	if (trace[last] == -1)
+	if (trace[f] == -1)
 	{
 		free(trace);
 		return (NULL);
 	}
-	while (last > 0)
+	while (f > 0)
 	{
-		v1 = find_ver_by_index(*ver, last);
+		v1 = find_ver_by_index(*ver, f);
 		n = path_init(v1);
 		path_push(&route, n);
-		last = trace[last];
+		f = trace[f];
 	}
-	v1 = (t_vertex *)ver[0];
+	v1 = find_ver_by_index(*ver, s);
 	n = path_init(v1);
 	path_push(&route, n);
 	free(trace);

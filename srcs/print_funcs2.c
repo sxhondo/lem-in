@@ -18,7 +18,7 @@ void			print_all(t_structs *str)
 	// vertex_print((t_vertex **)&str->ver);
 	// edge_print((t_edge *)str->edge);
 	ways_print((t_list **)&str->ways);
-	print_ants_per_paths((t_ants **)&str->ants, ft_lstlen(&str->ways) - 1);
+//	print_ants_per_paths((t_ants **)&str->ants, ft_lstlen(&str->ways) - 1);
 }
 
 void			print_void_ver(void **ver, int len)

@@ -41,20 +41,6 @@ static void		set_super_flag(t_ants **ants)
 	}
 }
 
-static void		link_nodes(t_ants **ants, t_list **paths)
-{
-	t_ants		*a;
-	t_list		*tmp;
-
-	a = *ants;
-	while (a)
-	{
-		tmp = get_i_paths(paths, a->path);
-		a->pos = get_i_path_node((t_path **)&tmp->content, a->indx);
-		a = a->next;
-	}
-}
-
 int 			find_min_value(int *cost, int len)
 {
 	int 		i;
@@ -98,6 +84,7 @@ static int 		get_min_path(t_ants **ants, t_list **ways)
 			i++;
 		}
 	}
+//	print_arr(cost, ft_lstlen(ways));
 	return (find_min_value(cost, ft_lstlen(ways)));
 }
 
@@ -105,16 +92,34 @@ static void 	dispatcher(int amount, t_list **ways, t_ants **ants)
 {
 	t_ants 		*a;
 	int 		min;
+	int 		id;
 
+	id = 1;
 	a = *ants;
-	a->path = 0;
-	a = a->next;
-
-	while (--amount)
+	while (a)
 	{
 		min = get_min_path(ants, ways);
 		a->path = min;
-		a = a->next;
+		a->id = id++;
+ 		a = a->next;
+	}
+
+}
+
+static void 	set_ants_on_path(t_ants *ants, t_list **ways)
+{
+	t_list		*tmp;
+
+	while (ants)
+	{
+		tmp = *ways;
+		while (ants->path)
+		{
+			tmp = tmp->next;
+			ants->path--;
+		}
+		ants->pos = tmp->content;
+		ants = ants->next;
 	}
 }
 
@@ -134,10 +139,11 @@ t_ants			*spawn_ants(int amount, t_list **ways)
 		ants_push_back(&ants, node);
 		i++;
 	}
+//	ants_print(&ants);
 	if (is_super_way(ways))
 		set_super_flag(&ants);
 	else
 		dispatcher(amount, ways, &ants);
-	link_nodes(&ants, ways);
+	set_ants_on_path(ants, ways);
 	return (ants);
 }

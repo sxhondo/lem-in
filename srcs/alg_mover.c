@@ -59,7 +59,6 @@ static void 		push_turns(t_vec **turns, char *id, char *name)
 	i = -1;
 	while (name[++i])
 		ft_vec_add(turns, &name[i]);
-//	free(name);
 	ft_vec_add(turns, &sp);
 }
 
@@ -72,17 +71,10 @@ static int			update(t_ants **ants, int id, t_vec *turns)
 	a = *ants;
 	while (a)
 	{
-		if (a->pos->next_p && a->pos->next_p->curr_v->mod == 2)
+		if (a->pos->next_p &&
+				(no_one_next(ants, a->pos->next_p->curr_v->name) ||
+					a->pos->next_p->curr_v->mod & END))
 		{
-			a->pos = a->pos->next_p;
-			if (a->super_way && ++id)
-				a->id = id;
-			push_turns(&turns, ft_itoa(a->id), a->pos->curr_v->name);
-		}
-		if (a->pos->next_p && no_one_next(ants, a->pos->next_p->curr_v->name))
-		{
-			if (a->id == 0 && ++id)
-				a->id = id;
 			a->pos = a->pos->next_p;
 			push_turns(&turns, ft_itoa(a->id), a->pos->curr_v->name);
 		}
@@ -114,7 +106,7 @@ void				mover(t_ants **ants, unsigned flag)
 		char *str = turns->data;
 		int i = 0;
 		int c = 0;
-		while (str[i])
+		while (i < turns->total)
 		{
 			if (str[i] == '\n')
 				c++;

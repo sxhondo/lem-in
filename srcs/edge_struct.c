@@ -71,21 +71,6 @@ void						edge_add(t_structs *structs, t_info *inf)
 	ft_strdel(&v2);
 }
 
-//t_edge						*find_edge(t_edge **edge, char *v1, char *v2)
-//{
-//	t_edge					*e;
-//
-//	e = *edge;
-//	while (e)
-//	{
-//		if ((ft_strequ(e->v1->name, v1) && ft_strequ(e->v2->name, v2)) ||
-//			(ft_strequ(e->v1->name, v2) && ft_strequ(e->v2->name, v1)))
-//			return (e);
-//		e = e->next;
-//	}
-//	return (NULL);
-//}
-
 t_edge						*find_edge(t_edge **edge, char *f, char *to)
 {
 	t_edge					*e;

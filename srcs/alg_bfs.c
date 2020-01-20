@@ -12,17 +12,15 @@
 
 #include "lem_in.h"
 
-
-
-int 				explore_neighbours(t_edge *e, t_list **que,
-										int *inq, int *trace, int v, int m)
+static int			explore_neighbours(t_edge *e, t_list **que, int *inq,
+														int *trace, int v)
 {
 	int 			to;
 	t_list			*n;
 
 	while (e)
 	{
-		if (m == 0 && e->v1->i == v && e->on == 1)
+		if (e->v1->i == v && e->on == 1 && e->del == 0 && e->v2->mark == 0)
 		{
 			to = e->v2->i;
 			if (inq[to] == 0)
@@ -38,7 +36,7 @@ int 				explore_neighbours(t_edge *e, t_list **que,
 	}
 }
 
-t_path				*breadth_first_search(t_edge **edge, t_vertex **ver, int s, int f, int m)
+t_path				*breadth_first_search(t_edge **edge, t_vertex **ver, int s, int f)
 {
 	t_list			*queue;
 	t_list			*n;
@@ -58,11 +56,9 @@ t_path				*breadth_first_search(t_edge **edge, t_vertex **ver, int s, int f, int
 	{
 		v = pop_lst(&queue);
 //		t_vertex *tmp = find_ver_by_index(*ver, v);
-//		ft_printf("%s %s on: %d\n", tmp->name, tmp->div & IN ? "(in)" :
-//		tmp->div & OUT ? "(out)" : "", tmp->on);
-		explore_neighbours(*edge, &queue, inq, trace, v, m);
+//		ft_printf("%s m: %d\n", tmp->name, tmp->mark);
+		explore_neighbours(*edge, &queue, inq, trace, v);
 	}
 	free(inq);
-//	ft_lstfree(&queue);
-	return (trace_route(ver, trace, f));
+	return (trace_route(ver, trace));
 }
