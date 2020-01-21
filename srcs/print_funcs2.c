@@ -15,25 +15,7 @@
 void			print_all(t_structs *str)
 {
 	ft_printf("\n{cyan}ANTS: %14d\n{eoc}", str->ants_amount);
-	// vertex_print((t_vertex **)&str->ver);
-	// edge_print((t_edge *)str->edge);
 	ways_print((t_list **)&str->ways);
-//	print_ants_per_paths((t_ants **)&str->ants, ft_lstlen(&str->ways) - 1);
-}
-
-void			print_void_ver(void **ver, int len)
-{
-	int			i;
-	t_vertex	*v;
-
-	i = 0;
-	while (i < len)
-	{
-		v = ver[i];
-		ft_printf("[%d] %s ", i, v->name);
-		ft_printf("\n");
-		i++;
-	}
 }
 
 void			ways_print(t_list **ways)
@@ -47,7 +29,7 @@ void			ways_print(t_list **ways)
 	{
 		ft_printf("[%d] ", i++);
 		path_print((t_path **)&w->content, 'f');
-		ft_printf("(%d)", path_len((t_path **)&w->content));
+		ft_printf("(%d)", path_len((t_path *)w->content));
 		ft_printf("\n");
 		w = w->next;
 	}

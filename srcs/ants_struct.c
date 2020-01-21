@@ -28,7 +28,7 @@ void			ants_push_back(t_ants **dst, t_ants *ant)
 	}
 }
 
-t_ants			*ant_init(int id)
+t_ants			*ant_init()
 {
 	t_ants		*tmp;
 
@@ -37,33 +37,20 @@ t_ants			*ant_init(int id)
 		put_error("cannot allocate memory", 0);
 		return (NULL);
 	}
-	tmp->id = id;
 	tmp->path = -1;
 	return (tmp);
 }
 
-int				ants_per_path(t_ants **ants, int path)
+int 			ants_per_path(t_ants *ants, int path)
 {
-	t_ants		*a;
-	int			r;
+	int 		count;
 
-	r = 0;
-	a = *ants;
-	while (a)
+	count = 0;
+	while (ants)
 	{
-		if (a->path == path)
-			r++;
-		a = a->next;
+		if (ants->path == path)
+			count++;
+		ants = ants->next;
 	}
-	return (r);
-}
-
-t_list			*get_i_paths(t_list **paths, int value)
-{
-	t_list		*l;
-
-	l = *paths;
-	while (l && value--)
-		l = l->next;
-	return (l);
+	return(count);
 }

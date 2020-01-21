@@ -68,44 +68,38 @@ void			ants_print(t_ants **ants)
 	while (an)
 	{
 		ft_printf("{red}id:[%d]{eoc}\t", an->id);
-		ft_printf(" {cyan}path: %d{eoc}\t", an->path);
-		if (an->pos)
-			ft_printf("{green} pos: %s{eoc}\n", an->pos->curr_v->name);
-		else
-			ft_printf("{magenta} finished! {eoc}\n");
+		ft_printf(" {cyan}path: %d{eoc}\t\n", an->path);
 		an = an->next;
 	}
 	ft_printf("\n");
 }
 
-void			vertex_print(t_vertex **ver)
+void			vertex_print(t_vertex *ver)
 {
 	int			i;
-	t_vertex	*p;
 
 	i = 0;
-	p = *ver;
 	ft_printf("{red}------vertexes-------{eoc}\n");
-	while (p)
+	while (ver)
 	{
-		ft_printf("[%d] ", p->i);
-		if (p->mod == 1)
-			ft_printf("{blue}%s {eoc}", p->name);
-		else if (p->mod == 2)
-			ft_printf("{red}%s {eoc}", p->name);
-		else if (p->mod)
+		ft_printf("[%d] ", ver->i);
+		if (ver->mod == 1)
+			ft_printf("{blue}%s {eoc}", ver->name);
+		else if (ver->mod == 2)
+			ft_printf("{red}%s {eoc}", ver->name);
+		else if (ver->mod)
 		{
-			ft_printf("{magenta}%s ", p->name);
-			if (p->mod & IN)
+			ft_printf("{magenta}%s ", ver->name);
+			if (ver->mod & IN)
 				ft_printf("(in)");
-			else if (p->mod & OUT)
+			else if (ver->mod & OUT)
 				ft_printf("(out)");
 			ft_printf("{eoc}");
 		}
 		else
-			ft_printf("%s ", p->name);
+			ft_printf("%s ", ver->name);
 		ft_printf("\n");
-		p = p->next;
+		ver = ver->next;
 	}
 }
 

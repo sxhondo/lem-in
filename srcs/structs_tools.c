@@ -12,41 +12,6 @@
 
 #include "lem_in.h"
 
-//void				vertex_new(t_vertex **ver, char *name, unsigned div)
-//{
-//	t_vertex		*elem;
-//	char 			*str;
-//	unsigned 		d;
-//
-//	d = 0;
-//	if (!(elem = ft_memalloc(sizeof(t_vertex))))
-//	{
-//		put_error("cannot allocate memory", 0);
-//		return ;
-//	}
-//	str = ft_strdup(name);
-//	elem->name = str;
-//	elem->div |= div;
-//	elem->mod = 0;
-////	elem->vis = 0;
-//	vertex_insert(ver, elem);
-//}
-
-t_list				*duplicate_set(t_list *s)
-{
-	t_list 			*lst = NULL;
-	t_list			*node;
-
-	while (s)
-	{
-		if (!(node = ft_lstnew(s->content, sizeof(t_path))))
-			put_error("cannot allocate memory", 0);
-		ft_lstpushback(&lst, node);
-		s = s->next;
-	}
-	return (lst);
-}
-
 void				add_path_to_lst(t_list **lst, t_path *path)
 {
 	t_list			*node;

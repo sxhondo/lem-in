@@ -22,16 +22,14 @@ t_path					*get_i_path_node(t_path **path, int value)
 	return (p);
 }
 
-int						path_len(t_path **dst)
+int						path_len(t_path *dst)
 {
-	t_path				*p;
 	int					i;
 
 	i = 0;
-	p = *dst;
-	while (p)
+	while (dst)
 	{
-		p = p->next_p;
+		dst = dst->next_p;
 		i++;
 	}
 	return (i);

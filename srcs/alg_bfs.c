@@ -20,7 +20,8 @@ static int			explore_neighbours(t_edge *e, t_list **que, int *inq,
 
 	while (e)
 	{
-		if (e->v1->i == v && e->on == 1 && e->del == 0 && e->v2->mark == 0)
+//		ft_printf("f: %s to: %s %d %d\n", e->v1->name, e->v2->name, e->v1->i, e->v2->i);
+		if (e->v1->i == v && e->on == 1 && e->del == 0)
 		{
 			to = e->v2->i;
 			if (inq[to] == 0)

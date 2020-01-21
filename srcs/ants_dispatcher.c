@@ -12,36 +12,7 @@
 
 #include "lem_in.h"
 
-static int		is_super_way(t_list **paths)
-{
-	t_list		*l;
-	t_path		*p;
-
-	l = *paths;
-	while (l)
-	{
-		p = l->content;
-		if (path_len(&p) == 2)
-			return (1);
-		l = l->next;
-	}
-	return (0);
-}
-
-static void		set_super_flag(t_ants **ants)
-{
-	t_ants		*a;
-
-	a = *ants;
-	while (a)
-	{
-		a->path = 0;
-		a->super_way = 1;
-		a = a->next;
-	}
-}
-
-int 			find_min_value(int *cost, int len)
+static int 		find_min_value(const int *cost, int len)
 {
 	int 		i;
 	int 		j;
@@ -49,101 +20,96 @@ int 			find_min_value(int *cost, int len)
 	i = 0;
 	while (i < len)
 	{
-		j = -1;
-		while (++j < len && cost[i] <= cost[j])
-			;
-		if (j == len)
+		j = i;
+		while (j < len)
 		{
-			free(cost);
-			return (i);
+			if (cost[i] <= cost[j])
+				j++;
+			else
+				break ;
 		}
+		if (j == len)
+			return (i);
 		i++;
 	}
-	free(cost);
-	return (-1);
 }
 
-static int 		get_min_path(t_ants **ants, t_list **ways)
+static t_path	*get_i_path(t_list *ways, int i)
 {
-	t_list 		*w;
-	t_path 		*p;
-	int 		*cost;
-	int 		i;
+	t_path		*tmp;
 
- 	i = 0;
-	w = *ways;
-	if (!(cost = ft_new_array(ft_lstlen(ways), -1)))
-		put_error("cannot allocate memory", 0);
-	else
+	while (ways->next && i--)
+		ways = ways->next;
+	tmp = ways->content;
+	return (tmp);
+}
+
+static void 	linkage(t_ants *ants, t_list *ways, int *cost, int len)
+{
+	int 		i, j;
+
+	i = 1;
+	if (len == 0)
 	{
-		while (w)
+		j = 0;
+		while (ants)
 		{
-			p = w->content;
-			cost[i] = (path_len(&p) - 1) + ants_per_path(ants, i);
-			w = w->next;
-			i++;
+			ants->id = i++;
+			ants->pos = get_i_path(ways, j++);
+			ants = ants->next;
 		}
+		return ;
 	}
-//	print_arr(cost, ft_lstlen(ways));
-	return (find_min_value(cost, ft_lstlen(ways)));
-}
-
-static void 	dispatcher(int amount, t_list **ways, t_ants **ants)
-{
-	t_ants 		*a;
-	int 		min;
-	int 		id;
-
-	id = 1;
-	a = *ants;
-	while (a)
-	{
-		min = get_min_path(ants, ways);
-		a->path = min;
-		a->id = id++;
- 		a = a->next;
-	}
-
-}
-
-static void 	set_ants_on_path(t_ants *ants, t_list **ways)
-{
-	t_list		*tmp;
-
 	while (ants)
 	{
-		tmp = *ways;
-		while (ants->path)
-		{
-			tmp = tmp->next;
-			ants->path--;
-		}
-		ants->pos = tmp->content;
+		ants->id = i++;
+		j = find_min_value(cost, len);
+		ants->pos = get_i_path(ways, j);
+		ants->path = j;
+		cost[j] += ants_per_path(ants, j);
 		ants = ants->next;
 	}
 }
 
-t_ants			*spawn_ants(int amount, t_list **ways)
+static void 	dispatcher(t_list *ways, t_ants *ants)
+{
+	t_list		*w;
+	int 		*cost;
+	int 		len;
+	int 		i;
+
+	i = -1;
+	len = ft_lstlen(&ways);
+	cost = ft_new_array(len, 0);
+	w = ways;
+	while (++i < len)
+	{
+		cost[i] = path_len((t_path *)w->content) - 1;
+		w = w->next;
+	}
+	linkage(ants, ways, cost, len);
+	free(cost);
+}
+
+t_ants			*spawn_ants(int amount, t_list *ways)
 {
 	int			i;
-	int			tmp;
-	t_ants		*node;
+	int			a;
+	t_ants		*tmp;
 	t_ants		*ants;
 
 	ants = NULL;
-	i = 1;
-	tmp = amount;
-	while (tmp--)
+	a = amount;
+	while (a--)
 	{
-		node = ant_init(0);
-		ants_push_back(&ants, node);
-		i++;
+		tmp = ant_init();
+		ants_push_back(&ants, tmp);
 	}
-//	ants_print(&ants);
-	if (is_super_way(ways))
-		set_super_flag(&ants);
-	else
-		dispatcher(amount, ways, &ants);
-	set_ants_on_path(ants, ways);
+	if (path_len(ways->content) != 2)
+	{
+		dispatcher(ways, ants);
+		return (ants);
+	}
+	linkage(ants, ways, NULL, 0);
 	return (ants);
 }
