@@ -98,6 +98,7 @@ void			vertex_print(t_vertex *ver)
 		}
 		else
 			ft_printf("%s ", ver->name);
+		ft_printf(" m: %d ", ver->mark);
 		ft_printf("\n");
 		ver = ver->next;
 	}

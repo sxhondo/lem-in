@@ -10,8 +10,8 @@ LIB_DIR = libft/
 LIB_FT = $(LIB_DIR)libft.a
 
 SRCS_DIR = srcs/
-SRCS_LIST= 	alg_bfs.c alg_mover.c alg_route_mgmt.c\
-			alg_solver.c alg_tools.c structs_tools.c exclude_route.c\
+SRCS_LIST= 	alg_bfs.c alg_mover.c alg_solver.c collect_turns.c exclude_route.c \
+			alg_tools.c structs_tools.c \
 			ants_dispatcher.c ants_struct.c\
 			edge_struct.c path_struct.c vertex_struct.c free_structs.c\
 			validator_tools.c vec_info_structs.c\

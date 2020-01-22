@@ -77,19 +77,15 @@ static int			update(t_ants **ants, int id, t_vec *turns)
 			{
 				a->pos = a->pos->next_p;
 				push_turns(&turns, ft_itoa(a->id), a->pos->curr_v->name);
-//				ft_printf("%d - %s ", a->id, a->pos->curr_v->name);
 			}
 			else if (no_one_next(ants, a->pos->next_p->curr_v->name))
 			{
 				a->pos = a->pos->next_p;
 				push_turns(&turns, ft_itoa(a->id), a->pos->curr_v->name);
-//				ft_printf("%d - %s ", a->id, a->pos->curr_v->name);
 			}
-//			push_turns(&turns, ft_itoa(a->id), a->pos->curr_v->name);
 		}
 		a = a->next;
 	}
-//	ft_printf("\n");
 	ft_vec_add(&turns, &n);
 	return (id);
 }
@@ -109,21 +105,9 @@ void				mover(t_ants *ants, unsigned flag)
 		ft_vec_del(&turns);
 		put_error("cannot allocate memory", 0);
 	}
-
 	if (!(flag & NO_OUT))
 		write(1, turns->data, turns->total);
 	if (flag & NL)
-	{
-		char *str = turns->data;
-		int i = 0;
-		int c = 0;
-		while (i < turns->total)
-		{
-			if (str[i] == '\n')
-				c++;
-			i++;
-		}
-		ft_printf("\nNL: %d\n", c);
-	}
+		count_print_nl(turns);
 	ft_vec_del(&turns);
 }

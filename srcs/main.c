@@ -31,6 +31,10 @@ static void			free_structs(t_structs *structs)
 {
 	if (structs->ver)
 		vertex_free((t_vertex **)&structs->ver);
+	if (structs->cv)
+		vertex_free((t_vertex **)&structs->cv);
+	if (structs->ce)
+		edge_free((t_edge **)&structs->ce);
 	if (structs->edge)
 		edge_free((t_edge **)&structs->edge);
 	if (structs->ways)
@@ -50,7 +54,6 @@ int					main(int ac, char **av)
 	reader(structs, flag, av[ac - 1]);
 	parse_lists(structs);
 	structs->ways =	solver(structs);
-	ways_print(&structs->ways);
 	structs->ants = spawn_ants(structs->ants_amount, structs->ways);
 	mover(structs->ants, flag);
 	if (flag & DEBUG)

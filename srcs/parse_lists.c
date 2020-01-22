@@ -62,11 +62,8 @@ static void		check_non_existing_vertex(t_vertex **ver, t_edge **edge)
 	}
 }
 
-static void		link_edges_to_vertex(t_vertex **ver, t_edge **edge)
+static void		link_edges_to_vertex(t_vertex **ver, t_edge *e)
 {
-	t_edge		*e;
-
-	e = *edge;
 	while (e)
 	{
 		e->v1 = find_ver_by_name(ver, e->tmp_name1);
@@ -99,12 +96,12 @@ static t_vertex		*copy_ver(t_vertex *ver)
 	return (d);
 }
 
-
 static t_edge 		*copy_edge(t_edge *edge)
 {
-	t_edge			*d = NULL;
+	t_edge			*d;
 	t_edge			*n;
 
+	d = NULL;
 	while (edge)
 	{
 		if (!(n = ft_memalloc(sizeof(t_edge))))
@@ -131,12 +128,10 @@ void			parse_lists(t_structs *structs)
 	check_duplicate_vertex((t_vertex **)&structs->ver);
 	check_non_existing_vertex((t_vertex **)&structs->ver,
 			(t_edge **)&structs->edge);
-	link_edges_to_vertex((t_vertex **)&structs->ver,
-			(t_edge **)&structs->edge);
+	link_edges_to_vertex((t_vertex **)&structs->ver, structs->edge);
 	structs->cv = copy_ver(structs->ver);
 	structs->ce = copy_edge(structs->edge);
-	link_edges_to_vertex((t_vertex **)&structs->cv,
-						 (t_edge **)&structs->ce);
+	link_edges_to_vertex((t_vertex **)&structs->cv, structs->ce);
 	update_indexes(structs->ver);
 	update_indexes(structs->cv);
 	structs->a_set = NULL;

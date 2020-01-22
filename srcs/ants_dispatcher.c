@@ -32,16 +32,7 @@ static int 		find_min_value(const int *cost, int len)
 			return (i);
 		i++;
 	}
-}
-
-static t_path	*get_i_path(t_list *ways, int i)
-{
-	t_path		*tmp;
-
-	while (ways->next && i--)
-		ways = ways->next;
-	tmp = ways->content;
-	return (tmp);
+	return (i);
 }
 
 static void 	linkage(t_ants *ants, t_list *ways, int *cost, int len)
@@ -93,7 +84,6 @@ static void 	dispatcher(t_list *ways, t_ants *ants)
 
 t_ants			*spawn_ants(int amount, t_list *ways)
 {
-	int			i;
 	int			a;
 	t_ants		*tmp;
 	t_ants		*ants;

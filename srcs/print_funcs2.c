@@ -12,6 +12,24 @@
 
 #include "lem_in.h"
 
+void 			count_print_nl(t_vec *vec)
+{
+	char 		*str;
+	int 		i;
+	int 		c;
+
+	i = 0;
+	c = 0;
+	str = vec->data;
+	while (i < vec->total)
+	{
+		if (str[i] == '\n')
+			c++;
+		i++;
+	}
+	ft_printf("\nNL: %d\n", c);
+}
+
 void			print_all(t_structs *str)
 {
 	ft_printf("\n{cyan}ANTS: %14d\n{eoc}", str->ants_amount);

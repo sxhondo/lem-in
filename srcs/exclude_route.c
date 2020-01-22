@@ -1,5 +1,30 @@
 #include "lem_in.h"
 
+int 					cross_paths(t_path *fn, t_list **ways)
+{
+	t_list 				*l;
+	t_path 				*tmp;
+
+	while (fn)
+	{
+		l = *ways;
+		while (l)
+		{
+			tmp = l->content;
+			while (tmp)
+			{
+				if (ft_strequ(fn->curr_v->name, tmp->curr_v->name)
+					&& fn->curr_v->mod == 0)
+					return (1);
+				tmp = tmp->next_p;
+			}
+			l = l->next;
+		}
+		fn = fn->next_p;
+	}
+	return (0);
+}
+
 t_vertex			*find_marked(t_vertex *m, char *name, unsigned div)
 {
 	while (m)
@@ -11,74 +36,21 @@ t_vertex			*find_marked(t_vertex *m, char *name, unsigned div)
 	return (NULL);
 }
 
-static void 		delete_connections(t_edge **edge)
-{
-	t_edge			*e;
-	t_edge			*next;
-	t_edge			*del;
-
-	e = *edge;
-	while (e->next)
-	{
-		if (e->on == 0 || e->del == 1)
-		{
-			next = e->next;
-			*edge = next;
-			del = e;
-			free(del);
-			delete_connections(edge);
-		}
-		if (e->next->on == 0 || e->next->del == 1)
-		{
-			del = e->next;
-			next = e->next->next;
-			e->next = next;
-			free(del);
-			delete_connections(edge);
-		}
-		e = e->next;
-	}
-}
-
-static void 		delete_outdated_v(t_vertex *ver, int i)
-{
-	t_vertex		*v;
-	t_vertex		*next;
-	t_vertex		*del;
-
-	v = ver;
-	while (v->next)
-	{
-		if (v->next->mod & DIV)
-		{
-			del = v->next;
-			next = v->next->next;
-			v->next = next;
-			ft_strdel(&del->name);
-			free(del);
-		}
-		v = v->next;
-	}
-}
-
 void				re_route_edges(t_edge **edge, t_vertex *ver)
 {
 	t_edge			*e;
-	t_vertex		*tmp;
 
 	e = *edge;
 	while (e)
 	{
-		if (e->v2->mod == 0 && (e->v1->mod & DIV))
+		if (e->del == 0 && e->v2->mod == 0 && (e->v1->mod & DIV))
 			e->v1 = find_marked(ver, e->v1->name, OUT);
-		if (e->v1->mod == 0 && (e->v2->mod & DIV))
+		if (e->del == 0 && e->v1->mod == 0 && (e->v2->mod & DIV))
 			e->v2 = find_marked(ver, e->v2->name, IN);
-		if (e->v1->mod & DIV && e->v2->mod & DIV)
+		if (e->del == 0 && e->v1->mod & DIV && e->v2->mod & DIV)
 		{
-			if ((tmp = find_marked(ver, e->v1->name, IN)))
-				e->v1 = tmp;
-			if ((tmp = find_marked(ver, e->v2->name, OUT)))
-				e->v2 = tmp;
+			e->v1 = find_marked(ver, e->v1->name, IN);
+			e->v2 = find_marked(ver, e->v2->name, OUT);
 		}
 		e = e->next;
 	}
@@ -102,26 +74,36 @@ void				flip_divide(t_path **route, t_edge **edge, t_vertex **ver)
 		}
 		r = r->next_p;
 	}
-//	delete_connections(edge);
+	update_indexes(*ver);
 }
 
-void 				delete_inverse_edges(t_edge *a, t_edge *b, t_path *r)
+void 				put_paths_on_map(t_edge **edge, t_list *xset)
 {
-	t_edge			*tmp;
+	t_path			*tmp;
+	t_edge			*e;
+	t_edge			*rv;
 
-	while (r->next_p)
+	e = *edge;
+	while (e)
 	{
-		if ((tmp = find_edge(&b, r->curr_v->name, r->next_p->curr_v->name)))
-			tmp->del = 0;
-		r = r->next_p;
+		e->on = 0;
+		e = e->next;
 	}
-	while (a)
+	while (xset)
 	{
-		if (a->del == 1)
+		tmp = xset->content;
+		while (tmp->next_p)
 		{
-			tmp = find_edge(&b, a->v1->name, a->v2->name);
-			tmp->del = 1;
+			e = find_edge(edge, tmp->curr_v->name, tmp->next_p->curr_v->name);
+			e->on = 1;
+			rv = find_edge(edge, tmp->next_p->curr_v->name, tmp->curr_v->name);
+			if (rv->on)
+			{
+				e->del = 1;
+				rv->del = 1;
+			}
+			tmp = tmp->next_p;
 		}
-		a = a->next;
+		xset = xset->next;
 	}
 }

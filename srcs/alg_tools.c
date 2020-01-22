@@ -12,16 +12,31 @@
 
 #include "lem_in.h"
 
-int 			find_sf(t_vertex *ver, int sf)
+t_path			*get_i_path(t_list *ways, int i)
 {
+	t_path		*tmp;
 
+	while (ways->next && i--)
+		ways = ways->next;
+	tmp = ways->content;
+	return (tmp);
+}
+
+int 			*find_sd(t_vertex *ver)
+{
+	int 		*sf;
+
+	if (!(sf = ft_new_array(2, 0)))
+		put_error("cannot allocate memory", 0);
 	while (ver)
 	{
-		if (ver->mod == sf)
-			return (ver->i);
+		if (ver->mod == START)
+			sf[0] = ver->i;
+		if (ver->mod == END)
+			sf[1] = ver->i;
 		ver = ver->next;
 	}
-	return (-1);
+	return (sf);
 }
 
 t_vertex					*find_ver_by_name(t_vertex **ver, char *name)
@@ -49,22 +64,19 @@ t_vertex				*find_ver_by_index(t_vertex *ver, int i)
 	return (NULL);
 }
 
-t_path				*trace_route(t_vertex **ver, int *trace)
+t_path				*trace_route(t_vertex **ver, int *trace, int s, int f)
 {
 	t_path			*route;
 	t_path			*n;
 	t_vertex		*v1;
-	int 			s, f;
 
-	s = find_sf(*ver, START);
-	f = find_sf(*ver, END);
 	route = NULL;
 	if (trace[f] == -1)
 	{
 		free(trace);
 		return (NULL);
 	}
-	while (f > 0)
+	while (f != s)
 	{
 		v1 = find_ver_by_index(*ver, f);
 		n = path_init(v1);
