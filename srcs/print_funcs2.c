@@ -12,11 +12,11 @@
 
 #include "lem_in.h"
 
-void 			count_print_nl(t_vec *vec)
+void			count_print_nl(t_vec *vec)
 {
-	char 		*str;
-	int 		i;
-	int 		c;
+	char		*str;
+	unsigned	i;
+	int			c;
 
 	i = 0;
 	c = 0;
@@ -50,22 +50,6 @@ void			ways_print(t_list **ways)
 		ft_printf("(%d)", path_len((t_path *)w->content));
 		ft_printf("\n");
 		w = w->next;
-	}
-	ft_printf("\n");
-}
-
-void			print_arr(int *cst, int len)
-{
-	int			i;
-
-	i = 0;
-	while (i < len)
-	{
-		if (cst[i] == INT32_MAX)
-			ft_printf("-");
-		else
-			ft_printf("%d ", cst[i]);
-		i++;
 	}
 	ft_printf("\n");
 }

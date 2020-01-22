@@ -12,10 +12,10 @@
 
 #include "lem_in.h"
 
-int 				compare_sets(t_structs *s)
+int					compare_sets(t_structs *s)
 {
-	int 			cf_a;
-	int 			cf_b;
+	int				cf_a;
+	int				cf_b;
 
 	if (s->a_set == NULL || s->b_set == NULL)
 		return (1);
@@ -30,7 +30,7 @@ int 				compare_sets(t_structs *s)
 	return (1);
 }
 
-static t_list 		*handle_small_graph(t_edge **edge, t_vertex **ver, int *sf)
+static t_list		*handle_small_graph(t_edge **edge, t_vertex **ver, int *sf)
 {
 	t_path			*r;
 	t_list			*ret;
@@ -38,6 +38,8 @@ static t_list 		*handle_small_graph(t_edge **edge, t_vertex **ver, int *sf)
 	ret = NULL;
 	if (!(r = breadth_first_search(edge, ver, sf[0], sf[1])))
 		put_error("no possible solution", 0);
+	if (path_len(r) == 2)
+		free(sf);
 	add_path_to_lst(&ret, r);
 	return (ret);
 }
@@ -51,10 +53,37 @@ static t_path		*suurballe(t_edge *edge, t_vertex *ver, int *sf)
 	return (route);
 }
 
+static t_list		*correct_free(t_structs *s, int *sf)
+{
+	t_list			*tmp;
+
+	free_list(&s->x_set);
+	if (s->a_set == NULL && s->b_set == NULL)
+	{
+		tmp = handle_small_graph(&s->edge, &s->ver, sf);
+		free(sf);
+		return (tmp);
+	}
+	free(sf);
+	if (s->a_set != NULL && s->a_set == s->b_set)
+		return (s->a_set);
+	if (s->a_set)
+	{
+		free_list(&s->b_set);
+		return (s->a_set);
+	}
+	if (s->b_set)
+	{
+		free_list(&s->a_set);
+		return (s->b_set);
+	}
+	return (NULL);
+}
+
 t_list				*solver(t_structs *s)
 {
 	t_path			*route;
-	int 			*sf;
+	int				*sf;
 
 	sf = find_sd(s->ver);
 	s->x_set = handle_small_graph(&s->ce, &s->cv, sf);
@@ -72,8 +101,5 @@ t_list				*solver(t_structs *s)
 		add_path_to_lst(&s->x_set, route);
 		s->b_set = collect_turns(s->edge, s->ver, s->x_set, sf);
 	}
-	free(sf);
-	if (s->a_set == NULL && s->b_set == NULL)
-		s->a_set = s->x_set;
-	return (s->a_set ? s->a_set : s->b_set);
+	return (correct_free(s, sf));
 }

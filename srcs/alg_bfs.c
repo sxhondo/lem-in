@@ -5,17 +5,26 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: sxhondo <w13cho@gmail.com>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/12/26 12:42:42 by sxhondo           #+#    #+#             */
-/*   Updated: 2019/12/26 12:42:43 by sxhondo          ###   ########.fr       */
+/*   Created: 2020/01/22 21:14:52 by sxhondo           #+#    #+#             */
+/*   Updated: 2020/01/22 21:14:53 by sxhondo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lem_in.h"
 
-static void			explore_neighbours(t_edge *e, t_list **que, int *inq,
-														int *trace, int v)
+static t_arrays		*init_arrays(t_arrays *arr)
 {
-	int 			to;
+	if (!(arr->inq = ft_new_array(arr->len, 0)))
+		put_error("cannot allocate memory", 0);
+	if (!(arr->trace = ft_new_array(arr->len, -1)))
+		put_error("cannot allocate memory", 0);
+	return (arr);
+}
+
+static void			explore_neighbours(t_edge *e, t_list **que,
+														t_arrays *arr, int v)
+{
+	int				to;
 	t_list			*n;
 
 	while (e)
@@ -23,13 +32,13 @@ static void			explore_neighbours(t_edge *e, t_list **que, int *inq,
 		if (e->v1->i == v && e->on == 1 && e->del == 0)
 		{
 			to = e->v2->i;
-			if (inq[to] == 0)
+			if (arr->inq[to] == 0)
 			{
 				if (!(n = ft_lstnew(&to, sizeof(int))))
 					put_error("cannot allocate memory", 0);
 				ft_lstpushback(que, n);
-				inq[to] = 1;
-				trace[to] = v;
+				arr->inq[to] = 1;
+				arr->trace[to] = v;
 			}
 		}
 		e = e->next;
@@ -39,26 +48,27 @@ static void			explore_neighbours(t_edge *e, t_list **que, int *inq,
 t_path				*breadth_first_search(t_edge **edge, t_vertex **ver,
 																int s, int f)
 {
+	t_arrays		*arr;
 	t_list			*queue;
 	t_list			*n;
-	int				*trace;
-	int				*inq;
-	int 			len;
-	int 			v;
+	int				v;
+	int				*tmp_trace;
 
 	queue = NULL;
-	len = vertex_len(ver);
-	inq = ft_new_array(len, 0);
-	inq[s] = 1;
-	trace = ft_new_array(len, -1);
+	if (!(arr = ft_memalloc(sizeof(t_arrays))))
+		put_error("cannot allocate memory", 0);
+	arr->len = vertex_len(ver);
+	init_arrays(arr);
 	if (!(n = ft_lstnew(&s, sizeof(int))))
 		put_error("cannot allocate memory", 0);
 	ft_lstpushback(&queue, n);
 	while (queue)
 	{
 		v = pop_lst(&queue);
-		explore_neighbours(*edge, &queue, inq, trace, v);
+		explore_neighbours(*edge, &queue, arr, v);
 	}
-	free(inq);
-	return (trace_route(ver, trace, s, f));
+	tmp_trace = arr->trace;
+	free(arr->inq);
+	free(arr);
+	return (trace_route(ver, tmp_trace, s, f));
 }

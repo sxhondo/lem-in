@@ -53,7 +53,7 @@ int					main(int ac, char **av)
 	structs = init_structs();
 	reader(structs, flag, av[ac - 1]);
 	parse_lists(structs);
-	structs->ways =	solver(structs);
+	structs->ways = solver(structs);
 	structs->ants = spawn_ants(structs->ants_amount, structs->ways);
 	mover(structs->ants, flag);
 	if (flag & DEBUG)

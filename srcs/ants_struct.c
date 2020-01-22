@@ -28,7 +28,7 @@ void			ants_push_back(t_ants **dst, t_ants *ant)
 	}
 }
 
-t_ants			*ant_init()
+t_ants			*ant_init(void)
 {
 	t_ants		*tmp;
 
@@ -41,9 +41,9 @@ t_ants			*ant_init()
 	return (tmp);
 }
 
-int 			ants_per_path(t_ants *ants, int path)
+int				ants_per_path(t_ants *ants, int path)
 {
-	int 		count;
+	int			count;
 
 	count = 0;
 	while (ants)
@@ -52,5 +52,5 @@ int 			ants_per_path(t_ants *ants, int path)
 			count++;
 		ants = ants->next;
 	}
-	return(count);
+	return (count);
 }

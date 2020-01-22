@@ -35,8 +35,6 @@ typedef struct			s_ants
 	int					path;
 	struct s_ants		*next;
 	struct s_path		*pos;
-	int					indx;
-	int					super_way;
 }						t_ants;
 
 typedef struct			s_vertex
@@ -45,8 +43,17 @@ typedef struct			s_vertex
 	unsigned			mod;
 	struct s_vertex		*next;
 	int					i;
-	int 				mark;
+	int					mark;
+	int					x;
+	int					y;
 }						t_vertex;
+
+typedef struct			s_arrays
+{
+	int					*trace;
+	int					*inq;
+	int					len;
+}						t_arrays;
 
 typedef struct			s_edge
 {
@@ -54,9 +61,9 @@ typedef struct			s_edge
 	char				*tmp_name2;
 	t_vertex			*v1;
 	t_vertex			*v2;
-	int 				on;
+	int					on;
 	unsigned			del;
-	int 				cost;
+	int					cost;
 	struct s_edge		*next;
 }						t_edge;
 
@@ -92,20 +99,15 @@ typedef struct			s_structs
 	t_ants				*ants;
 }						t_structs;
 
-
-void 					put_paths_on_map(t_edge **edge, t_list *set);
-void 					delete_inverse_edges(t_edge **e);
+void					put_paths_on_map(t_edge **edge, t_list *set);
 void					re_route_edges(t_edge **edge, t_vertex *ver);
-void					flip_divide(t_path **route, t_edge **edge, t_vertex **ver);
+void					flip_divide(t_path **r, t_edge **e, t_vertex **v);
 void					reader(t_structs *structs, unsigned flags, char *path);
 int						vertex_len(t_vertex **ver);
 void					vertex_add(t_structs *s, t_info *inf, int x, int y);
-int						get_i_by_name(t_vertex **ver, char *name);
 t_vertex				*find_ver_by_name(t_vertex **ver, char *name);
 t_vertex				*find_ver_by_index(t_vertex *ver, int i);
 void					vertex_free(t_vertex **ver);
-void 					vertex_insert(t_vertex **ver, t_vertex *elem);
-//void					flip_route(t_path **route, t_edge **edge);
 t_edge					*find_edge(t_edge **edge, char *v1, char *v2);
 void					edge_add(t_structs *structs, t_info *inf);
 t_vec					*vec_read(int fd);
@@ -115,6 +117,7 @@ int						cut_after_symbol(const char *src, char **dst, char sym);
 int						lem_atoi(const char *str, int *num, int pos, int lc);
 int						skip_spaces(const char *str);
 unsigned				parse_arguments(int ac, char **arg);
+void					turn_edges_off(t_edge *e);
 int						parse_room_name(const char *line, char **name, int lc);
 int						only_digits(const char *str);
 unsigned				check_few_rooms(unsigned flag, unsigned mod, int lc);
@@ -122,14 +125,11 @@ void					check_no_room_given(unsigned flag, int lc);
 int						check_ants_num(const char *line, int lc);
 int						mini_atoi(const char *str);
 void					parse_lists(t_structs *structs);
-void					put_to_begin(t_vertex **ver);
-void					put_to_end(t_vertex **ver);
 void					put_error(char *err, int lc);
+void					link_edges_to_vertex(t_vertex **ver, t_edge *e);
 void					edge_print(t_edge *e);
 void					vertex_print(t_vertex *ver);
 void					ants_print(t_ants **ants);
-void					print_arr(int *cst, int len);
-void					print_void_ver(void **ver, int len);
 void					path_print(t_path **path, char mode);
 void					ways_print(t_list **ways);
 void					print_all(t_structs *str);
@@ -138,16 +138,16 @@ t_path					*path_init(t_vertex *curr);
 void					path_push_back(t_path **dst, t_path *elem);
 void					path_push(t_path **dst, t_path *elem);
 int						path_len(t_path *dst);
-int 					compare_sets(t_structs *s);
-int 					calculate_actions(t_list *set, int amount);
-t_list 					*collect_turns(t_edge *edge, t_vertex *ver, t_list *xset,
-									 int *sf);
+int						compare_sets(t_structs *s);
+int						calculate_actions(t_list *set, int amount);
+t_list					*collect_turns(t_edge *edge, t_vertex *v, t_list *xset,
+						int *sf);
 t_path					*get_i_path(t_list *ways, int i);
 t_path					*get_i_path_node(t_path **path, int value);
 void					vertex_push_back(t_vertex **dst, t_vertex *elem);
 void					vertex_push(t_vertex **dst, t_vertex *elem);
 void					path_push_init(t_path **d, t_vertex *v1, t_vertex *v2);
-void 					update_indexes(t_vertex *ver);
+void					update_indexes(t_vertex *ver);
 t_edge					*edge_init(char *e1, char *e2);
 void					edge_push_back(t_edge **dst, t_edge *elem);
 void					path_free(t_path **s);
@@ -157,20 +157,10 @@ t_vertex				*vertex_duplic(t_vertex **ver, t_vertex *v);
 void					vertex_new(t_vertex **ver, char *name, unsigned div);
 int						get_index_of_ver(void **vp, t_vertex *v, int len);
 void					add_path_to_lst(t_list **lst, t_path *path);
-void					**convert_ver_to_ptrs(t_vertex **ver, t_edge **edge, int len);
-//t_list					*solver(int ants, t_edge **edge, t_vertex **ver);
 t_list					*solver(t_structs *s);
-t_path					*get_cheapest_path(t_edge **edge, void **ver, int len);
-t_list 					*update_graph(t_edge **edge, t_vertex **ver, t_path *route);
-//t_path 					*spf(t_edge **edge, void **vp, int len);
-//t_path					*breadth_first_search(t_edge **edge, void **ver, int l);
-//t_path					*breadth_first_search(t_edge **edge, t_vertex **ver, int l);
-t_path					*breadth_first_search(t_edge **edge, t_vertex **ver, int s, int f);
-t_path					*spf_algorithm(t_edge **edge, t_vertex **ver, int s, int f);
-//void					put_paths_on_map(t_edge **edge, t_list **ways);
-void					put_path_on_map(t_edge **edge, t_path *route);
+t_path					*breadth_first_search(t_edge **edge, t_vertex **ver,
+				int s, int f);
 t_path					*trace_route(t_vertex **ver, int *trace, int s, int f);
-void					swap_ver(t_vertex **v1, t_vertex **v2);
 void					mover(t_ants *ants, unsigned flag);
 t_ants					*spawn_ants(int amount, t_list *ways);
 t_list					*get_i_paths(t_list **paths, int value);
@@ -183,7 +173,7 @@ t_list					*add_shortest_paths(t_list **ways, t_edge **e,
 void					free_list(t_list **tab);
 void					set_indexes_of_ver(t_edge **edge, void **ver, int len);
 void					vertex_dupl(t_vertex **ver, char *name, unsigned div);
-int 					*find_sd(t_vertex *ver);
-void 					count_print_nl(t_vec *vec);
+int						*find_sd(t_vertex *ver);
+void					count_print_nl(t_vec *vec);
 
 #endif

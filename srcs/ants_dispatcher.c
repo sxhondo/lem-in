@@ -12,10 +12,10 @@
 
 #include "lem_in.h"
 
-static int 		find_min_value(const int *cost, int len)
+static int		find_min_value(const int *cost, int len)
 {
-	int 		i;
-	int 		j;
+	int			i;
+	int			j;
 
 	i = 0;
 	while (i < len)
@@ -35,9 +35,10 @@ static int 		find_min_value(const int *cost, int len)
 	return (i);
 }
 
-static void 	linkage(t_ants *ants, t_list *ways, int *cost, int len)
+static void		linkage(t_ants *ants, t_list *ways, int *cost, int len)
 {
-	int 		i, j;
+	int			i;
+	int			j;
 
 	i = 1;
 	if (len == 0)
@@ -62,12 +63,12 @@ static void 	linkage(t_ants *ants, t_list *ways, int *cost, int len)
 	}
 }
 
-static void 	dispatcher(t_list *ways, t_ants *ants)
+static void		dispatcher(t_list *ways, t_ants *ants)
 {
 	t_list		*w;
-	int 		*cost;
-	int 		len;
-	int 		i;
+	int			*cost;
+	int			len;
+	int			i;
 
 	i = -1;
 	len = ft_lstlen(&ways);

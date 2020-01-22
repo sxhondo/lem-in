@@ -1,9 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   exclude_route.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sxhondo <w13cho@gmail.com>                 +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/01/22 21:47:06 by sxhondo           #+#    #+#             */
+/*   Updated: 2020/01/22 21:47:07 by sxhondo          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "lem_in.h"
 
-int 					cross_paths(t_path *fn, t_list **ways)
+int					cross_paths(t_path *fn, t_list **ways)
 {
-	t_list 				*l;
-	t_path 				*tmp;
+	t_list			*l;
+	t_path			*tmp;
 
 	while (fn)
 	{
@@ -77,18 +89,14 @@ void				flip_divide(t_path **route, t_edge **edge, t_vertex **ver)
 	update_indexes(*ver);
 }
 
-void 				put_paths_on_map(t_edge **edge, t_list *xset)
+void				put_paths_on_map(t_edge **edge, t_list *xset)
 {
 	t_path			*tmp;
 	t_edge			*e;
 	t_edge			*rv;
 
+	turn_edges_off(*edge);
 	e = *edge;
-	while (e)
-	{
-		e->on = 0;
-		e = e->next;
-	}
 	while (xset)
 	{
 		tmp = xset->content;

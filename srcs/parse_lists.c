@@ -12,11 +12,11 @@
 
 #include "lem_in.h"
 
-static void		check_duplicate_vertex(t_vertex **ver)
+static void				check_duplicate_vertex(t_vertex **ver)
 {
-	t_vertex	*i;
-	t_vertex	*j;
-	int			err;
+	t_vertex			*i;
+	t_vertex			*j;
+	int					err;
 
 	i = *ver;
 	while (i)
@@ -35,12 +35,12 @@ static void		check_duplicate_vertex(t_vertex **ver)
 	}
 }
 
-static void		check_non_existing_vertex(t_vertex **ver, t_edge **edge)
+static void				check_non_exst_ver(t_vertex **ver, t_edge **edge)
 {
-	t_vertex	*v;
-	t_edge		*e;
-	int			i;
-	int			j;
+	t_vertex			*v;
+	t_edge				*e;
+	int					i;
+	int					j;
 
 	e = *edge;
 	while (e)
@@ -62,23 +62,12 @@ static void		check_non_existing_vertex(t_vertex **ver, t_edge **edge)
 	}
 }
 
-static void		link_edges_to_vertex(t_vertex **ver, t_edge *e)
+static t_vertex			*copy_ver(t_vertex *ver)
 {
-	while (e)
-	{
-		e->v1 = find_ver_by_name(ver, e->tmp_name1);
-		e->v2 = find_ver_by_name(ver, e->tmp_name2);
-		ft_strdel(&e->tmp_name1);
-		ft_strdel(&e->tmp_name2);
-		e = e->next;
-	}
-}
+	t_vertex			*d;
+	t_vertex			*v;
 
-static t_vertex		*copy_ver(t_vertex *ver)
-{
-	t_vertex		*d = NULL;
-	t_vertex		*v;
-
+	d = NULL;
 	while (ver)
 	{
 		if (!(v = ft_memalloc(sizeof(t_vertex))))
@@ -96,10 +85,10 @@ static t_vertex		*copy_ver(t_vertex *ver)
 	return (d);
 }
 
-static t_edge 		*copy_edge(t_edge *edge)
+static t_edge			*copy_edge(t_edge *edge)
 {
-	t_edge			*d;
-	t_edge			*n;
+	t_edge				*d;
+	t_edge				*n;
 
 	d = NULL;
 	while (edge)
@@ -121,13 +110,12 @@ static t_edge 		*copy_edge(t_edge *edge)
 	return (d);
 }
 
-void			parse_lists(t_structs *structs)
+void					parse_lists(t_structs *structs)
 {
 	if (!structs->edge)
 		put_error("no links given", 0);
 	check_duplicate_vertex((t_vertex **)&structs->ver);
-	check_non_existing_vertex((t_vertex **)&structs->ver,
-			(t_edge **)&structs->edge);
+	check_non_exst_ver((t_vertex **)&structs->ver, (t_edge **)&structs->edge);
 	link_edges_to_vertex((t_vertex **)&structs->ver, structs->edge);
 	structs->cv = copy_ver(structs->ver);
 	structs->ce = copy_edge(structs->edge);

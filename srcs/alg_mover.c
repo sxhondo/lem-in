@@ -40,12 +40,12 @@ static int			no_one_next(t_ants **ants, char *next)
 	return (1);
 }
 
-static void 		push_turns(t_vec **turns, char *id, char *name)
+static void			push_turns(t_vec **turns, char *id, char *name)
 {
-	char 			l;
-	char 			d;
-	char 			sp;
-	int 			i;
+	char			l;
+	char			d;
+	char			sp;
+	int				i;
 
 	l = 'L';
 	d = '-';
@@ -64,8 +64,8 @@ static void 		push_turns(t_vec **turns, char *id, char *name)
 
 static int			update(t_ants **ants, int id, t_vec *turns)
 {
-	t_ants 			*a;
-	char 			n;
+	t_ants			*a;
+	char			n;
 
 	n = '\n';
 	a = *ants;

@@ -1,9 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   collect_turns.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sxhondo <w13cho@gmail.com>                 +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/01/22 21:44:00 by sxhondo           #+#    #+#             */
+/*   Updated: 2020/01/22 21:44:00 by sxhondo          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "lem_in.h"
 
-static int 			total_actions(t_list *set)
+static int			total_actions(t_list *set)
 {
 	t_path			*r;
-	int 			tmp;
+	int				tmp;
 
 	tmp = 0;
 	while (set)
@@ -15,10 +27,10 @@ static int 			total_actions(t_list *set)
 	return (tmp);
 }
 
-int 				calculate_actions(t_list *set, int amount)
+int					calculate_actions(t_list *set, int amount)
 {
-	int 			tmp;
-	int 			len;
+	int				tmp;
+	int				len;
 
 	len = ft_lstlen(&set);
 	tmp = total_actions(set);
@@ -32,7 +44,7 @@ int 				calculate_actions(t_list *set, int amount)
 	return (tmp);
 }
 
-static void 		turn_off(t_edge **edge, t_path *r)
+static void			turn_off(t_edge **edge, t_path *r)
 {
 	t_edge			*e;
 
@@ -44,11 +56,11 @@ static void 		turn_off(t_edge **edge, t_path *r)
 	}
 }
 
-t_list 				*collect_turns(t_edge *edge, t_vertex *ver, t_list *xset,
+t_list				*collect_turns(t_edge *edge, t_vertex *ver, t_list *xset,
 									int *sf)
 {
 	t_path			*route;
-	t_list 			*bset;
+	t_list			*bset;
 
 	bset = NULL;
 	put_paths_on_map(&edge, xset);

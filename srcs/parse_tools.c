@@ -87,14 +87,6 @@ unsigned				parse_arguments(int ac, char **arg)
 			flag |= NO_OUT;
 		if (ft_strequ(arg[i], "-nl"))
 			flag |= NL;
-//		else
-//		{
-//			ft_printf("usage: ./lem-in [options] < [map]\n");
-//			ft_printf("options:\n-c -- colorise output\n-d -- debug mode\n"
-//			"-o [map] -- open from a file\n-nofile -- do not print file\n"
-//			"-noout -- do not print output\n");
-//			exit (0);
-//		}
 		i++;
 	}
 	return (flag);

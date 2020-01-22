@@ -26,8 +26,6 @@ static unsigned			get_command(const char *line, t_info *inf)
 				return (START);
 			else if (ft_strequ(line, "end"))
 				return (END);
-			else
-				put_error("unkown modifier", inf->lc);
 		}
 	}
 	return (inf->mod);
@@ -64,7 +62,7 @@ static void				proceed_rooms(t_structs *structs, t_info *inf,
 }
 
 static void				validator(t_structs *structs, t_info *inf,
-		const char *line)
+															const char *line)
 {
 	line += skip_spaces(line);
 	if (*line == '#')
@@ -92,6 +90,19 @@ static void				validator(t_structs *structs, t_info *inf,
 	}
 }
 
+static void				additional_check(t_vec *file, unsigned flag)
+{
+	char				*str;
+
+	str = file->data;
+	if (!(flag & NO_FILE))
+	{
+		write(1, file->data, file->total - 1);
+		str[file->total - 2] != '\n' ? write(1, "\n\n", 2) : write(1, "\n", 1);
+	}
+	ft_vec_del(&file);
+}
+
 void					reader(t_structs *structs, unsigned flags, char *path)
 {
 	t_info				*inf;
@@ -115,11 +126,6 @@ void					reader(t_structs *structs, unsigned flags, char *path)
 		ft_strdel(&inf->name);
 	}
 	check_no_room_given(inf->flag, inf->lc);
-	if (!(flags & NO_FILE))
-	{
-		write(1, vec->data, vec->total - 1);
-		write(1, "\n", 1);
-	}
-	ft_vec_del(&vec);
+	additional_check(vec, flags);
 	free(inf);
 }
