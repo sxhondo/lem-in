@@ -24,6 +24,7 @@ void				ants_free(t_ants **s)
 		free(a);
 		a = next;
 	}
+	*s = NULL;
 }
 
 void				edge_free(t_edge **edge)
@@ -38,6 +39,7 @@ void				edge_free(t_edge **edge)
 		free(p);
 		p = next;
 	}
+	*edge = NULL;
 }
 
 void				path_free(t_path **s)
@@ -52,6 +54,7 @@ void				path_free(t_path **s)
 		free(p);
 		p = next;
 	}
+	*s = NULL;
 }
 
 void				free_list(t_list **tab)
@@ -85,4 +88,5 @@ void				vertex_free(t_vertex **ver)
 		free(p);
 		p = next;
 	}
+	*ver = NULL;
 }

@@ -88,30 +88,3 @@ void				flip_divide(t_path **route, t_edge **edge, t_vertex **ver)
 	}
 	update_indexes(*ver);
 }
-
-void				put_paths_on_map(t_edge **edge, t_list *xset)
-{
-	t_path			*tmp;
-	t_edge			*e;
-	t_edge			*rv;
-
-	turn_edges_off(*edge);
-	e = *edge;
-	while (xset)
-	{
-		tmp = xset->content;
-		while (tmp->next_p)
-		{
-			e = find_edge(edge, tmp->curr_v->name, tmp->next_p->curr_v->name);
-			e->on = 1;
-			rv = find_edge(edge, tmp->next_p->curr_v->name, tmp->curr_v->name);
-			if (rv->on)
-			{
-				e->del = 1;
-				rv->del = 1;
-			}
-			tmp = tmp->next_p;
-		}
-		xset = xset->next;
-	}
-}

@@ -43,7 +43,7 @@ typedef struct			s_vertex
 	unsigned			mod;
 	struct s_vertex		*next;
 	int					i;
-	int					mark;
+	int					on;
 	int					x;
 	int					y;
 }						t_vertex;
@@ -99,7 +99,6 @@ typedef struct			s_structs
 	t_ants				*ants;
 }						t_structs;
 
-void					put_paths_on_map(t_edge **edge, t_list *set);
 void					re_route_edges(t_edge **edge, t_vertex *ver);
 void					flip_divide(t_path **r, t_edge **e, t_vertex **v);
 void					reader(t_structs *structs, unsigned flags, char *path);

@@ -12,24 +12,6 @@
 
 #include "lem_in.h"
 
-int					compare_sets(t_structs *s)
-{
-	int				cf_a;
-	int				cf_b;
-
-	if (s->a_set == NULL || s->b_set == NULL)
-		return (1);
-	cf_a = calculate_actions(s->a_set, s->ants_amount);
-	cf_b = calculate_actions(s->b_set, s->ants_amount);
-	if (cf_b > cf_a)
-	{
-		free_list(&s->b_set);
-		return (0);
-	}
-	free_list(&s->a_set);
-	return (1);
-}
-
 static t_list		*handle_small_graph(t_edge **edge, t_vertex **ver, int *sf)
 {
 	t_path			*r;
@@ -42,15 +24,6 @@ static t_list		*handle_small_graph(t_edge **edge, t_vertex **ver, int *sf)
 		free(sf);
 	add_path_to_lst(&ret, r);
 	return (ret);
-}
-
-static t_path		*suurballe(t_edge *edge, t_vertex *ver, int *sf)
-{
-	t_path			*route;
-
-	if (!(route = breadth_first_search(&edge, &ver, sf[0], sf[1])))
-		return (NULL);
-	return (route);
 }
 
 static t_list		*correct_free(t_structs *s, int *sf)
@@ -80,6 +53,33 @@ static t_list		*correct_free(t_structs *s, int *sf)
 	return (NULL);
 }
 
+int					compare_sets(t_structs *s)
+{
+	int				cf_a;
+	int				cf_b;
+
+	if (s->a_set == NULL || s->b_set == NULL)
+		return (1);
+	cf_a = calculate_actions(s->a_set, s->ants_amount);
+	cf_b = calculate_actions(s->b_set, s->ants_amount);
+	if (cf_b > cf_a)
+	{
+		free_list(&s->b_set);
+		return (0);
+	}
+	free_list(&s->a_set);
+	return (1);
+}
+
+static t_path		*suurballe(t_edge *edge, t_vertex *ver, int *sf)
+{
+	t_path			*route;
+
+	if (!(route = breadth_first_search(&edge, &ver, sf[0], sf[1])))
+		return (NULL);
+	return (route);
+}
+
 t_list				*solver(t_structs *s)
 {
 	t_path			*route;
@@ -87,7 +87,7 @@ t_list				*solver(t_structs *s)
 
 	sf = find_sd(s->ver);
 	s->x_set = handle_small_graph(&s->ce, &s->cv, sf);
-	if (path_len((t_path *)s->x_set->content) == 2)
+	if (path_len((t_path *)s->x_set->content) == 2 || s->ants_amount == 1)
 		return (s->x_set);
 	flip_divide((t_path **)&s->x_set->content, &s->ce, &s->cv);
 	re_route_edges(&s->ce, s->cv);

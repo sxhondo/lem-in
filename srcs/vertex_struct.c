@@ -59,7 +59,7 @@ void				vertex_add(t_structs *structs, t_info *inf, int x, int y)
 	}
 	elem->x = x;
 	elem->y = y;
-	elem->mark = 0;
+	elem->on = 0;
 	elem->mod = inf->mod;
 	vertex_push_back((t_vertex **)&structs->ver, elem);
 }
@@ -78,7 +78,7 @@ void				vertex_dupl(t_vertex **ver, char *name, unsigned div)
 		put_error("cannot allocate memory", 0);
 		return ;
 	}
-	elem->mark = 0;
+	elem->on = 0;
 	elem->mod = div;
 	vertex_push_back(ver, elem);
 }

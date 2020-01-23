@@ -12,6 +12,38 @@
 
 #include "lem_in.h"
 
+static int			total_actions(t_list *set)
+{
+	t_path			*r;
+	int				tmp;
+
+	tmp = 0;
+	while (set)
+	{
+		r = set->content;
+		tmp += path_len(r) - 1;
+		set = set->next;
+	}
+	return (tmp);
+}
+
+int					calculate_actions(t_list *set, int amount)
+{
+	int				tmp;
+	int				len;
+
+	len = ft_lstlen(&set);
+	tmp = total_actions(set);
+	tmp += amount;
+	if (len != 0)
+	{
+		if (tmp % len)
+			tmp--;
+		tmp = tmp / len;
+	}
+	return (tmp);
+}
+
 t_path				*get_i_path(t_list *ways, int i)
 {
 	t_path			*tmp;
@@ -20,15 +52,6 @@ t_path				*get_i_path(t_list *ways, int i)
 		ways = ways->next;
 	tmp = ways->content;
 	return (tmp);
-}
-
-void				turn_edges_off(t_edge *e)
-{
-	while (e)
-	{
-		e->on = 0;
-		e = e->next;
-	}
 }
 
 int					*find_sd(t_vertex *ver)

@@ -12,39 +12,7 @@
 
 #include "lem_in.h"
 
-static int			total_actions(t_list *set)
-{
-	t_path			*r;
-	int				tmp;
-
-	tmp = 0;
-	while (set)
-	{
-		r = set->content;
-		tmp += path_len(r) - 1;
-		set = set->next;
-	}
-	return (tmp);
-}
-
-int					calculate_actions(t_list *set, int amount)
-{
-	int				tmp;
-	int				len;
-
-	len = ft_lstlen(&set);
-	tmp = total_actions(set);
-	tmp += amount;
-	if (len != 0)
-	{
-		if (tmp % len)
-			tmp--;
-		tmp = tmp / len;
-	}
-	return (tmp);
-}
-
-static void			turn_off(t_edge **edge, t_path *r)
+static void			turn_off_path(t_edge **edge, t_path *r)
 {
 	t_edge			*e;
 
@@ -53,6 +21,41 @@ static void			turn_off(t_edge **edge, t_path *r)
 		e = find_edge(edge, r->curr_v->name, r->next_p->curr_v->name);
 		e->on = 0;
 		r = r->next_p;
+	}
+}
+
+void				reset_map(t_edge *e)
+{
+	while (e)
+	{
+		e->on = 0;
+		e = e->next;
+	}
+}
+
+static void			put_paths_on_map(t_edge **edge, t_list *xset)
+{
+	t_path			*tmp;
+	t_edge			*e;
+	t_edge			*rv;
+
+	reset_map(*edge);
+	while (xset)
+	{
+		tmp = xset->content;
+		while (tmp->next_p)
+		{
+			e = find_edge(edge, tmp->curr_v->name, tmp->next_p->curr_v->name);
+			e->on = 1;
+			rv = find_edge(edge, tmp->next_p->curr_v->name, tmp->curr_v->name);
+			if (rv->on)
+			{
+				e->del = 1;
+				rv->del = 1;
+			}
+			tmp = tmp->next_p;
+		}
+		xset = xset->next;
 	}
 }
 
@@ -66,7 +69,7 @@ t_list				*collect_turns(t_edge *edge, t_vertex *ver, t_list *xset,
 	put_paths_on_map(&edge, xset);
 	while ((route = breadth_first_search(&edge, &ver, sf[0], sf[1])))
 	{
-		turn_off(&edge, route);
+		turn_off_path(&edge, route);
 		add_path_to_lst(&bset, route);
 	}
 	return (bset);
