@@ -95,7 +95,7 @@ static void				additional_check(t_vec *file, unsigned flag)
 	char				*str;
 
 	str = file->data;
-	if (!(flag & NO_FILE))
+	if (!(flag & P_NO_FILE))
 	{
 		write(1, file->data, file->total - 1);
 		str[file->total - 2] != '\n' ? write(1, "\n\n", 2) : write(1, "\n", 1);
@@ -111,6 +111,7 @@ void					reader(t_structs *structs, unsigned flags, char *path)
 	char				*line;
 	int					i;
 
+	ft_printf("hi\n");
 	inf = init_info(path, flags);
 	vec = vec_read(inf->fd);
 	file = vec->data;

@@ -22,12 +22,22 @@
 # define IN				8u
 # define OUT			16u
 
-# define DEBUG			1u
-# define COLORS			2u
-# define OPEN			4u
-# define NO_FILE		8u
-# define NO_OUT			16u
-# define NL				32u
+# define P_DEBUG		1u
+# define P_OPEN			2u
+# define P_NO_FILE		4u
+# define P_NO_OUT		8u
+# define P_NEW_LINE		16u
+
+typedef struct			s_info
+{
+	char				*name;
+	unsigned			mod;
+	unsigned			flag;
+	int					lc;
+	int					fd;
+	int					total;
+	int					skip_comments;
+}						t_info;
 
 typedef struct			s_ants
 {
@@ -74,17 +84,6 @@ typedef struct			s_path
 	struct s_path		*prev_p;
 }						t_path;
 
-typedef struct			s_info
-{
-	char				*name;
-	unsigned			mod;
-	unsigned			flag;
-	int					lc;
-	int					fd;
-	int					total;
-	int					skip_comments;
-}						t_info;
-
 typedef struct			s_structs
 {
 	int					ants_amount;
@@ -99,9 +98,12 @@ typedef struct			s_structs
 	t_ants				*ants;
 }						t_structs;
 
+
+void					reader(t_structs *structs, unsigned flags, char *path);
+
+
 void					re_route_edges(t_edge **edge, t_vertex *ver);
 void					flip_divide(t_path **r, t_edge **e, t_vertex **v);
-void					reader(t_structs *structs, unsigned flags, char *path);
 int						vertex_len(t_vertex **ver);
 void					vertex_add(t_structs *s, t_info *inf, int x, int y);
 t_vertex				*find_ver_by_name(t_vertex **ver, char *name);

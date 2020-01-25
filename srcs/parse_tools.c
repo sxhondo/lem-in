@@ -12,6 +12,32 @@
 
 #include "lem_in.h"
 
+int						lem_atoi(const char *str, int *num, int pos, int lc)
+{
+	int					sign;
+	long				res;
+	int					i;
+
+	i = 0;
+	res = 0;
+	sign = 1;
+	if ((*str == '-' || *str == '+') && ++i)
+		sign = *str++ == '-' ? -1 : 1;
+	if (!ft_isdigit(*str))
+		put_error("bad modifier", lc);
+	while (*str && ft_isdigit(*str) && ++i)
+	{
+		if (!*str || *str < '0' || *str > '9')
+			put_error("bad modifier", lc);
+		res = res * 10 + (*str++ - '0');
+		if ((sign == 1 && res > INT32_MAX)
+			|| (sign == -1 && res - 2 >= INT32_MAX))
+			put_error("overflow value in modifier", lc);
+	}
+	num[pos] = (int)res * sign;
+	return (i);
+}
+
 int						skip_spaces(const char *str)
 {
 	int					i;
@@ -40,54 +66,55 @@ int						cut_after_symbol(const char *src, char **dst, char sym)
 	return (i);
 }
 
-int						lem_atoi(const char *str, int *num, int pos, int lc)
+static unsigned 		get_arg(char *str)
 {
-	int					sign;
-	long				res;
-	int					i;
-
-	i = 0;
-	res = 0;
-	sign = 1;
-	if ((*str == '-' || *str == '+') && ++i)
-		sign = *str++ == '-' ? -1 : 1;
-	if (!ft_isdigit(*str))
-		put_error("bad modifier", lc);
-	while (*str && ft_isdigit(*str) && ++i)
+	int 				i;
+	int 				k;
+	unsigned			flag;
+	static char			*mod[5] = { "-d", "-o", "-nf", "-no", "-nl"};
+	static int 			flags[5] = {P_DEBUG, P_OPEN, P_NO_FILE, 
+											P_NO_OUT, P_NEW_LINE}; 
+	
+	flag = 0;
+	while (*str)
 	{
-		if (!*str || *str < '0' || *str > '9')
-			put_error("bad modifier", lc);
-		res = res * 10 + (*str++ - '0');
-		if ((sign == 1 && res > INT32_MAX)
-			|| (sign == -1 && res - 2 >= INT32_MAX))
-			put_error("overflow value in modifier", lc);
+		i = 0;
+		while (str[i] && str[i] != ' ')
+			i++;
+		k = -1;	
+		while (++k < 5)
+		{
+			if (ft_strnequ(mod[k], str, i) && i > 1)
+				flag |= flags[k];
+		}
+		str += i;
 	}
-	num[pos] = (int)res * sign;
-	return (i);
+	return (flag);
 }
 
 unsigned				parse_arguments(int ac, char **arg)
 {
 	unsigned			flag;
-	int					i;
+	int 				i;
 
 	flag = 0;
-	i = 1;
-	while (i < ac)
+	if (ac == 1)
+		return (0u);
+	else if (ac == 2)
+		flag = get_arg(arg[1]);
+	else
 	{
-		if (ft_strequ(arg[i], "-c"))
-			flag |= COLORS;
-		if (ft_strequ(arg[i], "-d"))
-			flag |= DEBUG;
-		if (ft_strequ(arg[i], "-o"))
-			flag |= OPEN;
-		if (ft_strequ(arg[i], "-nofile"))
-			flag |= NO_FILE;
-		if (ft_strequ(arg[i], "-noout"))
-			flag |= NO_OUT;
-		if (ft_strequ(arg[i], "-nl"))
-			flag |= NL;
-		i++;
+		i = 0;
+		while (++i < ac)
+			flag |= get_arg(arg[i]);
+	}
+	if (flag == 0)
+	{
+		ft_printf("usage: lem-in [options] < [map] \n\n"
+		"options: \n\t"
+		"-d --debug mode\n\t-o -- open file from an argument\n\t"
+		"-nf -- don't print file\n\t-no -- don't print result output\n\t"
+		"-nl -- count output result amount of new lines\n");
 	}
 	return (flag);
 }

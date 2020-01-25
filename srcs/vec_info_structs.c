@@ -52,7 +52,7 @@ t_info				*init_info(char *path, unsigned flags)
 	i->flag = 0;
 	i->lc = 1;
 	i->fd = 0;
-	if (flags & OPEN)
+	if (flags & P_OPEN)
 		i->fd = open(path, O_RDONLY);
 	else
 		i->fd = 0;

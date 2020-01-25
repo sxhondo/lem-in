@@ -1,0 +1,35 @@
+    // See https://go.microsoft.com/fwlink/?LinkId=733558 
+    // for the documentation about the tasks.json format
+    {
+        "version": "2.0.0",
+        "tasks": [
+            {
+                "type": "shell",
+                "label": "g++ build active file",
+                "command": "/usr/bin/gcc",
+                "args": [
+                    "-g",
+                    "${workspaceFolder}/srcs/*.c",
+                    "-I",
+                    "${workspaceFolder}/incs",
+                    "-I",
+                    "${workspaceFolder}/libft/incs",
+                    "-L",
+                    "${workspaceFolder}/libft",
+                    "-lft",
+                    "-o",
+                    "${workspaceFolder}/lem-in"
+                ],
+                "options": {
+                    "cwd": "/usr/bin"
+                },
+                "problemMatcher": [
+                    "$gcc"
+                ],
+                "group": {
+                    "kind": "build",
+                    "isDefault": true
+                }
+            }
+        ]
+      }

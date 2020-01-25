@@ -105,9 +105,9 @@ void				mover(t_ants *ants, unsigned flag)
 		ft_vec_del(&turns);
 		put_error("cannot allocate memory", 0);
 	}
-	if (!(flag & NO_OUT))
+	if (!(flag & P_NO_OUT))
 		write(1, turns->data, turns->total);
-	if (flag & NL)
+	if (flag & P_NEW_LINE)
 		count_print_nl(turns);
 	ft_vec_del(&turns);
 }

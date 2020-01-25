@@ -114,13 +114,15 @@ void					parse_lists(t_structs *structs)
 {
 	if (!structs->edge)
 		put_error("no links given", 0);
+	update_indexes(structs->ver);
+	vertex_print(structs->ver);
+	exit(0);	
 	check_duplicate_vertex((t_vertex **)&structs->ver);
 	check_non_exst_ver((t_vertex **)&structs->ver, (t_edge **)&structs->edge);
 	link_edges_to_vertex((t_vertex **)&structs->ver, structs->edge);
 	structs->cv = copy_ver(structs->ver);
 	structs->ce = copy_edge(structs->edge);
 	link_edges_to_vertex((t_vertex **)&structs->cv, structs->ce);
-	update_indexes(structs->ver);
 	update_indexes(structs->cv);
 	structs->a_set = NULL;
 	structs->b_set = NULL;
