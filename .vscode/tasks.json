@@ -6,19 +6,11 @@
             {
                 "type": "shell",
                 "label": "g++ build active file",
-                "command": "/usr/bin/gcc",
+                "command": "make",
                 "args": [
-                    "-g",
-                    "${workspaceFolder}/srcs/*.c",
-                    "-I",
-                    "${workspaceFolder}/incs",
-                    "-I",
-                    "${workspaceFolder}/libft/incs",
-                    "-L",
-                    "${workspaceFolder}/libft",
-                    "-lft",
-                    "-o",
-                    "${workspaceFolder}/lem-in"
+                    
+                    
+            "tmp"
                 ],
                 "options": {
                     "cwd": "/usr/bin"

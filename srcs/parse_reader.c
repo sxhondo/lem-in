@@ -111,7 +111,6 @@ void					reader(t_structs *structs, unsigned flags, char *path)
 	char				*line;
 	int					i;
 
-	ft_printf("hi\n");
 	inf = init_info(path, flags);
 	vec = vec_read(inf->fd);
 	file = vec->data;

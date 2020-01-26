@@ -12,6 +12,17 @@
 
 #include "lem_in.h"
 
+t_vertex				*find_vertex(t_vertex *v, char *name)
+{
+	while (v)
+	{
+		if (ft_strequ(v->name, name))
+			return (v);
+		v = v->next;
+	}
+	return (NULL);
+}
+
 int					vertex_len(t_vertex **ver)
 {
 	int				i;
@@ -59,26 +70,7 @@ void				vertex_add(t_structs *structs, t_info *inf, int x, int y)
 	}
 	elem->x = x;
 	elem->y = y;
-	elem->on = 0;
+	elem->on = 1;
 	elem->mod = inf->mod;
 	vertex_push_back((t_vertex **)&structs->ver, elem);
-}
-
-void				vertex_dupl(t_vertex **ver, char *name, unsigned div)
-{
-	t_vertex		*elem;
-
-	if (!(elem = ft_memalloc(sizeof(t_vertex))))
-	{
-		put_error("cannot allocate memory", 0);
-		return ;
-	}
-	if (!(elem->name = ft_strdup(name)))
-	{
-		put_error("cannot allocate memory", 0);
-		return ;
-	}
-	elem->on = 0;
-	elem->mod = div;
-	vertex_push_back(ver, elem);
 }

@@ -37,11 +37,10 @@ t_edge						*edge_init(char *e1, char *e2)
 		put_error("cannot alocate memory", 0);
 		return (NULL);
 	}
-	if (!(edge->tmp_name1 = ft_strdup(e1)))
+	edge->v1 = ft_strdup(e1);
+	edge->v2 = ft_strdup(e2);
+	if (edge->v1 == NULL || edge->v2 == NULL)
 		put_error("cannot alocate memory", 0);
-	if (!(edge->tmp_name2 = ft_strdup(e2)))
-		put_error("cannot alocate memory", 0);
-	edge->on = 1;
 	return (edge);
 }
 
@@ -65,22 +64,20 @@ void						edge_add(t_structs *structs, t_info *inf)
 		put_error("cannot alocate memory", 0);
 	elem = edge_init(v1, v2);
 	edge_push_back((t_edge **)&structs->edge, elem);
-	elem = edge_init(elem->tmp_name2, elem->tmp_name1);
-	edge_push_back((t_edge **)&structs->edge, elem);
 	ft_strdel(&v1);
 	ft_strdel(&v2);
 }
 
-t_edge						*find_edge(t_edge **edge, char *f, char *to)
-{
-	t_edge					*e;
-
-	e = *edge;
-	while (e)
-	{
-		if ((ft_strequ(e->v1->name, f) && ft_strequ(e->v2->name, to)))
-			return (e);
-		e = e->next;
-	}
-	return (NULL);
-}
+//t_edge						*find_edge(t_edge **edge, char *f, char *to)
+//{
+//	t_edge					*e;
+//
+//	e = *edge;
+//	while (e)
+//	{
+//		if ((ft_strequ(e->v1->name, f) && ft_strequ(e->v2->name, to)))
+//			return (e);
+//		e = e->next;
+//	}
+//	return (NULL);
+//}

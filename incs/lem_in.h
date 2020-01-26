@@ -52,6 +52,7 @@ typedef struct			s_vertex
 	char				*name;
 	unsigned			mod;
 	struct s_vertex		*next;
+	t_list				*adj;
 	int					i;
 	int					on;
 	int					x;
@@ -67,13 +68,8 @@ typedef struct			s_arrays
 
 typedef struct			s_edge
 {
-	char				*tmp_name1;
-	char				*tmp_name2;
-	t_vertex			*v1;
-	t_vertex			*v2;
-	int					on;
-	unsigned			del;
-	int					cost;
+	char				*v1;
+	char				*v2;
 	struct s_edge		*next;
 }						t_edge;
 
@@ -87,8 +83,7 @@ typedef struct			s_path
 typedef struct			s_structs
 {
 	int					ants_amount;
-	t_edge				*ce;
-	t_vertex			*cv;
+	t_vertex			**adj;
 	t_edge				*edge;
 	t_vertex			*ver;
 	t_list				*x_set;
@@ -98,17 +93,33 @@ typedef struct			s_structs
 	t_ants				*ants;
 }						t_structs;
 
-
+/*
+**		parse_reader.c
+*/
 void					reader(t_structs *structs, unsigned flags, char *path);
 
+/*
+**		create_adjacency_list.c
+*/
+void					create_adjacency_list(t_vertex *ver, t_edge *e);
 
+/*
+**		vertex_struct.c
+*/
+void					vertex_add(t_structs *s, t_info *inf, int x, int y);
+void					vertex_push_back(t_vertex **dst, t_vertex *elem);
+t_vertex				*find_vertex(t_vertex *v, char *name);
+int						vertex_len(t_vertex **ver);
+
+
+
+void					adj_print(t_vertex *ver);
 void					re_route_edges(t_edge **edge, t_vertex *ver);
 void					flip_divide(t_path **r, t_edge **e, t_vertex **v);
-int						vertex_len(t_vertex **ver);
-void					vertex_add(t_structs *s, t_info *inf, int x, int y);
+
 t_vertex				*find_ver_by_name(t_vertex **ver, char *name);
 t_vertex				*find_ver_by_index(t_vertex *ver, int i);
-void					vertex_free(t_vertex **ver);
+void					vertex_free(t_vertex *ver);
 t_edge					*find_edge(t_edge **edge, char *v1, char *v2);
 void					edge_add(t_structs *structs, t_info *inf);
 t_vec					*vec_read(int fd);
@@ -145,7 +156,7 @@ t_list					*collect_turns(t_edge *edge, t_vertex *v, t_list *xset,
 						int *sf);
 t_path					*get_i_path(t_list *ways, int i);
 t_path					*get_i_path_node(t_path **path, int value);
-void					vertex_push_back(t_vertex **dst, t_vertex *elem);
+
 void					vertex_push(t_vertex **dst, t_vertex *elem);
 void					path_push_init(t_path **d, t_vertex *v1, t_vertex *v2);
 void					update_indexes(t_vertex *ver);

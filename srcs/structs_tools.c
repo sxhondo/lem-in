@@ -46,15 +46,3 @@ void				add_path_to_lst(t_list **lst, t_path *path)
 	free(path);
 	ft_lstpushback(lst, node);
 }
-
-void				update_indexes(t_vertex *ver)
-{
-	int				i;
-
-	i = 0;
-	while (ver)
-	{
-		ver->i = i++;
-		ver = ver->next;
-	}
-}

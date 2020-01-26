@@ -36,6 +36,8 @@ void				edge_free(t_edge **edge)
 	while (p)
 	{
 		next = p->next;
+		ft_strdel(&p->v1);
+		ft_strdel(&p->v2);
 		free(p);
 		p = next;
 	}
@@ -75,18 +77,20 @@ void				free_list(t_list **tab)
 	*tab = NULL;
 }
 
-void				vertex_free(t_vertex **ver)
+void				vertex_free(t_vertex *ver)
 {
-	t_vertex		*p;
 	t_vertex		*next;
 
-	p = *ver;
-	while (p)
+	while (ver)
 	{
-		next = p->next;
-		ft_strdel(&p->name);
-		free(p);
-		p = next;
+		next = ver->next;
+		ft_strdel(&ver->name);
+		while (ver->adj)
+		{
+
+			ver->adj = ver->adj->next;
+		}
+		free(ver);
+		ver = next;
 	}
-	*ver = NULL;
 }

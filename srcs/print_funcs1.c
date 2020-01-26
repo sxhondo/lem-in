@@ -17,17 +17,7 @@ void			edge_print(t_edge *e)
 	ft_printf("{blue}------edges----------{eoc}\n");
 	while (e)
 	{
-		ft_printf("{blue}%s[%d]", e->v1->name, e->v1->i);
-		if (e->v1->mod & IN)
-			ft_printf("(%s)", "in");
-		if (e->v1->mod & OUT)
-			ft_printf("(%s)", "out");
-		ft_printf("-> %s[%d]", e->v2->name, e->v2->i);
-		if (e->v2->mod & IN)
-			ft_printf("(%s)", "in");
-		if (e->v2->mod & OUT)
-			ft_printf("(%s)", "out");
-		ft_printf("{eoc} del: %d on: %d\n", e->del, e->on);
+		ft_printf("%s {blue}-{eoc} %s\n", e->v1, e->v2);
 		e = e->next;
 	}
 	ft_printf("\n");
@@ -74,6 +64,28 @@ void			ants_print(t_ants **ants)
 	ft_printf("\n");
 }
 
+void			adj_print(t_vertex *ver)
+{
+	ft_printf("{red}--adj--{eoc}\n");
+	while (ver)
+	{
+		ft_printf("[%2d] ", ver->i);
+		if (ver->mod == 1)
+			ft_printf("{red}%3s {eoc}", ver->name);
+		else if (ver->mod == 2)
+			ft_printf("{red}%3s {eoc}", ver->name);
+		else
+			ft_printf("%3s {eoc}", ver->name);
+		while (ver->adj)
+		{
+			ft_printf("{blue}%3d ", *((int *)ver->adj->content));
+			ver->adj = ver->adj->next;
+		}
+		ft_printf("{eoc}\n");
+		ver = ver->next;
+	}
+}
+
 void			vertex_print(t_vertex *ver)
 {
 	int			i;
@@ -82,23 +94,14 @@ void			vertex_print(t_vertex *ver)
 	ft_printf("{red}------vertexes-------{eoc}\n");
 	while (ver)
 	{
-		ft_printf("[%d] ", ver->i);
+		ft_printf("[%2d] ", ver->i);
 		if (ver->mod == 1)
-			ft_printf("{blue}%s {eoc}", ver->name);
+			ft_printf("{blue}%3s{eoc}", ver->name);
 		else if (ver->mod == 2)
-			ft_printf("{red}%s {eoc}", ver->name);
-		else if (ver->mod)
-		{
-			ft_printf("{magenta}%s ", ver->name);
-			if (ver->mod & IN)
-				ft_printf("(in)");
-			else if (ver->mod & OUT)
-				ft_printf("(out)");
-			ft_printf("{eoc}");
-		}
+			ft_printf("{red}%3s{eoc}", ver->name);
 		else
-			ft_printf("%s ", ver->name);
-		ft_printf(" on: %d \n", ver->on);
+			ft_printf("%3s", ver->name);
+		ft_printf("\n");
 		ver = ver->next;
 	}
 }

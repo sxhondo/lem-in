@@ -12,17 +12,17 @@
 
 #include "lem_in.h"
 
-void				link_edges_to_vertex(t_vertex **ver, t_edge *e)
-{
-	while (e)
-	{
-		e->v1 = find_ver_by_name(ver, e->tmp_name1);
-		e->v2 = find_ver_by_name(ver, e->tmp_name2);
-		ft_strdel(&e->tmp_name1);
-		ft_strdel(&e->tmp_name2);
-		e = e->next;
-	}
-}
+//void				link_edges_to_vertex(t_vertex **ver, t_edge *e)
+//{
+//	while (e)
+//	{
+//		e->v1 = find_ver_by_name(ver, e->tmp_name1);
+//		e->v2 = find_ver_by_name(ver, e->tmp_name2);
+//		ft_strdel(&e->tmp_name1);
+//		ft_strdel(&e->tmp_name2);
+//		e = e->next;
+//	}
+//}
 
 int					pop_lst(t_list **queue)
 {
