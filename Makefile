@@ -13,6 +13,7 @@
 NAME = lem-in
 CC = gcc
 # CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -g
 
 INC_DIR = incs/
 INC  = $(INC_DIR)lem_in.h
@@ -30,7 +31,7 @@ SRCS_LIST= 	alg_bfs.c alg_mover.c alg_solver.c alg_collect_turns.c \
 			ants_dispatcher.c ants_struct.c\
 			edge_struct.c path_struct.c vertex_struct.c free_structs.c\
 			validator_tools.c vec_info_structs.c\
-			parse_lists.c parse_reader.c parse_tools.c\
+			adjacency_list.c parse_reader.c parse_tools.c\
 			print_funcs1.c helper_2.c main.c
 
 OBJ_DIR = obj/

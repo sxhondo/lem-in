@@ -43,19 +43,24 @@ static t_list			*establish_connection(char *curr, t_vertex *ver,
 	t_vertex			*tmp;
 
 	adj = NULL;
+	// ft_printf("%s ", curr);
 	while (edge)
 	{
 		if (ft_strequ(curr, edge->v1))
 		{
+			// ft_printf("%s == %s\n", curr, edge->v1);
 			if ((tmp = find_vertex(ver, edge->v2)) == NULL)
 				put_error("room name does not exist", 0);
+			// ft_printf("adding %s\n", tmp->name);
 			n = ft_lstnew(&tmp->i, sizeof(int));
 			ft_lstadd(&adj, n);
 		}
 		else if (ft_strequ(curr, edge->v2))
 		{
+			// ft_printf("%s == %s\n", curr, edge->v1);
 			if ((tmp = find_vertex(ver, edge->v1)) == NULL)
 				put_error("room name does not exist", 0);
+			// ft_printf("adding %s\n", tmp->name);
 			n = ft_lstnew(&tmp->i, sizeof(int));
 			ft_lstadd(&adj, n);
 		}
@@ -66,21 +71,20 @@ static t_list			*establish_connection(char *curr, t_vertex *ver,
 
 void					create_adjacency_list(t_vertex *ver, t_edge *edge)
 {
-	t_vertex			*tmp;
+	t_vertex			*v;
 	int 				i;
 
 	i = 0;
 	check_duplicate_vertex(ver);
-	tmp = ver;
-	tmp->i = i;
-	while ((tmp = tmp->next))
-		tmp->i = ++i;
-	tmp = ver;
-	while (tmp)
+	v = ver;
+	v->i = i;
+	while ((v = v->next))
+		v->i = ++i;
+	v = ver;
+	while (v)
 	{
-		tmp->adj = establish_connection(tmp->name, ver, edge);
-		tmp = tmp->next;
+		v->adj = establish_connection(v->name, ver, edge);
+		v = v->next;
 	}
-	exit(0);
 }
 

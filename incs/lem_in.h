@@ -52,7 +52,7 @@ typedef struct			s_vertex
 	char				*name;
 	unsigned			mod;
 	struct s_vertex		*next;
-	t_list				*adj;
+	struct s_list		*adj;
 	int					i;
 	int					on;
 	int					x;
@@ -83,7 +83,6 @@ typedef struct			s_path
 typedef struct			s_structs
 {
 	int					ants_amount;
-	t_vertex			**adj;
 	t_edge				*edge;
 	t_vertex			*ver;
 	t_list				*x_set;
@@ -163,7 +162,7 @@ void					update_indexes(t_vertex *ver);
 t_edge					*edge_init(char *e1, char *e2);
 void					edge_push_back(t_edge **dst, t_edge *elem);
 void					path_free(t_path **s);
-void					edge_free(t_edge **edge);
+void					edge_free(t_edge *edge);
 void					ants_free(t_ants **s);
 t_vertex				*vertex_duplic(t_vertex **ver, t_vertex *v);
 void					vertex_new(t_vertex **ver, char *name, unsigned div);

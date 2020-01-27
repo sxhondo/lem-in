@@ -5,19 +5,8 @@
         "tasks": [
             {
                 "type": "shell",
-                "label": "g++ build active file",
+                "label": "make build",
                 "command": "make",
-                "args": [
-                    
-                    
-            "tmp"
-                ],
-                "options": {
-                    "cwd": "/usr/bin"
-                },
-                "problemMatcher": [
-                    "$gcc"
-                ],
                 "group": {
                     "kind": "build",
                     "isDefault": true

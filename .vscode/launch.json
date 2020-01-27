@@ -11,7 +11,7 @@
             "program": "${workspaceFolder}/lem-in",
             "args": [
                 "<",
-                "maps/disjoint_med"
+                "maps/disjoint_small"
             ],
             "stopAtEntry": true,
             "cwd": "${workspaceFolder}",

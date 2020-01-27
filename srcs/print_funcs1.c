@@ -66,6 +66,7 @@ void			ants_print(t_ants **ants)
 
 void			adj_print(t_vertex *ver)
 {
+	t_list 		*p;
 	ft_printf("{red}--adj--{eoc}\n");
 	while (ver)
 	{
@@ -76,10 +77,11 @@ void			adj_print(t_vertex *ver)
 			ft_printf("{red}%3s {eoc}", ver->name);
 		else
 			ft_printf("%3s {eoc}", ver->name);
-		while (ver->adj)
+		p = ver->adj;	
+		while (p)
 		{
-			ft_printf("{blue}%3d ", *((int *)ver->adj->content));
-			ver->adj = ver->adj->next;
+			ft_printf("{blue}%3d ", *((int *)p->content));
+			p = p->next;
 		}
 		ft_printf("{eoc}\n");
 		ver = ver->next;
