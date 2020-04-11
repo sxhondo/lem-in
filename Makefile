@@ -27,7 +27,7 @@ OBJECTS = $(addprefix $(OBJ_DIR), $(OBJ_LIST))
 
 all: $(NAME)
 
-$(NAME): $(LIB_FT) $(VISOR_IN) $(OBJ_DIR) $(OBJECTS)
+$(NAME): $(LIB_FT) $(OBJ_DIR) $(OBJECTS)
 	$(CC) $(CFLAGS) $(OBJECTS) -L $(LIB_DIR) -lft -o $(NAME)
 
 $(OBJ_DIR)%.o: $(SRCS_DIR)%.c $(INC)
@@ -39,8 +39,8 @@ $(OBJ_DIR):
 $(LIB_FT): $(LIB_DIR)
 	@make -C $(LIB_DIR)
 
-$(VISOR_IN):
-	@make -C $(VIS_DIR)
+#$(VISOR_IN):
+#	@make -C $(VIS_DIR)
 
 clean:
 	@rm -rf $(OBJ_DIR)
