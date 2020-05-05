@@ -1,6 +1,6 @@
 NAME = lem-in
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = # -Wall -Wextra -Werror
 
 INC_DIR = incs/
 INC  = $(INC_DIR)lem_in.h
@@ -39,8 +39,8 @@ $(OBJ_DIR):
 $(LIB_FT): $(LIB_DIR)
 	@make -C $(LIB_DIR)
 
-#$(VISOR_IN):
-#	@make -C $(VIS_DIR)
+$(VISOR_IN):
+	@make -C $(VIS_DIR)
 
 clean:
 	@rm -rf $(OBJ_DIR)
